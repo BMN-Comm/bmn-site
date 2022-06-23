@@ -1,3 +1,5 @@
+https://docs.google.com/document/d/1svFfDqoswMy0fJsfq86bCKqQrs4ZP7Lh9QgI0R37pbQ/edit?usp=sharing
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
