@@ -8,6 +8,7 @@
 import { onMount } from 'svelte';
 import { getDocs, snapshotEqual } from "firebase/firestore/lite";
 import { songDoc, songsDocs } from "../scripts/firebase";
+
 async function f() {
 
     var s = songsDocs();
