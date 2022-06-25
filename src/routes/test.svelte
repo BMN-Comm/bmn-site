@@ -1,4 +1,4 @@
-<svelte:head><h1>Dit is header</h1></svelte:head>
+<Navbar/>
 
 <h1 id="HeaderText">Welcome to test</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
@@ -8,6 +8,7 @@
 import { onMount } from 'svelte';
 import { getDocs, snapshotEqual } from "firebase/firestore/lite";
 import { songDoc, songsDocs } from "../scripts/firebase";
+import Navbar from "../components/navbar.svelte";
 
 async function f() {
 
