@@ -1,5 +1,5 @@
 <script>
-	import { Header, HeaderNav, HeaderNavItem } from 'carbon-components-svelte';
+	import { Header, HeaderNav, HeaderNavItem } from 'carbon-components-svelte'
 </script>
 
 <div class="header-wrapper">

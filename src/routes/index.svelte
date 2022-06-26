@@ -1,6 +1,6 @@
 <script>
-	import Navbar from '../components/navbar.svelte';
-	import { Button } from 'carbon-components-svelte';
+	import Navbar from '../components/navbar.svelte'
+	import { Button } from 'carbon-components-svelte'
 </script>
 
 <Navbar />

@@ -1,6 +1,6 @@
-import adapter from '@sveltejs/adapter-auto';
-import preprocess from 'svelte-preprocess';
-import { optimizeImports } from 'carbon-preprocess-svelte';
+import adapter from '@sveltejs/adapter-auto'
+import preprocess from 'svelte-preprocess'
+import { optimizeImports } from 'carbon-preprocess-svelte'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -14,6 +14,6 @@ const config = {
 	paths: {
 		base: './'
 	}
-};
+}
 
-export default config;
+export default config
