@@ -1,5 +1,6 @@
 <script>
 	import { Header, HeaderNav, HeaderNavItem } from 'carbon-components-svelte'
+	import LoginButton from './LoginButton.svelte'
 </script>
 
 <div class="header-wrapper">
@@ -15,6 +16,8 @@
 			<HeaderNavItem href="/" text="Info" />
 			<HeaderNavItem href="/test" text="Test" />
 		</HeaderNav>
+
+		<LoginButton />
 	</Header>
 </div>
 

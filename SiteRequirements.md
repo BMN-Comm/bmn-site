@@ -1,33 +1,41 @@
-BMN site take 3
-Domein:
-Deelnemers:
+# BMN site take 3
+
+## Domein:
+
+### Deelnemers:
+
 Naam
 Email
 Wachtwoord
 Muzieksmaak
 Kleur tandenborstel
 
-DeelnemerSpeeltInstrument
+### DeelnemerSpeeltInstrument
+
 DeelnemerId
 Instrument - ENUM
 
-Commissies
+### Commissies
+
 Jaar
 Naam
 Kleur
 
-Deelnemer in commissie
+### Deelnemer in commissie
+
 DeelnemerId
 CommissieId
 Rol
 
-Edities
+### Edities
+
 Jaar
 Datum van optreden
 Ticket link
 Auditie link
 
-Nummers:
+### Nummers:
+
 Naam
 Artiest
 Lengte
@@ -35,38 +43,45 @@ Link
 Genre
 DeelnemerId(Wie heeft het nummer ingestuurd)
 
-Nummer in editie (masterlist)
+### Nummer in editie (masterlist)
+
 CombinatieId
 NummerId
 EditieIds
 
-CommissieVindNummerLeuk (DE lijst)
+### CommissieVindNummerLeuk (DE lijst)
+
 CommissieId
 NummerId
 
-Deelnemer in editie
+### Deelnemer in editie
+
 DeelnemerId
 EditieId
 
-Deelnemer op nummer in editie
+### Deelnemer op nummer in editie
+
 DeelnemerId
 NummerInEditieId
 Partij
 
-Repititiedagen
+### Repititiedagen
+
 Datum
 Begintijd
 Eindtijd
 Locatie
 EditieId
 
-NummerOpRepititiedag
+### NummerOpRepititiedag
+
 NummerInEditieId
 RepetiedagId
 Begintijd
 Eindtijd
 
-BeschikbaarheidDeelnemerOpRepititiedag
+### BeschikbaarheidDeelnemerOpRepititiedag
+
 DeelnemerId
 RepetiedagId
 Beschikbaar Ja/Nee
@@ -74,7 +89,8 @@ Begintijd
 Eindtijd
 Optioneel Reden
 
-NieuwsPosts
+### NieuwsPosts
+
 EditieId
 DatumTijd
 Text

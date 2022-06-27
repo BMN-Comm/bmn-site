@@ -1,0 +1,56 @@
+<script lang="ts">
+	import type { UserInfo } from 'firebase/auth'
+	import ChevronDown from 'carbon-icons-svelte/lib/ChevronDown.svelte'
+	import ChevronUp from 'carbon-icons-svelte/lib/ChevronUp.svelte'
+	import { Button } from 'carbon-components-svelte'
+	import { auth } from '../scripts/firebase/auth'
+
+	export let user: UserInfo | undefined
+
+	let expanded = false
+</script>
+
+<div
+	class="toggle"
+	on:click={() => {
+		expanded = !expanded
+	}}
+>
+	<span class="email-span">{user?.email}</span>
+
+	{#if expanded}
+		<ChevronUp />
+	{:else}
+		<ChevronDown />
+	{/if}
+
+	{#if expanded}
+		<div class="signout-dropdown">
+			<Button class="signout-button" on:click={() => auth.signOut()}>Signout</Button>
+		</div>
+	{/if}
+</div>
+
+<style>
+	.email-span {
+		margin-right: 5px;
+		padding-left: 15px;
+	}
+
+	.toggle {
+		cursor: pointer;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.signout-dropdown {
+		position: absolute;
+		top: 48px;
+		width: 100%;
+		height: 30px;
+	}
+
+	.signout-dropdown > :global(.signout-button) {
+		width: 100%;
+	}
+</style>
