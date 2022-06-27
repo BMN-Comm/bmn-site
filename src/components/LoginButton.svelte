@@ -8,50 +8,44 @@
 		PasswordInput,
 		TextInput
 	} from 'carbon-components-svelte'
-	import type { UserInfo } from 'firebase/auth'
+
 	import authStore from '../scripts/firebase/authStore'
 	import { auth } from '../scripts/firebase/auth'
 	import SignoutForUser from './SignoutForUser.svelte'
 
 	let modalOpen = false
-	let loginError = false
+	$: loginError = false
 
 	let email: string
 	let password: string
 
-	let loggedIn = false
-	let currentUser: UserInfo
-	let loading = true
-
 	/** Login using the email and password provided by the user*/
-	function LoginWithEmailAndPassword() {
-		auth.signIn(email, password)
-		modalOpen = false
+	async function LoginWithEmailAndPassword() {
+		try {
+			await auth.signIn(email, password)
+			modalOpen = false
+		} catch (_) {
+			loginError = true
+		}
 	}
-
-	// Make sure the login component knows if the user is logged in or not.
-	authStore.subscribe(async ({ isLoggedIn, user }) => {
-		loggedIn = isLoggedIn
-		if (user) currentUser = user
-		loading = false
-	})
 </script>
 
+<!-- The login component which is either loading, a login button, or a signout dropdown -->
 <div class="login-wrapper">
-	{#if loading}
+	{#if !$authStore.isLoaded}
 		<InlineLoading />
-	{:else if loggedIn}
-		<SignoutForUser user={currentUser} />
+	{:else if $authStore.isLoggedIn}
+		<SignoutForUser user={$authStore.user} />
 	{:else}
-		<Button on:click={() => (modalOpen = true)}>Login</Button>
+		<Button class="login-button" on:click={() => (modalOpen = true)}>Login</Button>
 	{/if}
 </div>
 
+<!-- The modal used to login the user -->
 <Modal
 	bind:open={modalOpen}
 	modalHeading="Login"
 	primaryButtonText="Confirm"
-	secondaryButtonText="Cancel"
 	on:click:button--primary={LoginWithEmailAndPassword}
 >
 	<FluidForm>

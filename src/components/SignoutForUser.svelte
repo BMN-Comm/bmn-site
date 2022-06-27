@@ -5,7 +5,7 @@
 	import { Button } from 'carbon-components-svelte'
 	import { auth } from '../scripts/firebase/auth'
 
-	export let user: UserInfo
+	export let user: UserInfo | undefined
 
 	let expanded = false
 </script>
@@ -16,7 +16,8 @@
 		expanded = !expanded
 	}}
 >
-	{user.email}
+	<span class="email-span">{user?.email}</span>
+
 	{#if expanded}
 		<ChevronUp />
 	{:else}
@@ -25,19 +26,31 @@
 
 	{#if expanded}
 		<div class="signout-dropdown">
-			<Button on:click={() => auth.signOut()}>Signout</Button>
+			<Button class="signout-button" on:click={() => auth.signOut()}>Signout</Button>
 		</div>
 	{/if}
 </div>
 
 <style>
+	.email-span {
+		margin-right: 5px;
+		padding-left: 15px;
+	}
+
 	.toggle {
 		cursor: pointer;
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 
 	.signout-dropdown {
 		position: absolute;
 		top: 48px;
+		width: 100%;
 		height: 30px;
+	}
+
+	.signout-dropdown > :global(.signout-button) {
+		width: 100%;
 	}
 </style>

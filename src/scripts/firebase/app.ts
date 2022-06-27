@@ -15,6 +15,7 @@ const app = initializeApp(firebaseConfig)
 
 getAuth(app).onAuthStateChanged((user) => {
 	authStore.set({
+		isLoaded: true,
 		isLoggedIn: user !== null,
 		user: user ?? undefined,
 		firebaseControlled: true
