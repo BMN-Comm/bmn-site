@@ -3,7 +3,7 @@
 	import ChevronDown from 'carbon-icons-svelte/lib/ChevronDown.svelte'
 	import ChevronUp from 'carbon-icons-svelte/lib/ChevronUp.svelte'
 	import { Button } from 'carbon-components-svelte'
-	import { auth } from '../scripts/firebase/auth'
+	import { auth } from '$lib/firebase/client/firebase'
 
 	export let user: UserInfo | undefined
 
