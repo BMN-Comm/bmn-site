@@ -15,9 +15,13 @@
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
 			<HeaderNavItem href="/" text="Info" />
-			<!-- TODO: This is pretty ugly, should use admin claim instead, but we can do that once we
-			implement a clean way to get the custom claims of the user to the client. -->
-			{#if $session.user?.email === 'bmn@a-eskwadraat.nl'}
+			{#if $session.user}
+				<HeaderNavItem href="/deelnemer" text="Deelnemers" />
+			{/if}
+			{#if $session.user?.commissie}
+				<HeaderNavItem href="/commissie" text="Commissie" />
+			{/if}
+			{#if $session.user?.admin}
 				<HeaderNavItem href="/admin-portal" text="Admin" />
 			{/if}
 		</HeaderNav>

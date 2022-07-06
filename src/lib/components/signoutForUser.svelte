@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { UserInfo } from 'firebase/auth'
 	import ChevronDown from 'carbon-icons-svelte/lib/ChevronDown.svelte'
 	import ChevronUp from 'carbon-icons-svelte/lib/ChevronUp.svelte'
 	import { Button } from 'carbon-components-svelte'
 	import { auth } from '$lib/firebase/client/firebase'
+	import type { MyUserInfo } from '$lib/types/myUserSession'
 
-	export let user: UserInfo | undefined
+	export let user: MyUserInfo | undefined
 
 	let expanded = false
 </script>

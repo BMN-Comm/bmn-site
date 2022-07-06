@@ -11,12 +11,14 @@ firebaseAuth.onAuthStateChanged(async (user) => {
 	if (browser) {
 		if (user) {
 			const token = await user.getIdToken()
-			await setToken(token)
+			const decodedToken = await setToken(token)
 			session.update((oldSession) => {
 				oldSession.user = {
 					name: user.displayName,
 					email: user.email,
-					uid: user.uid
+					uid: user.uid,
+					admin: decodedToken.admin ?? false,
+					commissie: decodedToken.commissie ?? false
 				}
 				return oldSession
 			})
@@ -36,13 +38,15 @@ firebaseAuth.onAuthStateChanged(async (user) => {
  */
 async function setToken(token: string) {
 	// We fetch from the api/token, because we need the server to set the cookie
-	await fetch('/api/token', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8'
-		},
-		body: JSON.stringify({ token })
-	})
+	return await (
+		await fetch('/api/token', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({ token })
+		})
+	).json()
 }
 
 /**

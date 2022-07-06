@@ -1,3 +1,4 @@
+import { decodeToken } from '$lib/firebase/server/firebase'
 import type { RequestHandler } from '@sveltejs/kit'
 import cookie from 'cookie'
 
@@ -11,6 +12,7 @@ export const post: RequestHandler = async (event) => {
 				path: '/',
 				httpOnly: true
 			})
-		}
+		},
+		body: await decodeToken(token)
 	}
 }
