@@ -2,16 +2,15 @@
 	import {
 		Button,
 		FluidForm,
-		InlineLoading,
 		InlineNotification,
 		Modal,
 		PasswordInput,
 		TextInput
 	} from 'carbon-components-svelte'
 
-	import authStore from '../scripts/firebase/authStore'
-	import { auth } from '../scripts/firebase/auth'
-	import SignoutForUser from './SignoutForUser.svelte'
+	import { session } from '$app/stores'
+	import { auth } from '$lib/firebase/client/firebase'
+	import SignoutForUser from '$lib/components/signoutForUser.svelte'
 
 	let modalOpen = false
 	$: loginError = false
@@ -32,10 +31,8 @@
 
 <!-- The login component which is either loading, a login button, or a signout dropdown -->
 <div class="login-wrapper">
-	{#if !$authStore.isLoaded}
-		<InlineLoading />
-	{:else if $authStore.isLoggedIn}
-		<SignoutForUser user={$authStore.user} />
+	{#if $session.user}
+		<SignoutForUser user={$session.user} />
 	{:else}
 		<Button class="login-button" on:click={() => (modalOpen = true)}>Login</Button>
 	{/if}
