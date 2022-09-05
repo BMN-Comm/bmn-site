@@ -31,9 +31,15 @@ export const getSession: GetSession = async (event) => {
 	// We store the decoded cookie in the event locals, so it can be passed to the session
 	const decodedToken: DecodedIdToken | null = event.locals.decodedToken
 	if (decodedToken) {
-		const { uid, name, email } = decodedToken
+		const { uid, name, email, admin, commissie } = decodedToken
 		return {
-			user: { name: name || null, email: email || null, uid }
+			user: {
+				name: name || null,
+				email: email || null,
+				uid,
+				admin: admin ?? false,
+				commissie: commissie ?? false
+			}
 		}
 	} else {
 		return { user: undefined }

@@ -10,7 +10,7 @@ declare namespace App {
 	// interface Platform {}
 
 	interface Session {
-		user: UserSession | undefined
+		user: (UserSession & { admin: boolean; commissie: boolean }) | undefined
 	}
 
 	// interface Stuff {}
