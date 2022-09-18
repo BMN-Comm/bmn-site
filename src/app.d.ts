@@ -6,12 +6,9 @@ declare namespace App {
 	interface Locals {
 		userid: string
 		decodedToken: DecodedIdToken | null
+		session: { user: (UserSession & { admin: boolean; commissie: boolean }) | undefined }
 	}
 	// interface Platform {}
-
-	interface Session {
-		user: (UserSession & { admin: boolean; commissie: boolean }) | undefined
-	}
 
 	// interface Stuff {}
 }

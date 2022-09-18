@@ -8,7 +8,6 @@
 		TextInput
 	} from 'carbon-components-svelte'
 
-	import { session } from '$app/stores'
 	import { auth } from '$lib/firebase/client/firebase'
 	import SignoutForUser from '$lib/components/signoutForUser.svelte'
 
@@ -27,12 +26,14 @@
 			loginError = true
 		}
 	}
+
+	import { page } from '$app/stores'
 </script>
 
 <!-- The login component which is either loading, a login button, or a signout dropdown -->
 <div class="login-wrapper">
-	{#if $session.user}
-		<SignoutForUser user={$session.user} />
+	{#if $page.data.user}
+		<SignoutForUser user={$page.data.user} />
 	{:else}
 		<Button class="login-button" on:click={() => (modalOpen = true)}>Login</Button>
 	{/if}

@@ -1,7 +1,8 @@
 <script>
 	import { Header, HeaderNav, HeaderNavItem } from 'carbon-components-svelte'
 	import LoginButton from '$lib/components/loginButton.svelte'
-	import { session } from '$app/stores'
+
+	import { page } from '$app/stores'
 </script>
 
 <div class="header-wrapper">
@@ -15,13 +16,13 @@
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
 			<HeaderNavItem href="/" text="Info" />
-			{#if $session.user}
-				<HeaderNavItem href="/deelnemer" text="Deelnemers" />
+			{#if $page.data.user}
+				<HeaderNavItem href="/participant" text="Deelnemers" />
 			{/if}
-			{#if $session.user?.commissie}
-				<HeaderNavItem href="/commissie" text="Commissie" />
+			{#if $page.data.user?.commissie}
+				<HeaderNavItem href="/committee" text="Commissie" />
 			{/if}
-			{#if $session.user?.admin}
+			{#if $page.data.user?.admin}
 				<HeaderNavItem href="/admin-portal" text="Admin" />
 			{/if}
 		</HeaderNav>

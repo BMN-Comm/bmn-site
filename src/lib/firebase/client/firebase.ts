@@ -1,8 +1,8 @@
-import { browser } from '$app/env'
 import { initializeApp } from 'firebase/app'
-import { getAuth, signInWithEmailAndPassword, signOut as fbSignOut } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, signOut as fbSignOut, type User } from 'firebase/auth'
 import { firebaseConfig } from '$lib/firebase/client/firbaseConfig'
-import { session } from '$app/stores'
+import { browser } from '$app/environment'
+import { invalidateAll } from '$app/navigation'
 
 const app = initializeApp(firebaseConfig)
 const firebaseAuth = getAuth(app)
@@ -11,24 +11,11 @@ firebaseAuth.onAuthStateChanged(async (user) => {
 	if (browser) {
 		if (user) {
 			const token = await user.getIdToken()
-			const decodedToken = await setToken(token)
-			session.update((oldSession) => {
-				oldSession.user = {
-					name: user.displayName,
-					email: user.email,
-					uid: user.uid,
-					admin: decodedToken.admin ?? false,
-					commissie: decodedToken.commissie ?? false
-				}
-				return oldSession
-			})
+			await setToken(token, user)
 		} else {
 			await setToken('')
-			session.update((oldSession) => {
-				oldSession.user = undefined
-				return oldSession
-			})
 		}
+		invalidateAll()
 	}
 })
 
@@ -36,17 +23,15 @@ firebaseAuth.onAuthStateChanged(async (user) => {
  * Set the authentication token in the cookies by utilizing the api
  * @param token The token to set
  */
-async function setToken(token: string) {
+async function setToken(token: string, user?: User) {
 	// We fetch from the api/token, because we need the server to set the cookie
-	return await (
-		await fetch('/api/token', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json;charset=utf-8'
-			},
-			body: JSON.stringify({ token })
-		})
-	).json()
+	await fetch('/api/token', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8'
+		},
+		body: JSON.stringify({ token, user })
+	})
 }
 
 /**
