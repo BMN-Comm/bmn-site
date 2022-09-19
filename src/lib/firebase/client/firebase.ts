@@ -3,9 +3,11 @@ import { getAuth, signInWithEmailAndPassword, signOut as fbSignOut, type User } 
 import { firebaseConfig } from '$lib/firebase/client/firbaseConfig'
 import { browser } from '$app/environment'
 import { invalidateAll } from '$app/navigation'
+import { getFirestore } from "firebase/firestore"
 
 const app = initializeApp(firebaseConfig)
 const firebaseAuth = getAuth(app)
+export const db = getFirestore()
 
 firebaseAuth.onAuthStateChanged(async (user) => {
 	if (browser) {
