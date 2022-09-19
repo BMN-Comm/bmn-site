@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {
 		SideNav,
 		SideNavItems,
@@ -6,9 +6,11 @@
 		SideNavDivider,
 		Content
 	} from 'carbon-components-svelte'
+
+	export let isSideNavOpen: boolean
 </script>
 
-<SideNav isOpen>
+<SideNav isOpen={isSideNavOpen}>
 	<SideNavItems>
 		<SideNavLink text="Mededelingen" href="participant/announcements" />
 		<SideNavLink text="Setlist" href="participant/setlist" />
