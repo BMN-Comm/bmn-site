@@ -12,8 +12,6 @@
 	import type { announcement } from '$lib/types/domain/announcement'
 
 	export let data: { announcements: announcement[] }
-
-	console.log(data)
 </script>
 
 <Grid>

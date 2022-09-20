@@ -7,14 +7,9 @@ export const load: PageLoad = async () => {
 	const announcements = await getDocs(announcementsQuery)
 	return {
 		announcements: announcements.docs.map((doc) => {
-			const docData = doc.data()
 			return {
 				id: doc.id,
-				title: docData.title,
-				content: docData.content,
-				publishDate: docData.publishDate,
-				edition: docData.edition,
-				authorUser: docData.authorUser
+				...doc.data()
 			}
 		})
 	}

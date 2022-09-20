@@ -6,11 +6,13 @@
 		SideNavDivider,
 		Content
 	} from 'carbon-components-svelte'
+	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import { getContext } from 'svelte'
 
-	export let isSideNavOpen: boolean
+	const { open } = getContext<sidebarContextType>('sidebar')
 </script>
 
-<SideNav isOpen={isSideNavOpen}>
+<SideNav bind:isOpen={$open}>
 	<SideNavItems>
 		<SideNavLink text="Mededelingen" href="participant/announcements" />
 		<SideNavLink text="Setlist" href="participant/setlist" />

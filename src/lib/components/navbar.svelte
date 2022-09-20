@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { Header, HeaderNav, HeaderNavItem } from 'carbon-components-svelte'
 	import LoginButton from '$lib/components/loginButton.svelte'
+	import { getContext } from 'svelte'
 
 	import { page } from '$app/stores'
+	import type { sidebarContextType } from 'src/routes/+layout.svelte'
 
-	export let isSideNavOpen: boolean
+	const { open } = getContext<sidebarContextType>('sidebar')
 </script>
 
 <div class="header-wrapper">
-	<Header bind:isSideNavOpen>
+	<Header bind:isSideNavOpen={$open}>
 		<img
 			src="https://betamusicnight.nl/images/260569dc3f0fd256c1519ca76a69b22e-BMN2022.png"
 			height="100%"
