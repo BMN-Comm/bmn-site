@@ -2,7 +2,7 @@
 	import { db } from '$lib/firebase/client/firebase'
 	import type { song } from '$lib/types/domain/song'
 	import { Grid, Row, Column, TextInput, Button, Form, TextArea, ToastNotification } from 'carbon-components-svelte'
-	import { collection, doc, setDoc } from 'firebase/firestore'
+	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
 
 
     let title: string
@@ -21,6 +21,7 @@
             link: link,
             genre: genre,
             note: note,
+            suggestionDate: Timestamp.now(),
             user: "Test"
         }
 

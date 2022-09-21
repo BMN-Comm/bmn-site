@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore'
+
 export type song = {
 	name: string
 	artist: string
@@ -5,5 +7,6 @@ export type song = {
 	link: string
 	genre: string
 	note: string
+	suggestionDate: Timestamp
 	user: string // Reference to user path
 }
