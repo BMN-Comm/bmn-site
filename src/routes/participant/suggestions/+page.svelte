@@ -32,13 +32,10 @@
         console.log(toasts)
 
         await setDoc(newSong, song)
-
-        
-
     }
 </script>
 
-{#each toasts as toast}
+{#each toasts as toast, i}
     <ToastNotification
         lowContrast
         timeout={5000}
@@ -46,6 +43,9 @@
         title="Success"
         subtitle="Nummer toegevoegd:"
         caption={toast}
+        on:close={(e) =>{
+            toasts = toasts.splice(i, 1)
+        }}
     />
 {/each}
 
