@@ -29,6 +29,7 @@
         const newSong = doc(collection(db, "songs"))
 
         toasts.push(title)
+        toasts = toasts
 
         console.log(toasts)
 
