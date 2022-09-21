@@ -15,6 +15,7 @@
 		<SideNavLink text="Mijn nummers" href="committee/mySongs" />
 		<SideNavLink text="Suggesties" href="committee/suggestions" />
 		<SideNavDivider />
+		<SideNavLink text="Repetities" href="committee/rehearsals" />
 		<SideNavLink text="Rooster" href="committee/schedule" />
 		<SideNavLink text="Beschikbaarheid" href="committee/availability" />
 	</SideNavItems>
