@@ -11,7 +11,7 @@
     let link: string
     let note: string
 
-    export let toasts: string[] = ["Test", "Test2"]
+    export let toasts: string[] = []
 
     async function AddSuggestion() {
         let song: song = {
@@ -24,8 +24,6 @@
             user: "Test"
         }
 
-        console.log(song)
-
         const newSong = doc(collection(db, "songs"))
 
         toasts.push(title)
@@ -33,7 +31,7 @@
 
         console.log(toasts)
 
-        // await setDoc(newSong, song)
+        await setDoc(newSong, song)
 
         
 
@@ -48,13 +46,6 @@
         title="Success"
         subtitle="Nummer toegevoegd:"
         caption={toast}
-        on:close={(e) => {
-            const i = toasts.indexOf(toast)
-            if (i > -1) {
-                toasts.splice(i, 1)
-            }
-            console.log(toasts)
-        }}
     />
 {/each}
 
