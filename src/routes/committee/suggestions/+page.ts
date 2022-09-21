@@ -16,11 +16,3 @@ export const load: PageLoad = async() => {
         })
     }
 }
-
-export async function DeleteSuggestion(id: string) {
-    console.log(id)
-
-    const docRef = doc(db, 'songs', id)
-    deleteDoc(docRef)
-    console.log("Deleted: " + id)
-}

@@ -2,7 +2,8 @@
 	import { Button, Column, Grid, Modal, ModalHeader, Row, StructuredList, StructuredListCell, StructuredListRow } from "carbon-components-svelte"
     import type { song } from "$lib/types/domain/song"
 	import { Chat, Favorite, MusicRemove, PlayFilledAlt, TrashCan } from "carbon-icons-svelte"
-	import { DeleteSuggestion } from "./+page"
+	import { deleteDoc, doc } from "firebase/firestore"
+	import { db } from "$lib/firebase/client/firebase"
 
     export let data: {suggestions: song[]}
 
@@ -16,6 +17,12 @@
         data.suggestions.splice(i, 1)
         data = data
         DeleteSuggestion(id)
+    }
+
+    async function DeleteSuggestion(id: string) {
+        const docRef = doc(db, 'songs', id)
+        deleteDoc(docRef)
+        console.log("Deleted: " + id)
     }
 
 </script>
@@ -45,7 +52,7 @@
                 </StructuredListCell>
                 <StructuredListCell>
                     <Button kind="danger-tertiary" size="small" iconDescription="Delete" icon={MusicRemove} on:click={() => { selectedSong=[suggestion.id, i]; openDel = true }}/>
-                    {#if suggestion.note != undefined && suggestion.note.length > 0}
+                    {#if suggestion.note && suggestion.note.length > 0}
                         <Button kind="tertiary" size="small" iconDescription="Opmerkingen" icon={Chat} on:click={() => {noteText = suggestion.note; openNote = true}}/>
                     {/if}
                 </StructuredListCell>
