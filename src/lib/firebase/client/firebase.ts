@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 import { getAuth, signInWithEmailAndPassword, signOut as fbSignOut, type User } from 'firebase/auth'
 import { firebaseConfig } from '$lib/firebase/client/firbaseConfig'
 import { browser } from '$app/environment'
@@ -54,3 +55,5 @@ export const auth = {
 }
 
 export default app
+
+export const db = getFirestore(app)
