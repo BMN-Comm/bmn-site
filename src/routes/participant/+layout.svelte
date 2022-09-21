@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {
 		SideNav,
 		SideNavItems,
@@ -6,9 +6,13 @@
 		SideNavDivider,
 		Content
 	} from 'carbon-components-svelte'
+	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import { getContext } from 'svelte'
+
+	const { open } = getContext<sidebarContextType>('sidebar')
 </script>
 
-<SideNav isOpen>
+<SideNav bind:isOpen={$open}>
 	<SideNavItems>
 		<SideNavLink text="Mededelingen" href="participant/announcements" />
 		<SideNavLink text="Setlist" href="participant/setlist" />
