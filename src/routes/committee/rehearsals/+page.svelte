@@ -2,8 +2,14 @@
 	import { Button, Column, ExpandableTile, Grid, Modal, ModalHeader, Row, StructuredList, StructuredListCell, StructuredListRow } from "carbon-components-svelte"
     import type { rehearsal } from "$lib/types/domain/rehearsal"
 	import { Chat, Favorite, MusicRemove, PlayFilledAlt, TrashCan } from "carbon-icons-svelte"
+	import { collection, getDoc, getDocs, orderBy, query, Timestamp } from "firebase/firestore"
+	import { db } from "$lib/firebase/client/firebase"
+	import LoginButton from "$lib/components/loginButton.svelte"
+	import type { song } from "$lib/types/domain/song"
 
     export let data: {rehearsals: rehearsal[]}
+
+    console.log(data.rehearsals)
 
 </script>
 
@@ -13,7 +19,7 @@
     </Row>
     <StructuredList>
         {#each data.rehearsals as rehearsal, i}
-            <ExpandableTile>
+            <ExpandableTile on:click={() => {}}>
                 <div slot="above">
                     <Row padding>
                         <Column>
@@ -31,7 +37,7 @@
                 <div slot="below">
                     <Row>
                         <Column>
-                            <Button>Test</Button>
+                            
                         </Column>
                     </Row>
                 </div>
