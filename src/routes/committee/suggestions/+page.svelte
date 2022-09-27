@@ -35,7 +35,7 @@
 
 <Grid>
     <Row>
-        <Column><h2>Suggesties</h2></Column>
+        <Column><h1>Suggesties</h1></Column>
     </Row>
 
     <StructuredList>
@@ -90,3 +90,9 @@
     on:click:button--secondary={() => {openDel=false}}>
     <p>Verwijder {delSong}?</p>
 </Modal>
+
+<style>
+    :global(h1) {
+        font-size: x-large;
+    }
+</style>

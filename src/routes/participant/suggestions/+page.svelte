@@ -10,10 +10,17 @@
     let genre: string
     let link: string
     let note: string
+    let validLink: boolean = true
 
     export let toasts: string[] = []
 
     async function AddSuggestion() { // TODO: Show error if failed
+
+        if (!isValidUrl(link)) {
+            validLink = false
+            return
+        }
+
         let song: song = {
             name: title,
             artist,
@@ -31,7 +38,24 @@
         toasts = toasts
 
         await setDoc(newSong, song)
+
+        title=""
+        artist=""
+        genre=""
+        link=""
+        note=""
     }
+
+    const isValidUrl = (urlString: string) => {
+        var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+	    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+	    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+	    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+	    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+	    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+	  return !!urlPattern.test(urlString);
+    }
+
 </script>
 
 {#each toasts as toast, i} <!-- TODO: Toasts are badly implemented -->
@@ -51,11 +75,7 @@
 <Form on:submit={(e) => {
     e.preventDefault()
     AddSuggestion()
-    title=""
-    artist=""
-    genre=""
-    link=""
-    note=""
+    
     }}>
     <Grid padding> <!-- TODO: scuffed on mobile -->
         <Row>
@@ -72,7 +92,11 @@
                 <TextInput bind:value={genre} labelText="Genre*" placeholder="Voer genre in" required/>
             </Column>
             <Column>
-                <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required/>
+                {#if validLink}
+                    <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required/>
+                {:else}
+                    <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required invalid invalidText="Voer een geldige link in"/>
+                {/if}
             </Column>
         </Row>
         <Row>
