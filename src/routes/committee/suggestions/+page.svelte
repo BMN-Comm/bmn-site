@@ -35,7 +35,7 @@
 
 <Grid>
     <Row>
-        <Column><h1>Suggesties</h1></Column>
+        <Column><h1 class="titleText">Suggesties</h1></Column>
     </Row>
 
     <StructuredList>
@@ -92,7 +92,7 @@
 </Modal>
 
 <style>
-    :global(h1) {
+    .titleText {
         font-size: x-large;
     }
 </style>

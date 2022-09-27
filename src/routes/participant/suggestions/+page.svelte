@@ -44,6 +44,8 @@
         genre=""
         link=""
         note=""
+
+        validLink = true
     }
 
     const isValidUrl = (urlString: string) => {
@@ -94,6 +96,8 @@
             <Column>
                 {#if validLink}
                     <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required/>
+                {:else if isValidUrl(link)}
+                    <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required autofocus/>
                 {:else}
                     <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required invalid invalidText="Voer een geldige link in"/>
                 {/if}
