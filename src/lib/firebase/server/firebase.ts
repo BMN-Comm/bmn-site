@@ -1,5 +1,7 @@
+import { db } from '$lib/firebase/client/firebase'
 import admin from 'firebase-admin'
 import type { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
+import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { firebaseAdminConfig } from './firebaseConfig'
 
 /** Initialize the firebase admin sdk with the admin config */
@@ -24,8 +26,8 @@ export async function decodeToken(token: string): Promise<DecodedIdToken | null>
 	}
 }
 
-/** Get all the users in the current application */
-export async function getUsers() {
+/** Get all the firebase auth users in the current application */
+export async function getAuthUsers() {
 	try {
 		initializeFirebase()
 		return await admin.auth().listUsers()
@@ -33,6 +35,22 @@ export async function getUsers() {
 		console.log(err)
 		return null
 	}
+}
+
+/** Create a new user in the auth system, and the database */
+export async function createUser(name: string, password: string, email: string) {
+	initializeFirebase()
+	await admin.auth().createUser({ email, password })
+	const newUserDoc = doc(collection(db, 'users'))
+	await setDoc(newUserDoc, { name, email })
+}
+
+/** Remove a user in the auth system, and the database */
+export async function removeUser(dbUid: string, authUid: string) {
+	initializeFirebase()
+	await admin.auth().deleteUser(authUid)
+	const docRef = doc(db, 'users', dbUid)
+	deleteDoc(docRef)
 }
 
 /** Set for the given user id, the value of the given claim to true */

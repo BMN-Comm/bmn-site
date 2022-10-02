@@ -23,7 +23,7 @@
 				<HeaderNavItem href="/committee" text="Commissie" />
 			{/if}
 			{#if $page.data.user?.admin}
-				<HeaderNavItem href="/admin-portal" text="Admin" />
+				<HeaderNavItem href="/admin-portal/claims" text="Admin" />
 			{/if}
 		</HeaderNav>
 
