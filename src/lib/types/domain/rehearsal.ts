@@ -1,4 +1,4 @@
-import type { Timestamp } from "firebase/firestore"
+import type { DocumentReference, Timestamp } from "firebase/firestore"
 
 export type rehearsal = {
 	edition: string // Reference to edition
@@ -6,7 +6,7 @@ export type rehearsal = {
 	endTime: Timestamp
 	location: string
 	songsToRehearse: {
-		song: string // Reference to song
+		song: DocumentReference // Reference to song
 		startTime: Timestamp
 		endTime: Timestamp
 	}
