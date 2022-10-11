@@ -72,6 +72,5 @@ export const load: PageLoad = async ({ params }) => {
 		musicians.set(playsInRefs[i].song.id, p!)
 	}
 
-
 	return { rehearsalId: params.rehearsalId, rehearsalSongs: rehearsalSongs, songs: songs, musicians: musicians}
 }
