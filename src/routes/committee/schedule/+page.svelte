@@ -18,21 +18,62 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
-	import { Add, Launch } from 'carbon-icons-svelte'
-	import type { Timestamp } from 'firebase/firestore'
+	import { Add, CicsWuiRegion, Launch, MusicRemove } from 'carbon-icons-svelte'
+	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import { db } from '$lib/firebase/client/firebase'
 
 	export let data: { rehearsals: rehearsal[] }
 
 	let openModal = false
+	let openDel = false
 	let location: string = "dB's"
 	let date: string
 	let startTime: string = "18:00"
 	let endTime: string = "21:00"
 
+	let selectedRehearsal: number
+
 	async function addRehearsal() {
 		console.log(date)
 		console.log(startTime)
 		console.log(endTime)
+
+		let start: Timestamp
+		let end: Timestamp
+
+		let dateSplit = date.split('/')
+		let sTimeSplit = startTime.split(':')
+		let eTimeSplit = endTime.split(':')
+		
+		let sDate: Date = new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
+		let eDate: Date = new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +eTimeSplit[0], +eTimeSplit[1])
+
+		console.log(+dateSplit[2], +dateSplit[1], +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
+		
+		
+		start = Timestamp.fromDate(sDate)
+		end = Timestamp.fromDate(eDate)
+
+		console.log(start.toDate())
+
+		//const newRehearsal = doc(collection(db, "rehearsals"))
+
+		let rehearsal: rehearsal = {
+			startTime: start,
+			endTime: end,
+			location
+		}
+	
+		//await setDoc(newRehearsal, rehearsal)
+	}
+
+	function removeRehearsal() {
+		data.rehearsals.splice(selectedRehearsal, 1)
+		data = data
+
+		const docRef = doc(db, 'songs', data.rehearsals[selectedRehearsal].id)
+		console.log(data.rehearsals[selectedRehearsal].startTime)
+        deleteDoc(docRef)
 	}
 
 </script>
@@ -74,7 +115,8 @@
 						{rehearsal.location}
 					</StructuredListCell>
 					<StructuredListCell>
-						<a href={`/participant/schedule/${rehearsal.id}`}><Launch /></a>
+						<Button size="small" iconDescription="Open Repetitie" icon={Launch} href={`/participant/schedule/${rehearsal.id}`}></Button>
+						<Button kind="danger-tertiary" size="small" iconDescription="Verwijder Repetitie" icon={MusicRemove} on:click={() => { selectedRehearsal = i; openDel = true }}/>
 					</StructuredListCell>
 				</StructuredListRow>
 			{/each}
@@ -90,7 +132,7 @@
 	hasScrollingContent
 	hasForm
 	on:submit={(e) => {
-		e.preventDefault
+		e.preventDefault()
 		addRehearsal()
 	}}
 >
@@ -109,7 +151,7 @@
 			</Row>
 			<Row>
 				<Column>
-					<DatePicker datePickerType="single" dateFormat="d/M/Y" bind:value={date} required>
+					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
 						<DatePickerInput labelText="Datum" placeholder="dd/mm/yyyy"/>
 					</DatePicker>
 				</Column>
@@ -130,4 +172,10 @@
 			</Row>
 		</Grid>
 	</Form>
+</Modal>
+
+<Modal danger modalHeading="Verwijder repetitie" primaryButtonText="Verwijder" primaryButtonIcon={MusicRemove} secondaryButtonText="Annuleer" bind:open={openDel}
+    on:click:button--primary={() => {removeRehearsal(); openDel=false}} 
+    on:click:button--secondary={() => {openDel=false}}>
+    <p>Verwijder repetitie?</p>
 </Modal>
