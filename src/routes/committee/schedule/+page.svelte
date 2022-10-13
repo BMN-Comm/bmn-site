@@ -34,9 +34,6 @@
 	let selectedRehearsal: number
 
 	async function addRehearsal() {
-		console.log(date)
-		console.log(startTime)
-		console.log(endTime)
 
 		let start: Timestamp
 		let end: Timestamp
@@ -47,24 +44,22 @@
 		
 		let sDate: Date = new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
 		let eDate: Date = new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +eTimeSplit[0], +eTimeSplit[1])
-
-		console.log(+dateSplit[2], +dateSplit[1], +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
-		
 		
 		start = Timestamp.fromDate(sDate)
 		end = Timestamp.fromDate(eDate)
 
 		console.log(start.toDate())
 
-		//const newRehearsal = doc(collection(db, "rehearsals"))
+		const newRehearsal = doc(collection(db, "rehearsals"))
 
 		let rehearsal: rehearsal = {
+			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: start,
 			endTime: end,
 			location
 		}
 	
-		//await setDoc(newRehearsal, rehearsal)
+		await setDoc(newRehearsal, rehearsal)
 	}
 
 	function removeRehearsal() {
@@ -115,7 +110,7 @@
 						{rehearsal.location}
 					</StructuredListCell>
 					<StructuredListCell>
-						<Button size="small" iconDescription="Open Repetitie" icon={Launch} href={`/participant/schedule/${rehearsal.id}`}></Button>
+						<Button size="small" iconDescription="Open Repetitie" icon={Launch} href={`/committee/schedule/${rehearsal.id}`}></Button>
 						<Button kind="danger-tertiary" size="small" iconDescription="Verwijder Repetitie" icon={MusicRemove} on:click={() => { selectedRehearsal = i; openDel = true }}/>
 					</StructuredListCell>
 				</StructuredListRow>
