@@ -36,6 +36,7 @@
 		let start: Timestamp
 		let end: Timestamp
 
+		// TODO: Rienk: check of dit beter kan
 		let dateSplit = date.split('/')
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
