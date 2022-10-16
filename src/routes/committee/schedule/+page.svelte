@@ -1,10 +1,9 @@
 <script lang="ts">
 	import {
-	Button,
+		Button,
 		Column,
 		DatePicker,
 		DatePickerInput,
-		ExpandableTile,
 		Form,
 		Grid,
 		Modal,
@@ -18,7 +17,7 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
-	import { Add, CicsWuiRegion, Launch, MusicRemove } from 'carbon-icons-svelte'
+	import { Add, Launch, MusicRemove } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 
@@ -28,29 +27,40 @@
 	let openDel = false
 	let location: string = "dB's"
 	let date: string
-	let startTime: string = "18:00"
-	let endTime: string = "21:00"
+	let startTime: string = '18:00'
+	let endTime: string = '21:00'
 
 	let selectedRehearsal: number
 
 	async function addRehearsal() {
-
 		let start: Timestamp
 		let end: Timestamp
 
 		let dateSplit = date.split('/')
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
-		
-		let sDate: Date = new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
-		let eDate: Date = new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +eTimeSplit[0], +eTimeSplit[1])
-		
+
+		let sDate: Date = new Date(
+			+dateSplit[2],
+			+dateSplit[1] - 1,
+			+dateSplit[0],
+			+sTimeSplit[0],
+			+sTimeSplit[1]
+		)
+		let eDate: Date = new Date(
+			+dateSplit[2],
+			+dateSplit[1] - 1,
+			+dateSplit[0],
+			+eTimeSplit[0],
+			+eTimeSplit[1]
+		)
+
 		start = Timestamp.fromDate(sDate)
 		end = Timestamp.fromDate(eDate)
 
 		console.log(start.toDate())
 
-		const newRehearsal = doc(collection(db, "rehearsals"))
+		const newRehearsal = doc(collection(db, 'rehearsals'))
 
 		let rehearsal: rehearsal = {
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
@@ -58,7 +68,7 @@
 			endTime: end,
 			location
 		}
-	
+
 		await setDoc(newRehearsal, rehearsal)
 	}
 
@@ -68,12 +78,9 @@
 
 		const docRef = doc(db, 'songs', data.rehearsals[selectedRehearsal].id)
 		console.log(data.rehearsals[selectedRehearsal].startTime)
-        deleteDoc(docRef)
+		deleteDoc(docRef)
 	}
-
 </script>
-
-
 
 <Grid>
 	<Row padding>
@@ -81,7 +88,13 @@
 	</Row>
 	<Row>
 		<Column>
-			<Button iconDescription="Voeg repetitiedag toe" icon={Add} on:click={() => {openModal = true}}/>
+			<Button
+				iconDescription="Voeg repetitiedag toe"
+				icon={Add}
+				on:click={() => {
+					openModal = true
+				}}
+			/>
 		</Column>
 	</Row>
 	<StructuredList>
@@ -110,8 +123,22 @@
 						{rehearsal.location}
 					</StructuredListCell>
 					<StructuredListCell>
-						<Button size="small" iconDescription="Open Repetitie" icon={Launch} href={`/committee/schedule/${rehearsal.id}`}></Button>
-						<Button kind="danger-tertiary" size="small" iconDescription="Verwijder Repetitie" icon={MusicRemove} on:click={() => { selectedRehearsal = i; openDel = true }}/>
+						<Button
+							size="small"
+							iconDescription="Open Repetitie"
+							icon={Launch}
+							href={`/committee/schedule/${rehearsal.id}`}
+						/>
+						<Button
+							kind="danger-tertiary"
+							size="small"
+							iconDescription="Verwijder Repetitie"
+							icon={MusicRemove}
+							on:click={() => {
+								selectedRehearsal = i
+								openDel = true
+							}}
+						/>
 					</StructuredListCell>
 				</StructuredListRow>
 			{/each}
@@ -119,7 +146,7 @@
 	</StructuredList>
 </Grid>
 
-<Modal 
+<Modal
 	bind:open={openModal}
 	modalHeading="Nieuwe repetitiedag"
 	primaryButtonIcon={Add}
@@ -147,30 +174,34 @@
 			<Row>
 				<Column>
 					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
-						<DatePickerInput labelText="Datum" placeholder="dd/mm/yyyy"/>
+						<DatePickerInput labelText="Datum" placeholder="dd/mm/yyyy" />
 					</DatePicker>
 				</Column>
 				<Column>
-					<TimePicker
-						labelText="Van"
-						bind:value={startTime}
-						required
-					/>
+					<TimePicker labelText="Van" bind:value={startTime} required />
 				</Column>
 				<Column>
-					<TimePicker
-						labelText="Tot"
-						bind:value={endTime}
-						required
-					/>
+					<TimePicker labelText="Tot" bind:value={endTime} required />
 				</Column>
 			</Row>
 		</Grid>
 	</Form>
 </Modal>
 
-<Modal danger modalHeading="Verwijder repetitie" primaryButtonText="Verwijder" primaryButtonIcon={MusicRemove} secondaryButtonText="Annuleer" bind:open={openDel}
-    on:click:button--primary={() => {removeRehearsal(); openDel=false}} 
-    on:click:button--secondary={() => {openDel=false}}>
-    <p>Verwijder repetitie?</p>
+<Modal
+	danger
+	modalHeading="Verwijder repetitie"
+	primaryButtonText="Verwijder"
+	primaryButtonIcon={MusicRemove}
+	secondaryButtonText="Annuleer"
+	bind:open={openDel}
+	on:click:button--primary={() => {
+		removeRehearsal()
+		openDel = false
+	}}
+	on:click:button--secondary={() => {
+		openDel = false
+	}}
+>
+	<p>Verwijder repetitie?</p>
 </Modal>
