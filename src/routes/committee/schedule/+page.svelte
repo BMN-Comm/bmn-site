@@ -59,11 +59,9 @@
 		start = Timestamp.fromDate(sDate)
 		end = Timestamp.fromDate(eDate)
 
-		console.log(start.toDate())
-
 		const newRehearsal = doc(collection(db, 'rehearsals'))
 
-		let rehearsal: rehearsal = {
+		let rehearsal = {
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: start,
 			endTime: end,
@@ -154,39 +152,43 @@
 	primaryButtonText="Voeg toe"
 	hasScrollingContent
 	hasForm
+	selectorPrimaryFocus="#locatie"
+	
 	on:submit={(e) => {
 		e.preventDefault()
 		addRehearsal()
 	}}
 >
-	<Form>
-		<Grid>
-			<Row padding>
-				<Column>
-					<TextInput
-						id="locatie"
-						labelText="Locatie"
-						placeholder="Locatie"
-						bind:value={location}
-						required
-					/>
-				</Column>
-			</Row>
-			<Row>
-				<Column>
-					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
-						<DatePickerInput labelText="Datum" placeholder="dd/mm/yyyy" />
-					</DatePicker>
-				</Column>
-				<Column>
-					<TimePicker labelText="Van" bind:value={startTime} required />
-				</Column>
-				<Column>
-					<TimePicker labelText="Tot" bind:value={endTime} required />
-				</Column>
-			</Row>
-		</Grid>
-	</Form>
+	<div class="modal">
+		<Form>
+			<Grid>
+				<Row padding>
+					<Column>
+						<TextInput
+							id="locatie"
+							labelText="Locatie"
+							placeholder="Locatie"
+							bind:value={location}
+							required
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<Column>
+						<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
+							<DatePickerInput labelText="Datum" placeholder="dd/mm/yyyy" />
+						</DatePicker>
+					</Column>
+					<Column>
+						<TimePicker labelText="Van" bind:value={startTime} required />
+					</Column>
+					<Column>
+						<TimePicker labelText="Tot" bind:value={endTime} required />
+					</Column>
+				</Row>
+			</Grid>
+		</Form>
+	</div>
 </Modal>
 
 <Modal
@@ -206,3 +208,9 @@
 >
 	<p>Verwijder repetitie?</p>
 </Modal>
+
+<style>
+	.modal{
+		height: 500px;
+	}
+</style>

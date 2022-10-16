@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { rehearsalSong } from "$lib/types/domain/rehearsal"
+	import type { rehearsal, rehearsalSong } from "$lib/types/domain/rehearsal"
 	import type { song } from "$lib/types/domain/song"
 	import { Column, Grid, Row, StructuredList, StructuredListBody, StructuredListCell, StructuredListHead, StructuredListRow, TooltipDefinition } from "carbon-components-svelte"
 	import { SortAscending } from "carbon-icons-svelte"
 	import { get } from "svelte/store"
 
 
-	export let data: { rehearsalId: string, rehearsalSongs: rehearsalSong[], songs: song[], musicians: Map<string, [string, string][]> }
+	export let data: { rehearsal: rehearsal, rehearsalId: string, rehearsalSongs: rehearsalSong[], songs: song[], musicians: Map<string, [string, string][]> }
 </script>
 
 <Grid>
 	<Row padding>
-		<Column><h1>Repetities {data.rehearsalSongs[0].startTime.toDate().toDateString()}</h1></Column>
+		<Column><h1>Repetities {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
 	<StructuredList>
 		<StructuredListHead>

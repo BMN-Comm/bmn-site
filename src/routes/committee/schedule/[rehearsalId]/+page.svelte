@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { db } from "$lib/firebase/client/firebase"
-	import type { rehearsalSong } from "$lib/types/domain/rehearsal"
+	import type { rehearsal, rehearsalSong } from "$lib/types/domain/rehearsal"
 	import type { song } from "$lib/types/domain/song"
 	import { Button, Column, ComboBox, DatePicker, DatePickerInput, Dropdown, Form, Grid, Modal, Row, StructuredList, StructuredListBody, StructuredListCell, StructuredListHead, StructuredListRow, TextInput, TimePicker, TooltipDefinition } from "carbon-components-svelte"
 	import type { DropdownItem } from "carbon-components-svelte/types/Dropdown/Dropdown.svelte"
@@ -9,7 +9,7 @@
 	import { get } from "svelte/store"
 
 
-	export let data: { rehearsalId: string, rehearsalSongs: rehearsalSong[], songs: song[], musicians: Map<string, [string, string][]>, editionSongs: song[]}
+	export let data: { rehearsal: rehearsal, rehearsalId: string, rehearsalSongs: rehearsalSong[], songs: song[], musicians: {[songId: string]: [string, string][]}, editionSongs: song[]}
 
     let openModal = false
     let startTime: string
@@ -24,17 +24,16 @@
         
         let rehearsalSong: rehearsalSong
 
-        data.editionSongs.forEach(s => {
-            if (s.id == songId){
-                rehearsalSong = {
-                    song: doc(db, 'songs', s.id),
-                    
-                    // TODO: Geef de repetitie datum mee
-                    startTime: Timestamp.fromDate(new Date(2022, 9, 14, +startTime.split(':')[0], +startTime.split(':')[1])),
-                    endTime: Timestamp.fromDate(new Date(2022, 9, 14, +endTime.split(':')[0], +endTime.split(':')[1]))
-                }                
-            }
-        });
+		if (!data.editionSongs.some((s: song) => s.id == songId)) return
+
+		let rehearsalDay = data.rehearsal.startTime.toDate()
+
+		rehearsalSong = {
+			song: doc(db, 'songs', songId),
+			
+			startTime: Timestamp.fromDate(new Date(rehearsalDay.getFullYear(), rehearsalDay.getMonth(), rehearsalDay.getDate(), +startTime.split(':')[0], +startTime.split(':')[1])),
+			endTime: Timestamp.fromDate(new Date(rehearsalDay.getFullYear(), rehearsalDay.getMonth(), rehearsalDay.getDate(), +endTime.split(':')[0], +endTime.split(':')[1]))
+		}
 
         await setDoc(doc(collection(db, 'rehearsals', data.rehearsalId, 'songsToRehearse')), rehearsalSong!)
         
@@ -44,7 +43,7 @@
 
 <Grid>
 	<Row padding>
-		<Column><h1>Repetities {data.rehearsalId}</h1></Column>
+		<Column><h1>Repetities {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
     <Row>
         <Column>
@@ -70,7 +69,7 @@
                                             data.rehearsalSongs[i].endTime.toDate().getMinutes()).padStart(2, '0')}
                         </StructuredListCell>
                         <StructuredListCell>
-                            {#each [...data.musicians] as [key, value]}
+                            {#each Object.entries(data.musicians) as [key, value]}
                                 {#if key == song.id}
                                     {#each value as musician}
                                         {musician[0]} - {musician[1]}<br>

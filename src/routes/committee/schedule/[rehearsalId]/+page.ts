@@ -1,6 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
 import type { edition } from '$lib/types/domain/edition'
-import type { rehearsalSong } from '$lib/types/domain/rehearsal'
+import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
 import type { song } from '$lib/types/domain/song'
 import type { user } from '$lib/types/domain/user'
 import { DatePicker } from 'carbon-components-svelte'
@@ -16,6 +16,8 @@ type playsSong = {
 
 export const load: PageLoad = async ({ params }) => {
 
+	const rehearsal = (await getDoc(doc(db, 'rehearsals/', params.rehearsalId))).data() as rehearsal
+
 	// Get all the songs that need to be rehearsed on this day
 	const rehearsalSongsQuery = query(collection(db, 'rehearsals/' + params.rehearsalId + '/songsToRehearse'),
 						orderBy('startTime'))
@@ -25,8 +27,8 @@ export const load: PageLoad = async ({ params }) => {
 
 	let songs
 	
-	//						songId	participantName	instrumentName
-	let musicians = new Map<string, [string, 		string][]>()
+	//						 songId	   participantName	instrumentName
+	let musicians: {[songId: string]: [string, 			string][]} = {}
 
     if (rehearsalSongs.length > 0) {
 
@@ -65,7 +67,8 @@ export const load: PageLoad = async ({ params }) => {
 
 		// For each song, add the [participant, instrument] tuple to it's key in the map
 		for (let i = 0; i < playsInRefs.length; i++) {
-			let m = musicians.get(playsInRefs[i].song.id)
+			let sid = playsInRefs[i].song.id
+			let m = musicians[sid]
 			let p: [string, string][] = []
 
 			if (m != undefined) {
@@ -74,7 +77,7 @@ export const load: PageLoad = async ({ params }) => {
 			else {
 				p = [[namesMap.get(parents[i])!, playsInRefs[i].part]]
 			}
-			musicians.set(playsInRefs[i].song.id, p!)
+			musicians[sid] = p!
 		}
 	}
 
@@ -88,5 +91,5 @@ export const load: PageLoad = async ({ params }) => {
 		(doc) => ({id: doc.id, ...doc.data()} as song)
 	)
 
-	return { rehearsalId: params.rehearsalId, rehearsalSongs: rehearsalSongs, songs: songs, musicians: musicians, editionSongs: editionSongs}
+	return { rehearsal: rehearsal, rehearsalId: params.rehearsalId, rehearsalSongs: rehearsalSongs, songs: songs, musicians: musicians, editionSongs: editionSongs}
 }

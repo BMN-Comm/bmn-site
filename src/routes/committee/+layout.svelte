@@ -16,7 +16,6 @@
 		<SideNavLink text="Suggesties" href="/committee/suggestions" />
 		<SideNavDivider />
 		<SideNavLink text="Repetities" href="/committee/schedule" />
-		<SideNavLink text="Rooster" href="/committee/schedule" />
 		<SideNavLink text="Beschikbaarheid" href="/committee/availability" />
 	</SideNavItems>
 </SideNav>
