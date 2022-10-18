@@ -154,7 +154,6 @@
 	hasScrollingContent
 	hasForm
 	selectorPrimaryFocus="#locatie"
-	
 	on:submit={(e) => {
 		e.preventDefault()
 		addRehearsal()
@@ -211,7 +210,7 @@
 </Modal>
 
 <style>
-	.modal{
+	.modal {
 		height: 500px;
 	}
 </style>
