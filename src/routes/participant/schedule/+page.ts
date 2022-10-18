@@ -4,6 +4,7 @@ import { query, collection, getDocs, orderBy } from 'firebase/firestore'
 import type { rehearsal } from '$lib/types/domain/rehearsal'
 
 export const load: PageLoad = async () => {
+	// Maybe filter editions?
 	const rehearsalsQuery = query(collection(db, 'rehearsals'), orderBy('startTime')) //, where('startTime', '>=', Timestamp.now()))
 	const rehearsals = (await getDocs(rehearsalsQuery)).docs.map(
 		(doc) => ({ id: doc.id, ...doc.data() } as rehearsal)

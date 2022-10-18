@@ -62,6 +62,7 @@
 		const newRehearsal = doc(collection(db, 'rehearsals'))
 
 		let rehearsal = {
+			// TODO: Use current edition
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: start,
 			endTime: end,
