@@ -75,11 +75,13 @@ export const load: PageLoad = async ({ params }) => {
 			let m = musiciansForSongs[sid]
 			let p: { participantName: string; instrumentName: string }[] = []
 
+			// TODO: Rienk haal kringeltjes weg/ refactor :)
 			if (m != undefined) {
 				p = [...m, [namesMap[parents[i]]!, playsInRefs[i].part]]
 			} else {
 				p = [[namesMap[parents[i]]!, playsInRefs[i].part]]
 			}
+
 			musiciansForSongs[sid] = p!
 		}
 	}
@@ -99,7 +101,7 @@ export const load: PageLoad = async ({ params }) => {
 		rehearsalId: params.rehearsalId,
 		rehearsalSongs: rehearsalSongs,
 		songs: songs,
-		musicians: musicians,
+		musicians: musiciansForSongs,
 		editionSongs: editionSongs
 	}
 }

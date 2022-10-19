@@ -45,8 +45,9 @@ export const load: PageLoad = async ({ params }) => {
 		(doc) => ({ id: doc.id, ...doc.data() } as song)
 	)
 
-	//						 songId	   participantName	instrumentName
-	let musicians: { [songId: string]: [string, string][] } = {}
+	let musiciansForSongs: {
+		[songId: string]: { participantName: string; instrumentName: string }[]
+	} = {}
 
 	// Get the playsSongInEdition for all participants on this rehearsal day
 	const sRef = s.map((item) => doc(db, 'songs/' + item))
@@ -58,7 +59,7 @@ export const load: PageLoad = async ({ params }) => {
 	const parents = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
 
 	// Map user document id to user name
-	let namesMap: { [userId: string]: [userName: string] } = {}
+	let namesMap: { [userId: string]: { participantName: string } } = {}
 
 	// Get the participants documents
 	const participantQuery = query(collection(db, 'users'), where('__name__', 'in', parents))
@@ -69,15 +70,17 @@ export const load: PageLoad = async ({ params }) => {
 	// For each song, add the [participant, instrument] tuple to it's key in the map
 	for (let i = 0; i < playsInRefs.length; i++) {
 		let sid = playsInRefs[i].song.id
-		let m = musicians[sid]
-		let p: [userName: string, insturmentName: string][] = []
+		let m = musiciansForSongs[sid]
+		let p: { participantName: string; instrumentName: string }[] = []
 
+		// TODO: Rienk haal kringeltjes weg/ refactor :)
 		if (m != undefined) {
 			p = [...m, [namesMap[parents[i]]!, playsInRefs[i].part]]
 		} else {
 			p = [[namesMap[parents[i]]!, playsInRefs[i].part]]
 		}
-		musicians[sid] = p!
+
+		musiciansForSongs[sid] = p!
 	}
 
 	return {
@@ -85,6 +88,6 @@ export const load: PageLoad = async ({ params }) => {
 		rehearsalId: params.rehearsalId,
 		rehearsalSongs: rehearsalSongs,
 		songs: songs,
-		musicians: musicians
+		musicians: musiciansForSongs
 	}
 }
