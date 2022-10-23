@@ -1,6 +1,7 @@
 import type { Timestamp } from 'firebase/firestore'
 
 export type song = {
+	id: string,
 	name: string
 	artist: string
 	length: string

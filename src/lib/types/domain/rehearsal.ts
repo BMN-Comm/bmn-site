@@ -1,11 +1,21 @@
+import type { DocumentReference, Timestamp } from 'firebase/firestore'
+
 export type rehearsal = {
-	edition: string // Reference to edition
-	startTime: string
-	endTime: string
+	id: string
+	edition: DocumentReference // Reference to edition
+	startTime: Timestamp
+	endTime: Timestamp
 	location: string
 	songsToRehearse: {
-		song: string // Reference to song
-		startTime: string
-		endTime: string
+		song: DocumentReference // Reference to song
+		startTime: Timestamp
+		endTime: Timestamp
 	}
+}
+
+export type rehearsalSong = {
+	id: string,
+	startTime: Timestamp,
+	endTime: Timestamp,
+	song: DocumentReference
 }
