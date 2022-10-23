@@ -6,16 +6,15 @@
 	// Importing carousel in a tragic way because the
 	// author forgot that typescript is superior...
 	// He forgor 💀
-	/**
-	 * @type {any}
-	 */
+
+	/** @type {any} **/
 	let Carousel
 	onMount(async () => {
 		const module = await import('svelte-carousel')
 		Carousel = module.default
 	})
 
-	// Voeg hier carousel foto's toe
+	// Add carousel photos here
 	const carouselPhotos = ['foto1.jpg', 'foto2.jpg', 'foto3.jpg']
 </script>
 
