@@ -38,6 +38,7 @@
 	"type": "module",
 	"dependencies": {
 		"carbon-icons-svelte": "^11.1.0",
+		"svelte-carousel": "^1.0.20",
 		"firebase": "9.7"
 	}
 }
