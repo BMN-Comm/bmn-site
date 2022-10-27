@@ -11,7 +11,7 @@
 
 <div class="header-wrapper">
 	<Header bind:isSideNavOpen={$open}>
-		<img src="BMN2023.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
+		<img src="/BMN2023.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
 			<HeaderNavItem href="/" text="Info" />
