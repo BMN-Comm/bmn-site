@@ -6,3 +6,7 @@ node_modules
 .env
 .env.*
 !.env.example
+# This is where the static hosting info is deployed
+/public
+hosting.*.cache
+

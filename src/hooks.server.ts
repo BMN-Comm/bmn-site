@@ -7,7 +7,7 @@ import { decodeToken } from '$lib/firebase/server/firebase'
 export const handle: Handle = async ({ event, resolve }) => {
 	// See if an authentication cookie is set, then try to decode it.
 	const cookies = cookie.parse(event.request.headers.get('cookie') || '')
-	const decodedToken = cookies.user && (await decodeToken(JSON.parse(cookies.user).token))
+	const decodedToken = cookies.__session && (await decodeToken(JSON.parse(cookies.__session).token))
 	event.locals.decodedToken = decodedToken
 
 	// Make sure that only users logged in with bmn@a-eskwadraat.nl are allowed to access the admin portal

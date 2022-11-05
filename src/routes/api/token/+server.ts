@@ -13,7 +13,7 @@ export const POST: RequestHandler = async (event) => {
 	const response = new Response('', {
 		headers: {
 			'set-cookie': cookie.serialize(
-				'user',
+				'__session',
 				JSON.stringify(
 					decodedToken && user
 						? {
