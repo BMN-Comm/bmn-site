@@ -2,23 +2,10 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth, signInWithEmailAndPassword, signOut as fbSignOut, type User } from 'firebase/auth'
 import { firebaseConfig } from '$lib/firebase/client/firbaseConfig'
-import { browser } from '$app/environment'
 import { invalidateAll } from '$app/navigation'
 
 const app = initializeApp(firebaseConfig)
 const firebaseAuth = getAuth(app)
-
-firebaseAuth.onAuthStateChanged(async (user) => {
-	if (browser) {
-		if (user) {
-			const token = await user.getIdToken()
-			await setToken(token, user)
-		} else {
-			await setToken('')
-		}
-		invalidateAll()
-	}
-})
 
 /**
  * Set the authentication token in the cookies by utilizing the api
@@ -41,12 +28,17 @@ async function setToken(token: string, user?: User) {
  * @param password The password of the user
  */
 async function signIn(email: string, password: string) {
-	await signInWithEmailAndPassword(firebaseAuth, email, password)
+	const user = (await signInWithEmailAndPassword(firebaseAuth, email, password)).user
+	const token = await user.getIdToken()
+	await setToken(token, user)
+	invalidateAll()
 }
 
 /** Sign out of firebase */
 async function signOut() {
 	await fbSignOut(firebaseAuth)
+	await setToken('')
+	invalidateAll()
 }
 
 export const auth = {
