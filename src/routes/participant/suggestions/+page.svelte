@@ -1,128 +1,151 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { song } from '$lib/types/domain/song'
-	import { Grid, Row, Column, TextInput, Button, Form, TextArea, ToastNotification } from 'carbon-components-svelte'
-	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import { page } from '$app/stores'
+	import { isValidUrl } from '$lib/util/urlValidation'
+	import {
+		Grid,
+		Row,
+		Column,
+		TextInput,
+		Button,
+		Form,
+		TextArea,
+		ToastNotification
+	} from 'carbon-components-svelte'
+	import { collection, doc, DocumentReference, setDoc, Timestamp } from 'firebase/firestore'
 
+	let title: string
+	let artist: string
+	let genre: string
+	let link: string
+	let remark: string
+	let length: string
 
-    let title: string
-    let artist: string
-    let genre: string
-    let link: string
-    let note: string
-    let validLink: boolean = true
+	$: validLink = true
 
-    export let toasts: string[] = []
+	export let toasts: string[] = []
 
-    async function AddSuggestion() { // TODO: Show error if failed
+	async function AddSuggestion() {
+		// TODO: Show error if failed
+		if (!isValidUrl(link)) {
+			console.log('invalid')
+			validLink = false
+			return
+		}
 
-        if (!isValidUrl(link)) {
-            validLink = false
-            return
-        }
+		let song = {
+			name: title,
+			artist,
+			length,
+			link,
+			genre,
+			remark,
+			suggestionDate: Timestamp.now(),
+			user: doc(db, 'users', $page.data.user!.databaseId)
+		}
 
-        let song: song = {
-            name: title,
-            artist,
-            length: "0", // TODO: Maybe do something with this
-            link,
-            genre,
-            note,
-            suggestionDate: Timestamp.now(),
-            user: "Test" // TODO: Link current user
-        }
+		const newSong = doc(collection(db, 'songs'))
 
-        const newSong = doc(collection(db, "songs"))
+		toasts.push(title)
+		toasts = toasts
 
-        toasts.push(title)
-        toasts = toasts
+		await setDoc(newSong, song)
 
-        await setDoc(newSong, song)
-
-        title=""
-        artist=""
-        genre=""
-        link=""
-        note=""
-
-        validLink = true
-    }
-
-    const isValidUrl = (urlString: string) => {
-        var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
-	    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
-	    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
-	    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
-	    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
-	    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
-	  return !!urlPattern.test(urlString);
-    }
-
+		title = ''
+		artist = ''
+		genre = ''
+		link = ''
+		remark = ''
+		length = ''
+		validLink = true
+	}
 </script>
 
-{#each toasts as toast, i} <!-- TODO: Toasts are badly implemented -->
-    <ToastNotification
-        lowContrast
-        timeout={5000}
-        kind="success"
-        title="Success"
-        subtitle="Nummer toegevoegd:"
-        caption={toast}
-        on:close={(e) =>{
-            toasts = toasts.splice(i, 1)
-        }}
-    />
+{#each toasts as toast, i}
+	<!-- TODO: Toasts are badly implemented -->
+	<ToastNotification
+		lowContrast
+		timeout={5000}
+		kind="success"
+		title="Success"
+		subtitle="Nummer toegevoegd:"
+		caption={toast}
+		on:close={(e) => {
+			toasts = toasts.splice(i, 1)
+		}}
+	/>
 {/each}
 
-<Form on:submit={(e) => {
-    e.preventDefault()
-    AddSuggestion()
-    
-    }}>
-    <Grid padding> <!-- TODO: scuffed on mobile -->
-        <Row>
-            <Column><h1>Suggestie toevoegen</h1></Column>
-        </Row>
-        <Row>
-            <Column>
-                <TextInput bind:value={title} labelText="Titel*" placeholder="Voer titel in" required/>
-            </Column>
-            <Column>
-                <TextInput bind:value={artist} labelText="Artiest*" placeholder="Voer artiest in" required/>
-            </Column>
-            <Column>
-                <TextInput bind:value={genre} labelText="Genre*" placeholder="Voer genre in" required/>
-            </Column>
-            <Column>
-                {#if validLink}
-                    <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required/>
-                {:else if isValidUrl(link)}
-                    <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required autofocus/>
-                {:else}
-                    <TextInput bind:value={link} labelText="Link*" placeholder="Voer link in" required invalid invalidText="Voer een geldige link in"/>
-                {/if}
-            </Column>
-        </Row>
-        <Row>
-            <Column>
-                <TextArea bind:value={note} labelText="Opmerkingen" placeholder="Ruimte voor opmerkingen" maxCount={255}/>
-            </Column>
-        </Row>
-        <Row>
-            <Column>
-                * is vereist
-            </Column>
-        </Row>
-        <Row>
-            <Column>
-                <Button type="submit">Insturen</Button>
-            </Column>
-        </Row>
-    </Grid>
+<Form
+	on:submit={(e) => {
+		e.preventDefault()
+		AddSuggestion()
+	}}
+>
+	<Grid padding>
+		<Row>
+			<Column><h1>Suggestie toevoegen</h1></Column>
+		</Row>
+		<Row>
+			<Column sm={4} md={8} lg={5}>
+				<TextInput bind:value={title} labelText="Titel*" placeholder="Voer titel in" required />
+			</Column>
+			<Column sm={4} md={8} lg={6}>
+				<TextInput
+					bind:value={artist}
+					labelText="Artiest*"
+					placeholder="Voer artiest in"
+					required
+				/>
+			</Column>
+			<Column sm={4} md={8} lg={5}>
+				<TextInput bind:value={genre} labelText="Genre*" placeholder="Voer genre in" required />
+			</Column>
+		</Row>
+		<Row>
+			<Column sm={4} md={4} lg={10}>
+				<TextInput
+					bind:value={link}
+					labelText="Link*"
+					placeholder="Voer link in"
+					required
+					invalid={!validLink}
+					invalidText={validLink ? undefined : 'Enter a valid link'}
+				/>
+			</Column>
+			<Column sm={4} md={4} lg={6}>
+				<TextInput
+					bind:value={length}
+					labelText="Length (mm:ss)*"
+					placeholder="Enter the length of the song"
+					required
+					pattern="[0-9][0-9]:[0-9][0-9]"
+				/>
+			</Column>
+		</Row>
+		<Row>
+			<Column>
+				<TextArea
+					bind:value={remark}
+					labelText="Remarks"
+					placeholder="Room for remarks"
+					maxCount={255}
+				/>
+			</Column>
+		</Row>
+		<Row>
+			<Column>* is required</Column>
+		</Row>
+		<Row>
+			<Column>
+				<Button type="submit">submit</Button>
+			</Column>
+		</Row>
+	</Grid>
 </Form>
 
 <style>
-    :global(.textinput-column) {
-        max-width: 300px;
-    }
+	:global(.textinput-column) {
+		max-width: 300px;
+	}
 </style>
