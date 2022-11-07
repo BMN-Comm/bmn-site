@@ -84,7 +84,7 @@
 >
 	<Grid padding>
 		<Row>
-			<Column><h1>Suggestie toevoegen</h1></Column>
+			<Column><h1>Add a suggestion</h1></Column>
 		</Row>
 		<Row>
 			<Column sm={4} md={8} lg={5}>

@@ -14,5 +14,5 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 			user: { ...locals.session.user, databaseId: dbUser.id, name: dbUser.data().name }
 		}
 	}
-	return {}
+	return { user: undefined }
 }
