@@ -1,5 +1,7 @@
+import { PUBLIC_FIREBASE_CLIENT_API_KEY } from '$env/static/public'
+
 export const firebaseConfig = {
-	apiKey: 'AIzaSyA4X7YCT7m7hFTyLJSPcEc_nZJOQ-9CTyE',
+	apiKey: PUBLIC_FIREBASE_CLIENT_API_KEY ?? process.env.PUBLIC_FIREBASE_CLIENT_API_KEY,
 	authDomain: 'bmn-site-9c595.firebaseapp.com',
 	projectId: 'bmn-site-9c595',
 	storageBucket: 'bmn-site-9c595.appspot.com',
