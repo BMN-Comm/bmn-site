@@ -1,13 +1,13 @@
-import type { Timestamp } from 'firebase/firestore'
+import type { Timestamp, DocumentReference } from 'firebase/firestore'
 
 export type song = {
-	id: string,
+	id: string
 	name: string
 	artist: string
 	length: string
 	link: string
 	genre: string
-	note: string
+	remark: string
 	suggestionDate: Timestamp
-	user: string // Reference to user path
+	user: DocumentReference // Reference to user path
 }

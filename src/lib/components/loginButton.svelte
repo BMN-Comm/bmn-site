@@ -30,7 +30,7 @@
 	import { page } from '$app/stores'
 </script>
 
-<!-- The login component which is either loading, a login button, or a signout dropdown -->
+<!-- The login component which is a login button, or a signout dropdown -->
 <div class="login-wrapper">
 	{#if $page.data.user}
 		<SignoutForUser user={$page.data.user} />

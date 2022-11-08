@@ -15,8 +15,11 @@
 	on:click={() => {
 		expanded = !expanded
 	}}
+	on:keyup={() => {
+		expanded = !expanded
+	}}
 >
-	<span class="email-span">{user?.email}</span>
+	<span class="email-span">{user?.name ?? user?.email}</span>
 
 	{#if expanded}
 		<ChevronUp />
