@@ -39,6 +39,16 @@ export const load: PageLoad = async ({ params }) => {
 	// Get the document ids of the songs
 	const s = rehearsalSongs.map((rehearsalSong) => rehearsalSong.song.id)
 
+	if (s.length < 1) {
+		return {
+			rehearsal: rehearsal,
+			rehearsalId: params.rehearsalId,
+			rehearsalSongs: rehearsalSongs,
+			songs: [],
+			musicians: []
+		}
+	}
+
 	// Get the song objects from the rehearsal songs
 	const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', s))
 	const songs = (await getDocs(songsQuery)).docs.map(

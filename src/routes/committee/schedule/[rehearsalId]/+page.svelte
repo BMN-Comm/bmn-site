@@ -2,6 +2,7 @@
 	import { db } from '$lib/firebase/client/firebase'
 	import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
+	import { newSchedule } from '$lib/util/webhook'
 	import {
 		Button,
 		Column,
@@ -23,7 +24,7 @@
 		TooltipDefinition
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { Add, ShoppingCartPlus, SortAscending } from 'carbon-icons-svelte'
+	import { Add, Save, ShoppingCartPlus, SortAscending } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { get } from 'svelte/store'
 
@@ -93,6 +94,13 @@
 				icon={Add}
 				on:click={() => {
 					openModal = true
+				}}
+			/>
+			<Button
+				iconDescription="Save schedule"
+				icon={Save}
+				on:click={() => {
+					newSchedule(data.rehearsal)
 				}}
 			/>
 		</Column>

@@ -20,6 +20,7 @@
 	import { Add, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
+	import { newRehearsalPost } from '$lib/util/webhook'
 
 	export let data: { rehearsals: rehearsal[] }
 
@@ -59,10 +60,13 @@
 		start = Timestamp.fromDate(sDate)
 		end = Timestamp.fromDate(eDate)
 
+		console.log('1')
 		const newRehearsal = doc(collection(db, 'rehearsals'))
+		console.log('2')
 
 		let rehearsal = {
 			// TODO: Use current edition
+			id: newRehearsal.id,
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: start,
 			endTime: end,
@@ -70,6 +74,7 @@
 		}
 
 		await setDoc(newRehearsal, rehearsal)
+		newRehearsalPost(rehearsal)
 	}
 
 	function removeRehearsal() {
