@@ -4,7 +4,7 @@ import { query, collection, getDocs, orderBy } from 'firebase/firestore'
 import type { rehearsal } from '$lib/types/domain/rehearsal'
 import type { availability } from '$lib/types/domain/availability'
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ parent }) => {
 	// Maybe filter editions?
 	const rehearsalsQuery = query(collection(db, 'rehearsals'), orderBy('startTime')) //, where('startTime', '>=', Timestamp.now()))
 	const rehearsals = (await getDocs(rehearsalsQuery)).docs.map(
@@ -13,7 +13,7 @@ export const load: PageLoad = async () => {
 
 	// TODO: use current logged in user
 	const availabilityQuery = query(
-		collection(db, 'users/n8omDekFPd3oBpcTzRZq/availability'),
+		collection(db, 'users/' + (await parent()).user.databaseId + '/availability'),
 		orderBy('startTime')
 	)
 	const availability = (await getDocs(availabilityQuery)).docs.map(

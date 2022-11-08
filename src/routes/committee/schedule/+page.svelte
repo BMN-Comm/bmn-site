@@ -17,7 +17,7 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
-	import { Add, Launch, MusicRemove } from 'carbon-icons-svelte'
+	import { Add, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 
@@ -127,6 +127,12 @@
 							iconDescription="Open Repetitie"
 							icon={Launch}
 							href={`/committee/schedule/${rehearsal.id}`}
+						/>
+						<Button
+							size="small"
+							iconDescription="Show availability"
+							icon={Person}
+							href={`/committee/schedule/availability/${rehearsal.id}`}
 						/>
 						<Button
 							kind="danger-tertiary"
