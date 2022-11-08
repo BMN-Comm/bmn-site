@@ -2,6 +2,7 @@ import type { PageLoad } from './$types'
 import { db } from '$lib/firebase/client/firebase'
 import { query, collection, getDocs, orderBy } from 'firebase/firestore'
 import type { rehearsal } from '$lib/types/domain/rehearsal'
+import type { availability } from '$lib/types/domain/availability'
 
 export const load: PageLoad = async () => {
 	// Maybe filter editions?
@@ -10,5 +11,14 @@ export const load: PageLoad = async () => {
 		(doc) => ({ id: doc.id, ...doc.data() } as rehearsal)
 	)
 
-	return { rehearsals }
+	// TODO: use current logged in user
+	const availabilityQuery = query(
+		collection(db, 'users/n8omDekFPd3oBpcTzRZq/availability'),
+		orderBy('startTime')
+	)
+	const availability = (await getDocs(availabilityQuery)).docs.map(
+		(doc) => ({ id: doc.id, ...doc.data() } as availability)
+	)
+
+	return { rehearsals, availability }
 }

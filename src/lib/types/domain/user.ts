@@ -8,7 +8,7 @@ export type user = {
 		edition: string // Reference to edition
 		part: string
 	}[]
-	availibility: {
+	availability: {
 		rehearsal: string // Reference to rehearsal
 		startTime: string
 		endTime: string

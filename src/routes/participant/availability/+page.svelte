@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
+	import type { availability } from '$lib/types/domain/availability'
 	import {
 		Column,
 		Grid,
@@ -12,7 +13,12 @@
 	} from 'carbon-components-svelte'
 	import { CheckmarkOutline, Launch, MisuseOutline } from 'carbon-icons-svelte'
 
-	export let data: { rehearsals: rehearsal[] }
+	export let data: { rehearsals: rehearsal[]; availability: availability[] }
+
+	let rehearsalAvailability = Object.assign(
+		{},
+		...data.availability.map((x) => ({ [x.rehearsal.id]: x.available }))
+	)
 </script>
 
 <Grid>
@@ -46,9 +52,11 @@
 						{rehearsal.location}
 					</StructuredListCell>
 					<StructuredListCell>
-						<!--TODO: Base this on filled in status-->
-						<div class="checkmark"><CheckmarkOutline /></div>
-						<div class="cross"><MisuseOutline /></div>
+						{#if rehearsal.id in rehearsalAvailability}
+							<div class="checkmark"><CheckmarkOutline /></div>
+						{:else}
+							<div class="cross"><MisuseOutline /></div>
+						{/if}
 					</StructuredListCell>
 					<StructuredListCell>
 						<a href={`/participant/availability/${rehearsal.id}`}><Launch /></a>
