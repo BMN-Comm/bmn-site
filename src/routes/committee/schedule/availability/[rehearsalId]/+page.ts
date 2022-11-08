@@ -24,10 +24,14 @@ export const load: PageLoad = async ({ params }) => {
 
 	const availabilitiesDict = Object.assign(
 		{},
-		...(await getDocs(availabilityQuery)).docs.map((document) => ({
-			// I mean deze heeft gewoon altijd een parent dus idk met een ? zijn er alsnog kringels
-			[document.ref.parent.parent.id]: document.data() as availability
-		}))
+		...(await getDocs(availabilityQuery)).docs.map((document) => {
+			if (document.ref.parent.parent != null) {
+				return {
+					// I mean deze heeft gewoon altijd een parent dus idk met een ? zijn er alsnog kringels
+					[document.ref.parent.parent.id]: document.data() as availability
+				}
+			}
+		})
 	)
 	return { users: users, availabilities: availabilitiesDict }
 }
