@@ -27,11 +27,10 @@ export const load: PageLoad = async ({ params }) => {
 		...(await getDocs(availabilityQuery)).docs.map((document) => {
 			if (document.ref.parent.parent != null) {
 				return {
-					// I mean deze heeft gewoon altijd een parent dus idk met een ? zijn er alsnog kringels
 					[document.ref.parent.parent.id]: document.data() as availability
 				}
 			}
 		})
 	)
-	return { users: users, availabilities: availabilitiesDict }
+	return { users: users, availabilities: availabilitiesDict, rehearsal: rehearsal }
 }

@@ -11,7 +11,6 @@ export const load: PageLoad = async ({ parent }) => {
 		(doc) => ({ id: doc.id, ...doc.data() } as rehearsal)
 	)
 
-	// TODO: use current logged in user
 	const availabilityQuery = query(
 		collection(db, 'users/' + (await parent()).user.databaseId + '/availability'),
 		orderBy('startTime')
