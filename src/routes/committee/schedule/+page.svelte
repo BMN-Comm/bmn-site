@@ -77,7 +77,6 @@
 		data = data
 
 		const docRef = doc(db, 'songs', data.rehearsals[selectedRehearsal].id)
-		console.log(data.rehearsals[selectedRehearsal].startTime)
 		deleteDoc(docRef)
 	}
 </script>

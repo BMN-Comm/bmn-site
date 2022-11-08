@@ -29,7 +29,7 @@
 
 	/** Create a request to add or delete claims, send it, and reload if it succeeds. */
 	async function SendClaimRequest(data: { id: string; claim: string }, method: 'POST' | 'DELETE') {
-		const response = await fetch('api/admin-portal/claims', {
+		const response = await fetch('/api/admin-portal/claims', {
 			method,
 			headers: {
 				'Content-Type': 'application/json'
