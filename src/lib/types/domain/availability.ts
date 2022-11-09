@@ -9,5 +9,5 @@ export type newAvailability = {
 	startTime: Timestamp
 	endTime: Timestamp
 	rehearsal: DocumentReference
-	reason: string
+	reason?: string
 }

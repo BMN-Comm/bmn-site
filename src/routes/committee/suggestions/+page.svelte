@@ -11,14 +11,7 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import type { song } from '$lib/types/domain/song'
-	import {
-		Bat,
-		Chat,
-		Favorite,
-		MusicRemove,
-		PlayFilledAlt,
-		SortAscending
-	} from 'carbon-icons-svelte'
+	import { Bat, Chat, Favorite, MusicRemove, PlayFilledAlt } from 'carbon-icons-svelte'
 	import { deleteDoc, doc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { isValidUrl } from '$lib/util/urlValidation'
@@ -82,11 +75,12 @@
 					/>
 				</StructuredListCell>
 				<StructuredListCell>
-					{#if song.user.id == 'KcRkWMQUEClLEeiccSD5'}
-						<Button kind="danger-tertiary" size="small" iconDescription="Like" icon={Bat} />
-					{:else}
-						<Button kind="danger-tertiary" size="small" iconDescription="Like" icon={Favorite} />
-					{/if}
+					<Button
+						kind="danger-tertiary"
+						size="small"
+						iconDescription="Like"
+						icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
+					/>
 				</StructuredListCell>
 				<StructuredListCell>
 					<Button

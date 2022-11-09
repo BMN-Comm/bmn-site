@@ -19,19 +19,10 @@ export const load: PageLoad = async ({ params, parent }) => {
 	if (availabilityDocs.length > 0) {
 		availability = availabilityDocs[0].data() as availability
 		availability.id = availabilityDocs[0].id
-	} else {
-		availability = {
-			id: '',
-			available: true,
-			startTime: rehearsal.startTime,
-			endTime: rehearsal.endTime,
-			rehearsal: rehearsalRef,
-			reason: ''
-		}
 	}
 
 	return {
 		rehearsal: rehearsal,
-		availability: availability
+		availability: availability!
 	}
 }

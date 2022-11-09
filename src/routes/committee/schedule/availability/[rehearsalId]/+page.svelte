@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { newAvailability } from '$lib/types/domain/availability'
+	import type { availability } from '$lib/types/domain/availability'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
 	import type { user } from '$lib/types/domain/user'
 	import { getTimeString } from '$lib/util/timeString'
@@ -16,7 +16,7 @@
 
 	export let data: {
 		users: { [id: string]: user }
-		availabilities: { [id: string]: newAvailability }
+		availabilities: { [id: string]: availability }
 		rehearsal: rehearsal
 	}
 	let reasonText: string = ''
@@ -46,14 +46,15 @@
 						{:else}
 							Unavailable
 						{/if}
-						{#if availability.reason !== null && availability.reason.length > 1}
+						{#if availability.reason !== undefined && availability.reason.length > 1}
 							<Button
 								kind="ghost"
 								size="small"
 								iconDescription="Remarks"
 								icon={Chat}
 								on:click={() => {
-									reasonText = availability.reason
+									// Ja deze check is dubbel, maar nu heb k geen kringeltjes :)
+									if (availability.reason !== undefined) reasonText = availability.reason
 									openReason = true
 								}}
 							/>

@@ -1,4 +1,4 @@
-import type { availability } from './availability'
+import type { availability } from '$lib/types/domain/availability'
 
 export type user = {
 	id: string
@@ -10,5 +10,5 @@ export type user = {
 		edition: string // Reference to edition
 		part: string
 	}[]
-	availability: availability
+	availability: availability[]
 }
