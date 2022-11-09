@@ -61,9 +61,7 @@
 		start = Timestamp.fromDate(sDate)
 		end = Timestamp.fromDate(eDate)
 
-		console.log('1')
 		const newRehearsal = doc(collection(db, 'rehearsals'))
-		console.log('2')
 
 		let rehearsal = {
 			// TODO: Use current edition
