@@ -23,6 +23,6 @@ export const load: PageLoad = async ({ params, parent }) => {
 
 	return {
 		rehearsal: rehearsal,
-		availability: availability!
+		availability
 	}
 }
