@@ -1,3 +1,5 @@
+import type { availability } from './availability'
+
 export type user = {
 	id: string
 	email: string
@@ -8,11 +10,5 @@ export type user = {
 		edition: string // Reference to edition
 		part: string
 	}[]
-	availability: {
-		rehearsal: string // Reference to rehearsal
-		startTime: string
-		endTime: string
-		available: boolean
-		reason?: string
-	}[]
+	availability: availability
 }

@@ -12,6 +12,7 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { CheckmarkOutline, Launch, MisuseOutline } from 'carbon-icons-svelte'
+	import { getTimeString } from '$lib/util/timeString'
 
 	export let data: { rehearsals: rehearsal[]; availability: availability[] }
 
@@ -41,12 +42,8 @@
 						{rehearsal.startTime.toDate().toDateString()}
 					</StructuredListCell>
 					<StructuredListCell>
-						{rehearsal.startTime.toDate().getHours()}:{String(
-							rehearsal.startTime.toDate().getMinutes()
-						).padStart(2, '0')} -
-						{rehearsal.endTime.toDate().getHours()}:{String(
-							rehearsal.endTime.toDate().getMinutes()
-						).padStart(2, '0')}
+						{getTimeString(rehearsal.startTime)} -
+						{getTimeString(rehearsal.endTime)}
 					</StructuredListCell>
 					<StructuredListCell>
 						{rehearsal.location}

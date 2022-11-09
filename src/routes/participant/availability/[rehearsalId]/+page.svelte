@@ -14,22 +14,14 @@
 	import { Save } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp, updateDoc } from 'firebase/firestore'
 	import { page } from '$app/stores'
+	import { getTimeString } from '$lib/util/timeString'
 
 	export let data: { rehearsal: rehearsal; availability: availability }
 
 	let available: boolean = true
 	let remarksText: string
-	let startTime: string =
-		'' +
-		data.availability.startTime.toDate().getHours() +
-		':' +
-		String(data.availability.startTime.toDate().getMinutes()).padStart(2, '0')
-
-	let endTime: string =
-		'' +
-		data.availability.endTime.toDate().getHours() +
-		':' +
-		String(data.availability.endTime.toDate().getMinutes()).padStart(2, '0')
+	let startTime: string = getTimeString(data.availability.startTime)
+	let endTime: string = getTimeString(data.availability.endTime)
 
 	if (data.availability.reason != null) {
 		remarksText = data.availability.reason

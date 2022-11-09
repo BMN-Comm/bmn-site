@@ -1,7 +1,8 @@
 <script lang="ts">
-	import type { availability } from '$lib/types/domain/availability'
+	import type { newAvailability } from '$lib/types/domain/availability'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
 	import type { user } from '$lib/types/domain/user'
+	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Button,
 		Grid,
@@ -15,7 +16,7 @@
 
 	export let data: {
 		users: { [id: string]: user }
-		availabilities: { [id: string]: availability }
+		availabilities: { [id: string]: newAvailability }
 		rehearsal: rehearsal
 	}
 	let reasonText: string = ''
@@ -38,24 +39,21 @@
 				</StructuredListCell>
 				<StructuredListCell>
 					{#if id in data.availabilities}
-						{#if data.availabilities[id].available}
-							{data.availabilities[id].startTime.toDate().getHours()}:{String(
-								data.availabilities[id].startTime.toDate().getMinutes()
-							).padStart(2, '0')} -
-							{data.availabilities[id].endTime.toDate().getHours()}:{String(
-								data.availabilities[id].endTime.toDate().getMinutes()
-							).padStart(2, '0')}
+						{@const availability = data.availabilities[id]}
+						{#if availability.available}
+							{getTimeString(availability.startTime)} -
+							{getTimeString(availability.endTime)}
 						{:else}
 							Unavailable
 						{/if}
-						{#if data.availabilities[id].reason !== null && data.availabilities[id].reason.length > 1}
+						{#if availability.reason !== null && availability.reason.length > 1}
 							<Button
 								kind="ghost"
 								size="small"
 								iconDescription="Remarks"
 								icon={Chat}
 								on:click={() => {
-									reasonText = data.availabilities[id].reason
+									reasonText = availability.reason
 									openReason = true
 								}}
 							/>
