@@ -1,17 +1,17 @@
-import { db } from '$lib/firebase/client/firebase'
 import admin from 'firebase-admin'
+import type { App } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
 import type { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
-import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { firebaseAdminConfig } from './firebaseConfig'
 
 /** Initialize the firebase admin sdk with the admin config */
 function initializeFirebase() {
 	if (!admin.apps.length) {
-		admin.initializeApp({
+		return admin.initializeApp({
 			credential: admin.credential.cert(firebaseAdminConfig)
 			// databaseURL: `https://${firebaseAdminConfig.project_id}.firebaseio.com`
 		})
-	}
+	} else return admin.apps[0] as App
 }
 
 /** Verify and decode the given token */
@@ -41,16 +41,14 @@ export async function getAuthUsers() {
 export async function createUser(name: string, password: string, email: string) {
 	initializeFirebase()
 	await admin.auth().createUser({ email, password })
-	const newUserDoc = doc(collection(db, 'users'))
-	await setDoc(newUserDoc, { name, email })
+	await db.collection('users').doc().create({ name, email })
 }
 
 /** Remove a user in the auth system, and the database */
 export async function removeUser(dbUid: string, authUid: string) {
 	initializeFirebase()
 	await admin.auth().deleteUser(authUid)
-	const docRef = doc(db, 'users', dbUid)
-	deleteDoc(docRef)
+	db.doc(dbUid).delete()
 }
 
 /** Set for the given user id, the value of the given claim to true */
@@ -70,3 +68,5 @@ async function updateClaim(uid: string, claim: string, value: true | undefined) 
 	currentClaims[claim] = value
 	return await admin.auth().setCustomUserClaims(uid, currentClaims)
 }
+
+export const db = getFirestore(initializeFirebase())

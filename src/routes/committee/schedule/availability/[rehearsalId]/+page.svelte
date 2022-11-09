@@ -2,6 +2,7 @@
 	import type { availability } from '$lib/types/domain/availability'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
 	import type { user } from '$lib/types/domain/user'
+	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Button,
 		Grid,
@@ -38,24 +39,22 @@
 				</StructuredListCell>
 				<StructuredListCell>
 					{#if id in data.availabilities}
-						{#if data.availabilities[id].available}
-							{data.availabilities[id].startTime.toDate().getHours()}:{String(
-								data.availabilities[id].startTime.toDate().getMinutes()
-							).padStart(2, '0')} -
-							{data.availabilities[id].endTime.toDate().getHours()}:{String(
-								data.availabilities[id].endTime.toDate().getMinutes()
-							).padStart(2, '0')}
+						{@const availability = data.availabilities[id]}
+						{#if availability.available}
+							{getTimeString(availability.startTime)} -
+							{getTimeString(availability.endTime)}
 						{:else}
 							Unavailable
 						{/if}
-						{#if data.availabilities[id].reason !== null && data.availabilities[id].reason.length > 1}
+						{#if availability.reason !== undefined && availability.reason.length > 1}
 							<Button
 								kind="ghost"
 								size="small"
 								iconDescription="Remarks"
 								icon={Chat}
 								on:click={() => {
-									reasonText = data.availabilities[id].reason
+									// Ja deze check is dubbel, maar nu heb k geen kringeltjes :)
+									if (availability.reason !== undefined) reasonText = availability.reason
 									openReason = true
 								}}
 							/>

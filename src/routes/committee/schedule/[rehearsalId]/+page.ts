@@ -1,15 +1,12 @@
-import { db } from '$lib/firebase/client/firebase'
+import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import type { edition } from '$lib/types/domain/edition'
 import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
 import type { song } from '$lib/types/domain/song'
-import type { user } from '$lib/types/domain/user'
-import { DatePicker } from 'carbon-components-svelte'
 import {
 	query,
 	collection,
 	orderBy,
 	getDocs,
-	Timestamp,
 	DocumentReference,
 	doc,
 	getDoc,
@@ -17,6 +14,8 @@ import {
 	where
 } from 'firebase/firestore'
 import type { PageLoad } from './$types'
+
+export const ssr = false
 
 type playsSong = {
 	id: string
@@ -26,6 +25,8 @@ type playsSong = {
 }
 
 export const load: PageLoad = async ({ params }) => {
+	await verifyUserLoggedIn()
+
 	const rehearsal = (await getDoc(doc(db, 'rehearsals/', params.rehearsalId))).data() as rehearsal
 
 	// Get all the songs that need to be rehearsed on this day

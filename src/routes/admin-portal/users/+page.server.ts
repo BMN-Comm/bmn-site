@@ -1,13 +1,12 @@
 import { getAuthUsers } from '$lib/firebase/server/firebase'
-import { db } from '$lib/firebase/client/firebase'
-import { collection, getDocs, query } from 'firebase/firestore'
+import { db } from '$lib/firebase/server/firebase'
 import type { authUser } from '$lib/types/auth/authUser'
 import type { user } from '$lib/types/domain/user'
 
 export const load = async function () {
 	const authUsers = await getAuthUsers()
 
-	const users = (await getDocs(query(collection(db, 'users')))).docs.map<user>((d) => {
+	const users = (await db.collection('users').get()).docs.map<user>((d) => {
 		const data = d.data()
 		return {
 			id: d.id,

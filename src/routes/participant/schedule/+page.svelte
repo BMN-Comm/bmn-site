@@ -12,6 +12,7 @@
 	} from 'carbon-components-svelte'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
 	import { Launch } from 'carbon-icons-svelte'
+	import { getTimeString } from '$lib/util/timeString'
 
 	export let data: { rehearsals: rehearsal[] }
 </script>
@@ -35,12 +36,8 @@
 						{rehearsal.startTime.toDate().toDateString()}
 					</StructuredListCell>
 					<StructuredListCell>
-						{rehearsal.startTime.toDate().getHours()}:{String(
-							rehearsal.startTime.toDate().getMinutes()
-						).padStart(2, '0')} -
-						{rehearsal.endTime.toDate().getHours()}:{String(
-							rehearsal.endTime.toDate().getMinutes()
-						).padStart(2, '0')}
+						{getTimeString(rehearsal.startTime)} -
+						{getTimeString(rehearsal.endTime)}
 					</StructuredListCell>
 					<StructuredListCell>
 						{rehearsal.location}

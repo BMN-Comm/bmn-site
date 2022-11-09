@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
+	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Column,
 		Grid,
@@ -41,12 +42,8 @@
 				<StructuredListRow>
 					<StructuredListCell>{song.name}</StructuredListCell>
 					<StructuredListCell
-						>{data.rehearsalSongs[i].startTime.toDate().getHours()}:{String(
-							data.rehearsalSongs[i].startTime.toDate().getMinutes()
-						).padStart(2, '0')} -
-						{data.rehearsalSongs[i].endTime.toDate().getHours()}:{String(
-							data.rehearsalSongs[i].endTime.toDate().getMinutes()
-						).padStart(2, '0')}
+						>{getTimeString(data.rehearsalSongs[i].startTime)} -
+						{getTimeString(data.rehearsalSongs[i].endTime)}
 					</StructuredListCell>
 					<StructuredListCell>
 						{#each Object.entries(data.musicians) as [key, value]}

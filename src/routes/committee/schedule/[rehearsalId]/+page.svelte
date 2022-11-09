@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
+	import type { newRehearsalSong, rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
+	import { getTimeString } from '$lib/util/timeString'
 	import { newSchedule } from '$lib/util/webhook'
 	import {
 		Button,
 		Column,
 		ComboBox,
-		DatePicker,
-		DatePickerInput,
-		Dropdown,
 		Form,
 		Grid,
 		Modal,
@@ -19,14 +17,11 @@
 		StructuredListCell,
 		StructuredListHead,
 		StructuredListRow,
-		TextInput,
-		TimePicker,
-		TooltipDefinition
+		TimePicker
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { Add, Save, ShoppingCartPlus, SortAscending } from 'carbon-icons-svelte'
+	import { Add, Save } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
-	import { get } from 'svelte/store'
 
 	export let data: {
 		rehearsal: rehearsal
@@ -47,33 +42,23 @@
 	)
 
 	async function addSong() {
-		let rehearsalSong: rehearsalSong
+		let rehearsalSong: newRehearsalSong
 
 		if (!data.editionSongs.some((s: song) => s.id == songId)) return
 
 		let rehearsalDay = data.rehearsal.startTime.toDate()
+		let startDate = rehearsalDay
+		let endDate = rehearsalDay
+		let start = startTime.split(':')
+		let end = endTime.split(':')
+		startDate.setHours(+start[0], +start[1])
+		endDate.setHours(+end[0], +end[1])
 
 		rehearsalSong = {
 			song: doc(db, 'songs', songId),
 
-			startTime: Timestamp.fromDate(
-				new Date(
-					rehearsalDay.getFullYear(),
-					rehearsalDay.getMonth(),
-					rehearsalDay.getDate(),
-					+startTime.split(':')[0],
-					+startTime.split(':')[1]
-				)
-			),
-			endTime: Timestamp.fromDate(
-				new Date(
-					rehearsalDay.getFullYear(),
-					rehearsalDay.getMonth(),
-					rehearsalDay.getDate(),
-					+endTime.split(':')[0],
-					+endTime.split(':')[1]
-				)
-			)
+			startTime: Timestamp.fromDate(startDate),
+			endTime: Timestamp.fromDate(endDate)
 		}
 
 		await setDoc(
@@ -119,12 +104,8 @@
 					<StructuredListRow>
 						<StructuredListCell>{song.name}</StructuredListCell>
 						<StructuredListCell
-							>{data.rehearsalSongs[i].startTime.toDate().getHours()}:{String(
-								data.rehearsalSongs[i].startTime.toDate().getMinutes()
-							).padStart(2, '0')} -
-							{data.rehearsalSongs[i].endTime.toDate().getHours()}:{String(
-								data.rehearsalSongs[i].endTime.toDate().getMinutes()
-							).padStart(2, '0')}
+							>{getTimeString(data.rehearsalSongs[i].startTime)} -
+							{getTimeString(data.rehearsalSongs[i].endTime)}
 						</StructuredListCell>
 						<StructuredListCell>
 							{#each Object.entries(data.musicians) as [key, value]}
