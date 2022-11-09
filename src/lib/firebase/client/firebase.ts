@@ -3,9 +3,16 @@ import { getFirestore } from 'firebase/firestore'
 import { getAuth, signInWithEmailAndPassword, signOut as fbSignOut, type User } from 'firebase/auth'
 import { firebaseConfig } from '$lib/firebase/client/firbaseConfig'
 import { invalidateAll } from '$app/navigation'
+import { error } from '@sveltejs/kit'
 
 const app = initializeApp(firebaseConfig)
 const firebaseAuth = getAuth(app)
+
+let currentUser: User | undefined | null
+
+firebaseAuth.onAuthStateChanged((user) => {
+	currentUser = user
+})
 
 /**
  * Set the authentication token in the cookies by utilizing the api
@@ -47,5 +54,15 @@ export const auth = {
 }
 
 export default app
+
+/** Wait until the user is logged in */
+export async function verifyUserLoggedIn() {
+	// Wait for auth to be initialized
+	while (currentUser === undefined) await new Promise((r) => setTimeout(r, 100))
+
+	// Return 404 if user is not logged in
+	if (currentUser === null) throw error(404)
+	else return Promise.resolve()
+}
 
 export const db = getFirestore(app)
