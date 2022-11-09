@@ -1,8 +1,12 @@
 import type { PageLoad } from './$types'
-import { db } from '$lib/firebase/client/firebase'
+import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { query, collection, getDocs, orderBy, DocumentReference, where } from 'firebase/firestore'
 
+export const ssr = false
+
 export const load: PageLoad = async () => {
+	await verifyUserLoggedIn()
+
 	// Get all the suggestions
 	const suggestionsQuery = query(collection(db, 'songs'), orderBy('suggestionDate'))
 	const suggestions = (await getDocs(suggestionsQuery)).docs
