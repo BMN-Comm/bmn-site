@@ -1,5 +1,6 @@
 import type { rehearsal } from '$lib/types/domain/rehearsal'
 import type { announcement } from '$lib/types/domain/announcement'
+import { PUBLIC_DISCORD_WEBHOOK_URL } from '$env/static/public'
 
 const colours: string[] = ['00b380', '800020', '696969']
 
@@ -134,20 +135,16 @@ function hexToDecimal(hex: string) {
 }
 
 async function sendWebhookMessage(params: any) {
-	const response = await fetch(
-		//TODO: Set to a BMN discord channel
-		'https://discord.com/api/webhooks/1039641913034297465/IUseUvlLD_HbPneE3aqgzyFnmM_mKbmcY5Y3C9tLzn2dDbIS0-pCycowULeynCa18fdE',
-		{
-			method: 'POST',
-			mode: 'cors',
-			cache: 'no-cache',
-			credentials: 'same-origin',
-			headers: {
-				'Content-type': 'application/json'
-			},
-			redirect: 'follow',
-			referrerPolicy: 'no-referrer',
-			body: JSON.stringify(params)
-		}
-	)
+	const response = await fetch(PUBLIC_DISCORD_WEBHOOK_URL, {
+		method: 'POST',
+		mode: 'cors',
+		cache: 'no-cache',
+		credentials: 'same-origin',
+		headers: {
+			'Content-type': 'application/json'
+		},
+		redirect: 'follow',
+		referrerPolicy: 'no-referrer',
+		body: JSON.stringify(params)
+	})
 }
