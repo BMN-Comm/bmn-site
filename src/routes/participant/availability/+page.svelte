@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
+	import type { availability } from '$lib/types/domain/availability'
 	import {
 		Column,
 		Grid,
@@ -11,8 +12,14 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { CheckmarkOutline, Launch, MisuseOutline } from 'carbon-icons-svelte'
+	import { getTimeString } from '$lib/util/timeString'
 
-	export let data: { rehearsals: rehearsal[] }
+	export let data: { rehearsals: rehearsal[]; availability: availability[] }
+
+	let rehearsalAvailability = Object.assign(
+		{},
+		...data.availability.map((x) => ({ [x.rehearsal.id]: x.available }))
+	)
 </script>
 
 <Grid>
@@ -35,20 +42,18 @@
 						{rehearsal.startTime.toDate().toDateString()}
 					</StructuredListCell>
 					<StructuredListCell>
-						{rehearsal.startTime.toDate().getHours()}:{String(
-							rehearsal.startTime.toDate().getMinutes()
-						).padStart(2, '0')} -
-						{rehearsal.endTime.toDate().getHours()}:{String(
-							rehearsal.endTime.toDate().getMinutes()
-						).padStart(2, '0')}
+						{getTimeString(rehearsal.startTime)} -
+						{getTimeString(rehearsal.endTime)}
 					</StructuredListCell>
 					<StructuredListCell>
 						{rehearsal.location}
 					</StructuredListCell>
 					<StructuredListCell>
-						<!--TODO: Base this on filled in status-->
-						<div class="checkmark"><CheckmarkOutline /></div>
-						<div class="cross"><MisuseOutline /></div>
+						{#if rehearsal.id in rehearsalAvailability}
+							<div class="checkmark"><CheckmarkOutline /></div>
+						{:else}
+							<div class="cross"><MisuseOutline /></div>
+						{/if}
 					</StructuredListCell>
 					<StructuredListCell>
 						<a href={`/participant/availability/${rehearsal.id}`}><Launch /></a>

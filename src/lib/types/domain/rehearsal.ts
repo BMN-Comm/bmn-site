@@ -14,8 +14,11 @@ export type rehearsal = {
 }
 
 export type rehearsalSong = {
-	id: string,
-	startTime: Timestamp,
-	endTime: Timestamp,
+	id: string
+} & newRehearsalSong
+
+export type newRehearsalSong = {
+	startTime: Timestamp
+	endTime: Timestamp
 	song: DocumentReference
 }

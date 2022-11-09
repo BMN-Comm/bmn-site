@@ -17,9 +17,10 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import type { rehearsal } from '$lib/types/domain/rehearsal'
-	import { Add, Launch, MusicRemove } from 'carbon-icons-svelte'
+	import { Add, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
+	import { getTimeString } from '$lib/util/timeString'
 
 	export let data: { rehearsals: rehearsal[] }
 
@@ -111,12 +112,8 @@
 						{rehearsal.startTime.toDate().toDateString()}
 					</StructuredListCell>
 					<StructuredListCell>
-						{rehearsal.startTime.toDate().getHours()}:{String(
-							rehearsal.startTime.toDate().getMinutes()
-						).padStart(2, '0')} -
-						{rehearsal.endTime.toDate().getHours()}:{String(
-							rehearsal.endTime.toDate().getMinutes()
-						).padStart(2, '0')}
+						{getTimeString(rehearsal.startTime)} -
+						{getTimeString(rehearsal.endTime)}
 					</StructuredListCell>
 					<StructuredListCell>
 						{rehearsal.location}
@@ -127,6 +124,12 @@
 							iconDescription="Open Repetitie"
 							icon={Launch}
 							href={`/committee/schedule/${rehearsal.id}`}
+						/>
+						<Button
+							size="small"
+							iconDescription="Show availability"
+							icon={Person}
+							href={`/committee/schedule/availability/${rehearsal.id}`}
 						/>
 						<Button
 							kind="danger-tertiary"
