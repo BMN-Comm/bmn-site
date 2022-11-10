@@ -4,21 +4,22 @@
 
 <Grid>
 	<Row>
-		<Column><h1>Welkom op de deelnemerspagina!</h1></Column>
+		<Column><h1>Welcome to the participants' page!</h1></Column>
 	</Row>
 	<Row>
 		<Column class="participant-info">
-			Op deze pagina kun je alle informatie vinden die je als deelnemer nodig hebt. Ben je hier voor
-			het eerst? Begin dan alvast met wat suggesties insturen via de
-			<strong> Suggesties </strong> knop in het menu aan de linkerkant. <br />
-			Zodra er nummers gekozen zijn door de commissie kun je deze vinden in de
-			<strong> Setlist </strong>, de nummers waar jij ook in speelt staan onder
-			<strong> Mijn nummers</strong>.<br />
-			Check jouw aankomende repetitietijden op de <strong>Rooster</strong> pagina, en vergeet niet
-			je beschikbaarheid in te vullen op de <strong>Beschikbaarheid</strong> pagina.<br />
-			Verdere mededelingen zijn natuurlijk te vinden op de <strong>Mededelingen</strong> pagina :).
+			On this page you will find any information you need as a participant. Is this your first time
+			here? Start with sending in some suggestions at the
+			<strong> Suggestions </strong> button in the menu on the left. <br />
+			When songs are selected by the committee you can find them at the
+			<strong> Setlist </strong>, the songs you play in are found under
+			<strong> My songs</strong>.<br />
+			Check your next rehearsals on the <strong>Rehearsal</strong> page, and don't forget to submit
+			your availability on the <strong>Availability</strong> page.<br />
+			Announcements by the committee are of course found on the <strong>Announcements</strong> page
+			:).
 			<br /><br />
-			Laten we er een mooi jaar van maken!
+			Let's have a great year!
 		</Column>
 	</Row>
 </Grid>

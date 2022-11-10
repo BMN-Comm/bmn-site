@@ -16,7 +16,7 @@
 
 <Grid>
 	<Row>
-		<Column><h1>Mededelingen</h1></Column>
+		<Column><h1>Announcements</h1></Column>
 	</Row>
 
 	<StructuredList>

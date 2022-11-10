@@ -16,10 +16,10 @@
 			<HeaderNavItem href="/" text="Home" />
 			<HeaderNavItem href="/" text="Info" />
 			{#if $page.data.user}
-				<HeaderNavItem href="/participant" text="Deelnemers" />
+				<HeaderNavItem href="/participant" text="Participants" />
 			{/if}
 			{#if $page.data.user?.commissie}
-				<HeaderNavItem href="/committee" text="Commissie" />
+				<HeaderNavItem href="/committee" text="Committee" />
 			{/if}
 			{#if $page.data.user?.admin}
 				<HeaderNavItem href="/admin-portal/claims" text="Admin" />

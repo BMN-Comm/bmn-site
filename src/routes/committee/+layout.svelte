@@ -10,12 +10,12 @@
 
 <SideNav isOpen>
 	<SideNavItems>
-		<SideNavLink text="Mededelingen" href="/committee/announcements" />
+		<SideNavLink text="Announcements" href="/committee/announcements" />
 		<SideNavLink text="Setlist" href="/committee/setlist" />
-		<SideNavLink text="Mijn nummers" href="/committee/mySongs" />
-		<SideNavLink text="Suggesties" href="/committee/suggestions" />
+		<SideNavLink text="My songs" href="/committee/mySongs" />
+		<SideNavLink text="Suggestions" href="/committee/suggestions" />
 		<SideNavDivider />
-		<SideNavLink text="Repetities" href="/committee/schedule" />
+		<SideNavLink text="Rehearsals" href="/committee/schedule" />
 	</SideNavItems>
 </SideNav>
 

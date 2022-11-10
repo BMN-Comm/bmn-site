@@ -68,7 +68,7 @@
 		timeout={5000}
 		kind="success"
 		title="Success"
-		subtitle="Nummer toegevoegd:"
+		subtitle="Song added:"
 		caption={toast}
 		on:close={(e) => {
 			toasts = toasts.splice(i, 1)
@@ -88,18 +88,13 @@
 		</Row>
 		<Row>
 			<Column sm={4} md={8} lg={5}>
-				<TextInput bind:value={title} labelText="Titel*" placeholder="Voer titel in" required />
+				<TextInput bind:value={title} labelText="Title*" placeholder="Title" required />
 			</Column>
 			<Column sm={4} md={8} lg={6}>
-				<TextInput
-					bind:value={artist}
-					labelText="Artiest*"
-					placeholder="Voer artiest in"
-					required
-				/>
+				<TextInput bind:value={artist} labelText="Artist*" placeholder="Artist" required />
 			</Column>
 			<Column sm={4} md={8} lg={5}>
-				<TextInput bind:value={genre} labelText="Genre*" placeholder="Voer genre in" required />
+				<TextInput bind:value={genre} labelText="Genre*" placeholder="Genre" required />
 			</Column>
 		</Row>
 		<Row>
@@ -107,7 +102,7 @@
 				<TextInput
 					bind:value={link}
 					labelText="Link*"
-					placeholder="Voer link in"
+					placeholder="Song link"
 					required
 					invalid={!validLink}
 					invalidText={validLink ? undefined : 'Enter a valid link'}

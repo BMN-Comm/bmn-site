@@ -48,6 +48,24 @@
 		</p>
 	</div>
 
+	<div class="watBMN">
+		<h1>What is the Bèta Music Night?</h1>
+		<p>
+			The Bèta Music Night (BMN) is a yearly recurring concert, organised by the studyassociation
+			A–Eskwadraat's committee with the same name. The first edition was in 2013, and we have had
+			eight editions since. The Bèta Music Night has grown to be one of A–Eskwadraat's biggest
+			activities. We are already very busy with the organisation of the ninth edition
+		</p>
+		<p>
+			The BMN brings A–Eskwadraat's best musisians together. This year we will once again get a
+			group of around thirty participants together. The setlist consists of covers of famous, and
+			not so famous songs. Each song has a different line-up with no two songs having the exact same
+			group of musicians on stage. This way the musicians learn to play together with a lot of
+			different people resulting in some nifty band experience. It is very nice to see that we, as
+			real bèta association, can show a different side of ourselves.
+		</p>
+	</div>
+
 	<Grid class="sponsors" padding>
 		<Row>
 			<Column>
