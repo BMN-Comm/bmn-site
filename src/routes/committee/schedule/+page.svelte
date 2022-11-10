@@ -21,6 +21,7 @@
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
+	import { newRehearsalPost } from '$lib/util/webhook'
 
 	export let data: { rehearsals: rehearsal[] }
 
@@ -71,6 +72,7 @@
 		}
 
 		await setDoc(newRehearsal, rehearsal)
+		newRehearsalPost(newRehearsal.id, rehearsal)
 	}
 
 	function removeRehearsal() {

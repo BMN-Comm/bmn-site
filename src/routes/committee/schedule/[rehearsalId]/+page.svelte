@@ -3,6 +3,7 @@
 	import type { newRehearsalSong, rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
+	import { newSchedule } from '$lib/util/webhook'
 	import {
 		Button,
 		Column,
@@ -19,7 +20,7 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { Add } from 'carbon-icons-svelte'
+	import { Add, Save } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
 
 	export let data: {
@@ -78,6 +79,15 @@
 				icon={Add}
 				on:click={() => {
 					openModal = true
+				}}
+			/>
+
+			<!-- TODO: Zelf opslaan -->
+			<Button
+				iconDescription="Save schedule"
+				icon={Save}
+				on:click={() => {
+					newSchedule(data.rehearsal)
 				}}
 			/>
 		</Column>
