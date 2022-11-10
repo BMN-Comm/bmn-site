@@ -11,8 +11,8 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import type { song } from '$lib/types/domain/song'
-	import { Bat, Chat, Favorite, MusicRemove, PlayFilledAlt } from 'carbon-icons-svelte'
-	import { deleteDoc, doc } from 'firebase/firestore'
+	import { Bat, Chat, Favorite, MusicAdd, MusicRemove, PlayFilledAlt } from 'carbon-icons-svelte'
+	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { isValidUrl } from '$lib/util/urlValidation'
 
@@ -20,6 +20,7 @@
 
 	let openRemark = false
 	let openDel = false
+	let openAdd = false
 	let remarkText: string
 	let selectedSong: number
 
@@ -29,6 +30,15 @@
 		await deleteDoc(docRef)
 
 		data.suggestions.splice(selectedSong, 1)
+		data.suggestions = data.suggestions
+	}
+
+	async function addToSetlist() {
+		// TODO: Use current edition
+		const editionRef = doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40')
+		updateDoc(editionRef, {
+			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].song.id))
+		})
 	}
 </script>
 
@@ -67,6 +77,7 @@
 					{@const validUrl = isValidUrl(song.link)}
 					<Button
 						href={validUrl ? song.link : undefined}
+						target="blank"
 						kind="ghost"
 						size="small"
 						iconDescription={validUrl ? song.link : 'Invalid URL'}
@@ -105,6 +116,17 @@
 							}}
 						/>
 					{/if}
+					<Button
+						kind="secondary"
+						size="small"
+						iconDescription="Add to setlist"
+						icon={MusicAdd}
+						on:click={() => {
+							selectedSong = i
+							openAdd = true
+						}}
+						class={song.user.id === '3ClGLhR2ctxg6ZPn0Ls7' ? 'ilanButton' : 'addButton'}
+					/>
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
@@ -113,6 +135,23 @@
 
 <Modal passiveModal modalHeading="Remark" bind:open={openRemark}>
 	<p>{remarkText}</p>
+</Modal>
+
+<Modal
+	modalHeading="Add to setlist"
+	bind:open={openAdd}
+	primaryButtonText="Add"
+	primaryButtonIcon={MusicAdd}
+	secondaryButtonText="Cancel"
+	on:click:button--primary={() => {
+		addToSetlist()
+		openAdd = false
+	}}
+	on:click:button--secondary={() => {
+		openAdd = false
+	}}
+>
+	<p>Add {data.suggestions[selectedSong]?.song.name} to setlist?</p>
 </Modal>
 
 <Modal
@@ -136,5 +175,69 @@
 <style>
 	.titleText {
 		font-size: x-large;
+	}
+
+	:global(.addButton) {
+		border-color: rgba(41, 252, 101, 255) !important;
+		background-color: rgba(0, 0, 0, 0) !important;
+		color: rgba(41, 252, 101, 255) !important;
+	}
+
+	:global(.ilanButton) {
+		animation: rainbow 2.5s linear !important;
+		animation-iteration-count: infinite !important;
+		background-color: rgba(0, 0, 0, 0) !important;
+	}
+
+	@keyframes rainbow {
+		100%,
+		0% {
+			color: rgb(255, 0, 0);
+			border-color: rgb(255, 0, 0);
+		}
+		8% {
+			color: rgb(255, 127, 0);
+			border-color: rgb(255, 127, 0);
+		}
+		16% {
+			color: rgb(255, 255, 0);
+			border-color: rgb(255, 255, 0);
+		}
+		25% {
+			color: rgb(127, 255, 0);
+			border-color: rgb(127, 255, 0);
+		}
+		33% {
+			color: rgb(0, 255, 0);
+			border-color: rgb(0, 255, 0);
+		}
+		41% {
+			color: rgb(0, 255, 127);
+			border-color: rgb(0, 255, 127);
+		}
+		50% {
+			color: rgb(0, 255, 255);
+			border-color: rgb(0, 255, 255);
+		}
+		58% {
+			color: rgb(0, 127, 255);
+			border-color: rgb(0, 127, 255);
+		}
+		66% {
+			color: rgb(0, 0, 255);
+			border-color: rgb(0, 0, 255);
+		}
+		75% {
+			color: rgb(127, 0, 255);
+			border-color: rgb(127, 0, 255);
+		}
+		83% {
+			color: rgb(255, 0, 255);
+			border-color: rgb(255, 0, 255);
+		}
+		91% {
+			color: rgb(255, 0, 127);
+			border-color: rgb(255, 0, 127);
+		}
 	}
 </style>

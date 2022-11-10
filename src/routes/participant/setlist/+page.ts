@@ -1,49 +1,21 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
-import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
+import type { edition } from '$lib/types/domain/edition'
 import type { playsSong, song } from '$lib/types/domain/song'
-import {
-	query,
-	collection,
-	orderBy,
-	getDocs,
-	doc,
-	getDoc,
-	collectionGroup,
-	where
-} from 'firebase/firestore'
+import { collection, collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 
 export const ssr = false
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async () => {
 	await verifyUserLoggedIn()
 
-	const rehearsal = (await getDoc(doc(db, 'rehearsals/', params.rehearsalId))).data() as rehearsal
+	// TODO: use current edition
+	const editionRef = doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40')
+	const edition = (await getDoc(editionRef)).data() as edition
 
-	// Get all the songs that need to be rehearsed on this day
-	const rehearsalSongsQuery = query(
-		collection(db, 'rehearsals/' + params.rehearsalId + '/songsToRehearse'),
-		orderBy('startTime')
-	)
-	const rehearsalSongs = (await getDocs(rehearsalSongsQuery)).docs.map(
-		(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
-	)
+	const editionSongs = edition.songs.map((s) => s.id)
 
-	// Get the document ids of the songs
-	const s = rehearsalSongs.map((rehearsalSong) => rehearsalSong.song.id)
-
-	if (s.length < 1) {
-		return {
-			rehearsal: rehearsal,
-			rehearsalId: params.rehearsalId,
-			rehearsalSongs: rehearsalSongs,
-			songs: [],
-			musicians: []
-		}
-	}
-
-	// Get the song objects from the rehearsal songs
-	const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', s))
+	const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', editionSongs))
 	const songs = (await getDocs(songsQuery)).docs.map(
 		(doc) => ({ id: doc.id, ...doc.data() } as song)
 	)
@@ -53,7 +25,7 @@ export const load: PageLoad = async ({ params }) => {
 	} = {}
 
 	// Get the playsSongInEdition for all participants on this rehearsal day
-	const sRef = s.map((item) => doc(db, 'songs/' + item))
+	const sRef = editionSongs.map((item) => doc(db, 'songs/' + item))
 	const playsInQuery = query(collectionGroup(db, 'playsSongInEdition'), where('song', 'in', sRef))
 	const playsInDocs = (await getDocs(playsInQuery)).docs
 	const playsInRefs = playsInDocs.map((doc) => ({ id: doc.id, ...doc.data() } as playsSong))
@@ -86,11 +58,5 @@ export const load: PageLoad = async ({ params }) => {
 		musiciansForSongs[sid] = p!
 	}
 
-	return {
-		rehearsal: rehearsal,
-		rehearsalId: params.rehearsalId,
-		rehearsalSongs: rehearsalSongs,
-		songs: songs,
-		musicians: musiciansForSongs
-	}
+	return { songs, musiciansForSongs }
 }

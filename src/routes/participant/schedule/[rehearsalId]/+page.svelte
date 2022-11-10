@@ -10,11 +10,8 @@
 		StructuredListBody,
 		StructuredListCell,
 		StructuredListHead,
-		StructuredListRow,
-		TooltipDefinition
+		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { SortAscending } from 'carbon-icons-svelte'
-	import { get } from 'svelte/store'
 
 	export let data: {
 		rehearsal: rehearsal
