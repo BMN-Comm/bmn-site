@@ -65,7 +65,6 @@
 
 		let rehearsal = {
 			// TODO: Use current edition
-			id: newRehearsal.id,
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: start,
 			endTime: end,
@@ -73,7 +72,7 @@
 		}
 
 		await setDoc(newRehearsal, rehearsal)
-		newRehearsalPost(rehearsal)
+		newRehearsalPost(newRehearsal.id, rehearsal)
 	}
 
 	function removeRehearsal() {
