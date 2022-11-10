@@ -6,7 +6,7 @@ export type rehearsal = {
 		song: DocumentReference // Reference to song
 		startTime: Timestamp
 		endTime: Timestamp
-	}
+	}[]
 } & newRehearsal
 
 export type newRehearsal = {
