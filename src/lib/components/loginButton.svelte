@@ -58,7 +58,7 @@
 	</FluidForm>
 	{#if loginError}
 		<InlineNotification
-			subtitle="De combinatie van email en wachtwoord klopt niet."
+			subtitle="The email and password combination is incorrect."
 			on:close={() => (loginError = false)}
 		/>
 	{/if}

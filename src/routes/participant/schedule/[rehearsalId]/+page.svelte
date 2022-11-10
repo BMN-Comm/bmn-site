@@ -27,14 +27,14 @@
 
 <Grid>
 	<Row padding>
-		<Column><h1>Repetities {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
+		<Column><h1>Rehearsals {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
 	<StructuredList>
 		<StructuredListHead>
 			<StructuredListRow head>
-				<StructuredListCell head>Titel</StructuredListCell>
-				<StructuredListCell head>Tijd</StructuredListCell>
-				<StructuredListCell head>Bezetting</StructuredListCell>
+				<StructuredListCell head>Title</StructuredListCell>
+				<StructuredListCell head>Time</StructuredListCell>
+				<StructuredListCell head>Line-up</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>

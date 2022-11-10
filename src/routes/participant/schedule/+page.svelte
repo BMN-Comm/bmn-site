@@ -19,14 +19,14 @@
 
 <Grid>
 	<Row padding>
-		<Column><h1>Geplande Repetities</h1></Column>
+		<Column><h1>Planned rehearsals</h1></Column>
 	</Row>
 	<StructuredList>
 		<StructuredListHead>
 			<StructuredListRow head>
-				<StructuredListCell head>Datum</StructuredListCell>
-				<StructuredListCell head>Tijd</StructuredListCell>
-				<StructuredListCell head>Locatie</StructuredListCell>
+				<StructuredListCell head>Date</StructuredListCell>
+				<StructuredListCell head>Time</StructuredListCell>
+				<StructuredListCell head>Location</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>

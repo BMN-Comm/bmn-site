@@ -86,12 +86,12 @@
 
 <Grid>
 	<Row padding>
-		<Column><h1>Geplande Repetities</h1></Column>
+		<Column><h1>Planned rehearsals</h1></Column>
 	</Row>
 	<Row>
 		<Column>
 			<Button
-				iconDescription="Voeg repetitiedag toe"
+				iconDescription="Add rehearsal"
 				icon={Add}
 				on:click={() => {
 					openModal = true
@@ -102,9 +102,9 @@
 	<StructuredList>
 		<StructuredListHead>
 			<StructuredListRow head>
-				<StructuredListCell head>Datum</StructuredListCell>
-				<StructuredListCell head>Tijd</StructuredListCell>
-				<StructuredListCell head>Locatie</StructuredListCell>
+				<StructuredListCell head>Date</StructuredListCell>
+				<StructuredListCell head>Time</StructuredListCell>
+				<StructuredListCell head>Location</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>
@@ -123,7 +123,7 @@
 					<StructuredListCell>
 						<Button
 							size="small"
-							iconDescription="Open Repetitie"
+							iconDescription="Open rehearsal"
 							icon={Launch}
 							href={`/committee/schedule/${rehearsal.id}`}
 						/>
@@ -136,7 +136,7 @@
 						<Button
 							kind="danger-tertiary"
 							size="small"
-							iconDescription="Verwijder Repetitie"
+							iconDescription="Remove rehearsal"
 							icon={MusicRemove}
 							on:click={() => {
 								selectedRehearsal = i
@@ -152,12 +152,12 @@
 
 <Modal
 	bind:open={openModal}
-	modalHeading="Nieuwe repetitiedag"
+	modalHeading="New rehearsal"
 	primaryButtonIcon={Add}
-	primaryButtonText="Voeg toe"
+	primaryButtonText="Add"
 	hasScrollingContent
 	hasForm
-	selectorPrimaryFocus="#locatie"
+	selectorPrimaryFocus="#location"
 	on:submit={(e) => {
 		e.preventDefault()
 		addRehearsal()
@@ -169,9 +169,9 @@
 				<Row padding>
 					<Column>
 						<TextInput
-							id="locatie"
-							labelText="Locatie"
-							placeholder="Locatie"
+							id="location"
+							labelText="Location"
+							placeholder="Location"
 							bind:value={location}
 							required
 						/>
@@ -184,10 +184,10 @@
 						</DatePicker>
 					</Column>
 					<Column>
-						<TimePicker labelText="Van" bind:value={startTime} required />
+						<TimePicker labelText="From" bind:value={startTime} required />
 					</Column>
 					<Column>
-						<TimePicker labelText="Tot" bind:value={endTime} required />
+						<TimePicker labelText="Till" bind:value={endTime} required />
 					</Column>
 				</Row>
 			</Grid>
@@ -197,10 +197,10 @@
 
 <Modal
 	danger
-	modalHeading="Verwijder repetitie"
-	primaryButtonText="Verwijder"
+	modalHeading="Remove rehearsal"
+	primaryButtonText="Remove"
 	primaryButtonIcon={MusicRemove}
-	secondaryButtonText="Annuleer"
+	secondaryButtonText="Cancel"
 	bind:open={openDel}
 	on:click:button--primary={() => {
 		removeRehearsal()
@@ -210,7 +210,7 @@
 		openDel = false
 	}}
 >
-	<p>Verwijder repetitie?</p>
+	<p>Remove rehearsal?</p>
 </Modal>
 
 <style>

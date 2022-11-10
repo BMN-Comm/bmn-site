@@ -70,12 +70,12 @@
 
 <Grid>
 	<Row padding>
-		<Column><h1>Repetities {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
+		<Column><h1>Rehearsals {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
 	<Row>
 		<Column>
 			<Button
-				iconDescription="Voeg nummer toe"
+				iconDescription="Add song"
 				icon={Add}
 				on:click={() => {
 					openModal = true
@@ -95,9 +95,9 @@
 	<StructuredList>
 		<StructuredListHead>
 			<StructuredListRow head>
-				<StructuredListCell head>Titel</StructuredListCell>
-				<StructuredListCell head>Tijd</StructuredListCell>
-				<StructuredListCell head>Bezetting</StructuredListCell>
+				<StructuredListCell head>Title</StructuredListCell>
+				<StructuredListCell head>Time</StructuredListCell>
+				<StructuredListCell head>Line-up</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>
@@ -127,9 +127,9 @@
 
 <Modal
 	bind:open={openModal}
-	modalHeading="Kies nummer"
+	modalHeading="Choose a song"
 	primaryButtonIcon={Add}
-	primaryButtonText="Voeg toe"
+	primaryButtonText="Add"
 	hasScrollingContent
 	hasForm
 	on:submit={(e) => {
@@ -141,15 +141,15 @@
 		<Grid>
 			<Row padding>
 				<Column>
-					<ComboBox titleText="Nummer" items={editionSongs} bind:selectedId={songId} required />
+					<ComboBox titleText="Song" items={editionSongs} bind:selectedId={songId} required />
 				</Column>
 			</Row>
 			<Row>
 				<Column>
-					<TimePicker labelText="Van" bind:value={startTime} required />
+					<TimePicker labelText="From" bind:value={startTime} required />
 				</Column>
 				<Column>
-					<TimePicker labelText="Tot" bind:value={endTime} required />
+					<TimePicker labelText="Till" bind:value={endTime} required />
 				</Column>
 			</Row>
 		</Grid>
