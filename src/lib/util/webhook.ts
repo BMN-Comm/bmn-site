@@ -4,6 +4,7 @@ import { PUBLIC_DISCORD_WEBHOOK_URL } from '$env/static/public'
 
 const colours: string[] = ['00b380', '800020', '696969']
 
+// TODO: Send on server
 export async function newRehearsalPost(rehearsalId: string, rehearsal: newRehearsal) {
 	const params = createWebhookMessage(
 		'New Rehearsal!',
