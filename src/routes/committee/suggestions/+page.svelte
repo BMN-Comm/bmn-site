@@ -12,11 +12,14 @@
 	} from 'carbon-components-svelte'
 	import type { song } from '$lib/types/domain/song'
 	import { Bat, Chat, Favorite, MusicRemove, PlayFilledAlt } from 'carbon-icons-svelte'
-	import { deleteDoc, doc } from 'firebase/firestore'
+	import { arrayRemove, arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { isValidUrl } from '$lib/util/urlValidation'
 
-	export let data: { suggestions: { song: song; user: string }[] }
+	export let data: {
+		suggestions: { song: song; user: string }[]
+		favouriteSongs: { [songId: string]: { favourite: boolean } }
+	}
 
 	let openRemark = false
 	let openDel = false
@@ -29,6 +32,26 @@
 		await deleteDoc(docRef)
 
 		data.suggestions.splice(selectedSong, 1)
+	}
+
+	async function FavouriteSong(songId: string) {
+		// TODO: use current committee
+		const committeeRef = doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU')
+		const songRef = doc(db, 'songs', songId)
+		await updateDoc(committeeRef, {
+			likesSongs: arrayUnion(songRef)
+		})
+		data.favouriteSongs[songId] = { favourite: true }
+	}
+
+	async function UnfavouriteSong(songId: string) {
+		// TODO: use current committee
+		const committeeRef = doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU')
+		const songRef = doc(db, 'songs', songId)
+		await updateDoc(committeeRef, {
+			likesSongs: arrayRemove(songRef)
+		})
+		data.favouriteSongs[songId] = { favourite: false }
 	}
 </script>
 
@@ -80,6 +103,14 @@
 						size="small"
 						iconDescription="Like"
 						icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
+						class={data.favouriteSongs[song.id] ? 'yesFave' : 'noFave'}
+						on:click={data.favouriteSongs[song.id]
+							? () => {
+									UnfavouriteSong(song.id)
+							  }
+							: () => {
+									FavouriteSong(song.id)
+							  }}
 					/>
 				</StructuredListCell>
 				<StructuredListCell>
@@ -136,5 +167,10 @@
 <style>
 	.titleText {
 		font-size: x-large;
+	}
+	:global(.yesFave) {
+		background-color: #b81921 !important;
+		border-color: #b81921 !important;
+		color: white !important;
 	}
 </style>
