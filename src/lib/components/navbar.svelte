@@ -4,7 +4,6 @@
 		HeaderNav,
 		HeaderNavItem,
 		HeaderNavMenu,
-		HeaderPanelDivider,
 		SideNav,
 		SideNavDivider,
 		SideNavItems,
@@ -43,7 +42,6 @@
 					<HeaderNavItem text="Home" href="/committee" />
 					<HeaderNavItem text="Announcements" href="/committee/announcements" />
 					<HeaderNavItem text="Setlist" href="/committee/setlist" />
-					<HeaderNavItem text="My songs" href="/committee/mySongs" />
 					<HeaderNavItem text="Suggestions" href="/committee/suggestions" />
 					<SideNavDivider />
 					<HeaderNavItem text="Rehearsals" href="/committee/schedule" />
@@ -82,7 +80,6 @@
 				<SideNavLink text="Home" href="/committee" />
 				<SideNavLink text="Announcements" href="/committee/announcements" />
 				<SideNavLink text="Setlist" href="/committee/setlist" />
-				<SideNavLink text="My songs" href="/committee/mySongs" />
 				<SideNavLink text="Suggestions" href="/committee/suggestions" />
 				<SideNavDivider />
 				<SideNavLink text="Rehearsals" href="/committee/schedule" />
