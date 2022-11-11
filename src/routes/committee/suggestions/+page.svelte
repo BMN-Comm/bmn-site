@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {
 		Button,
+		Checkbox,
 		Column,
 		Grid,
 		Modal,
@@ -23,6 +24,7 @@
 
 	let openRemark = false
 	let openDel = false
+	let filterFavourites = false
 	let remarkText: string
 	let selectedSong: number
 
@@ -57,7 +59,15 @@
 
 <Grid>
 	<Row>
-		<Column><h1 class="titleText">Suggestions</h1></Column>
+		<Column
+			><h1 class="titleText">Suggestions</h1>
+			<Checkbox
+				labelText="Filter Favourites"
+				on:change={() => {
+					filterFavourites = !filterFavourites
+				}}
+			/>
+		</Column>
 	</Row>
 
 	<StructuredList condensed>
@@ -73,71 +83,73 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		{#each data.suggestions as { song, user }, i}
-			<StructuredListRow>
-				<StructuredListCell>
-					{user}
-				</StructuredListCell>
-				<StructuredListCell>
-					{song.name}
-				</StructuredListCell>
-				<StructuredListCell>
-					{song.artist}
-				</StructuredListCell>
-				<StructuredListCell>
-					{song.genre}
-				</StructuredListCell>
-				<StructuredListCell>
-					{@const validUrl = isValidUrl(song.link)}
-					<Button
-						href={validUrl ? song.link : undefined}
-						kind="ghost"
-						size="small"
-						iconDescription={validUrl ? song.link : 'Invalid URL'}
-						icon={PlayFilledAlt}
-						disabled={!validUrl}
-					/>
-				</StructuredListCell>
-				<StructuredListCell>
-					<Button
-						kind="danger-tertiary"
-						size="small"
-						iconDescription="Like"
-						icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
-						class={data.favouriteSongs[song.id] ? 'yesFave' : 'noFave'}
-						on:click={data.favouriteSongs[song.id]
-							? () => {
-									UnfavouriteSong(song.id)
-							  }
-							: () => {
-									FavouriteSong(song.id)
-							  }}
-					/>
-				</StructuredListCell>
-				<StructuredListCell>
-					<Button
-						kind="danger-tertiary"
-						size="small"
-						iconDescription="Delete"
-						icon={MusicRemove}
-						on:click={() => {
-							selectedSong = i
-							openDel = true
-						}}
-					/>
-					{#if song.remark && song.remark.length > 0}
+			{#if (filterFavourites && data.favouriteSongs[song.id]) || !filterFavourites}
+				<StructuredListRow>
+					<StructuredListCell>
+						{user}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.name}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.artist}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.genre}
+					</StructuredListCell>
+					<StructuredListCell>
+						{@const validUrl = isValidUrl(song.link)}
 						<Button
-							kind="tertiary"
+							href={validUrl ? song.link : undefined}
+							kind="ghost"
 							size="small"
-							iconDescription="Remarks"
-							icon={Chat}
+							iconDescription={validUrl ? song.link : 'Invalid URL'}
+							icon={PlayFilledAlt}
+							disabled={!validUrl}
+						/>
+					</StructuredListCell>
+					<StructuredListCell>
+						<Button
+							kind="danger-tertiary"
+							size="small"
+							iconDescription="Like"
+							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
+							class={data.favouriteSongs[song.id] ? 'yesFave' : 'noFave'}
+							on:click={data.favouriteSongs[song.id]
+								? () => {
+										UnfavouriteSong(song.id)
+								  }
+								: () => {
+										FavouriteSong(song.id)
+								  }}
+						/>
+					</StructuredListCell>
+					<StructuredListCell>
+						<Button
+							kind="danger-tertiary"
+							size="small"
+							iconDescription="Delete"
+							icon={MusicRemove}
 							on:click={() => {
-								remarkText = song.remark
-								openRemark = true
+								selectedSong = i
+								openDel = true
 							}}
 						/>
-					{/if}
-				</StructuredListCell>
-			</StructuredListRow>
+						{#if song.remark && song.remark.length > 0}
+							<Button
+								kind="tertiary"
+								size="small"
+								iconDescription="Remarks"
+								icon={Chat}
+								on:click={() => {
+									remarkText = song.remark
+									openRemark = true
+								}}
+							/>
+						{/if}
+					</StructuredListCell>
+				</StructuredListRow>
+			{/if}
 		{/each}
 	</StructuredList>
 </Grid>
