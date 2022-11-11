@@ -12,7 +12,7 @@
 	const { open } = getContext<sidebarContextType>('sidebar')
 </script>
 
-<SideNav bind:isOpen={$open}>
+<!-- <SideNav bind:isOpen={$open}>
 	<SideNavItems>
 		<SideNavLink text="Announcements" href="/participant/announcements" />
 		<SideNavLink text="Setlist" href="/participant/setlist" />
@@ -22,7 +22,7 @@
 		<SideNavLink text="Schedule" href="/participant/schedule" />
 		<SideNavLink text="Availability" href="/participant/availability" />
 	</SideNavItems>
-</SideNav>
+</SideNav> -->
 
 <Content>
 	<slot />
