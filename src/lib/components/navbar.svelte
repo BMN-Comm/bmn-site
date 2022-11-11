@@ -25,7 +25,7 @@
 		<img src="/BMN2023.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
-			<HeaderNavItem href="/" text="Info" />
+			<HeaderNavItem href="/#info" text="Info" />
 			{#if $page.data.user}
 				<HeaderNavMenu text="Participants">
 					<HeaderNavItem text="Home" href="/participant" />

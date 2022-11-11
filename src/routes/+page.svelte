@@ -1,6 +1,6 @@
 <!-- Homepage -->
 <script>
-	import { Button, Column, Grid, Row } from 'carbon-components-svelte'
+	import { Column, Grid, Row } from 'carbon-components-svelte'
 	import { onMount } from 'svelte'
 
 	// Importing carousel in a tragic way because the
@@ -28,7 +28,7 @@
 		{/each}
 	</svelte:component>
 
-	<div class="watBMN">
+	<div class="watBMN" id="info">
 		<h1>Wat is de Bèta Music Night?</h1>
 		<p>
 			De Bèta Music Night (BMN) is een jaarlijks terugkerend concert, georganiseerd door de
