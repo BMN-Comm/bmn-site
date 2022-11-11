@@ -4,9 +4,7 @@
 		Row,
 		Column,
 		StructuredList,
-		StructuredListHead,
 		StructuredListCell,
-		StructuredListBody,
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import type { announcement } from '$lib/types/domain/announcement'

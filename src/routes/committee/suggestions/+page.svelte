@@ -11,10 +11,10 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import type { song } from '$lib/types/domain/song'
-	import { Bat, Chat, Favorite, MusicAdd, MusicRemove, PlayFilledAlt } from 'carbon-icons-svelte'
+	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
 	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
-	import { isValidUrl } from '$lib/util/urlValidation'
+	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 
 	export let data: { suggestions: { song: song; user: string }[] }
 
@@ -74,16 +74,7 @@
 					{song.genre}
 				</StructuredListCell>
 				<StructuredListCell>
-					{@const validUrl = isValidUrl(song.link)}
-					<Button
-						href={validUrl ? song.link : undefined}
-						target="blank"
-						kind="ghost"
-						size="small"
-						iconDescription={validUrl ? song.link : 'Invalid URL'}
-						icon={PlayFilledAlt}
-						disabled={!validUrl}
-					/>
+					<PlayLinkButton url={song.link} />
 				</StructuredListCell>
 				<StructuredListCell>
 					<Button
@@ -173,6 +164,7 @@
 </Modal>
 
 <style>
+	@import '/src/style/rainbow.css';
 	.titleText {
 		font-size: x-large;
 	}
@@ -187,57 +179,5 @@
 		animation: rainbow 2.5s linear !important;
 		animation-iteration-count: infinite !important;
 		background-color: rgba(0, 0, 0, 0) !important;
-	}
-
-	@keyframes rainbow {
-		100%,
-		0% {
-			color: rgb(255, 0, 0);
-			border-color: rgb(255, 0, 0);
-		}
-		8% {
-			color: rgb(255, 127, 0);
-			border-color: rgb(255, 127, 0);
-		}
-		16% {
-			color: rgb(255, 255, 0);
-			border-color: rgb(255, 255, 0);
-		}
-		25% {
-			color: rgb(127, 255, 0);
-			border-color: rgb(127, 255, 0);
-		}
-		33% {
-			color: rgb(0, 255, 0);
-			border-color: rgb(0, 255, 0);
-		}
-		41% {
-			color: rgb(0, 255, 127);
-			border-color: rgb(0, 255, 127);
-		}
-		50% {
-			color: rgb(0, 255, 255);
-			border-color: rgb(0, 255, 255);
-		}
-		58% {
-			color: rgb(0, 127, 255);
-			border-color: rgb(0, 127, 255);
-		}
-		66% {
-			color: rgb(0, 0, 255);
-			border-color: rgb(0, 0, 255);
-		}
-		75% {
-			color: rgb(127, 0, 255);
-			border-color: rgb(127, 0, 255);
-		}
-		83% {
-			color: rgb(255, 0, 255);
-			border-color: rgb(255, 0, 255);
-		}
-		91% {
-			color: rgb(255, 0, 127);
-			border-color: rgb(255, 0, 127);
-		}
 	}
 </style>

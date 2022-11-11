@@ -1,13 +1,12 @@
 <script lang="ts">
+	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import { db } from '$lib/firebase/client/firebase'
 	import type { song } from '$lib/types/domain/song'
 	import type { user } from '$lib/types/domain/user'
-	import { isValidUrl } from '$lib/util/urlValidation'
 	import {
 		Button,
 		Column,
 		ComboBox,
-		FluidForm,
 		Form,
 		Grid,
 		Modal,
@@ -19,15 +18,13 @@
 		TextInput
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { MusicRemove, PlayFilledAlt, UserFollow } from 'carbon-icons-svelte'
+	import { MusicRemove, UserFollow } from 'carbon-icons-svelte'
 	import {
 		addDoc,
 		arrayRemove,
 		collection,
-		collectionGroup,
 		deleteDoc,
 		doc,
-		getDoc,
 		getDocs,
 		query,
 		updateDoc,
@@ -38,10 +35,14 @@
 		songs: song[]
 		// Een goed tijdje bezig geweest dit om te schrijven, maar gaf steeds problemen
 		// dus als je iets weet laat maar weten xd
-		musiciansForSongs: Map<string, [string, string][]>
+		musiciansForSongs: {
+			[songId: string]: { participantName: string; instrumentName: string }[]
+		}
 		users: user[]
 		namesMap: { [userId: string]: { participantName: string } }
 	}
+
+	console.log(data.musiciansForSongs)
 
 	let selectedSong: number
 	let selectedUserEntry: number
@@ -76,7 +77,7 @@
 		})
 		data.musiciansForSongs[data.songs[selectedSong].id] = [
 			...data.musiciansForSongs[data.songs[selectedSong].id],
-			[data.namesMap[participant], instrument]
+			{ participantName: data.namesMap[participant].participantName, instrumentName: instrument }
 		]
 	}
 
@@ -116,39 +117,31 @@
 			<StructuredListRow>
 				<StructuredListCell>{song.name}</StructuredListCell>
 				<StructuredListCell>{song.artist}</StructuredListCell>
-				<StructuredListCell
-					>{@const validUrl = isValidUrl(song.link)}
-					<Button
-						href={validUrl ? song.link : undefined}
-						target="blank"
-						kind="ghost"
-						size="small"
-						iconDescription={validUrl ? song.link : 'Invalid URL'}
-						icon={PlayFilledAlt}
-						disabled={!validUrl}
-					/></StructuredListCell
-				>
 				<StructuredListCell>
-					{#each Object.entries(data.musiciansForSongs) as [key, value], j}
-						{#if key == song.id}
-							{#each value as musician}
-								{musician[0]} - {musician[1]}
-								<Button
-									size="small"
-									kind="ghost"
-									class="removePerson"
-									on:click={() => {
-										selectedSong = i
-										selectedUser = musician[0]
-										selectedInstrument = musician[1]
-										selectedUserEntry = j
-										openDelUser = true
-									}}>X</Button
-								>
-								<br />
-							{/each}
-						{/if}
-					{/each}
+					<PlayLinkButton url={song.link} />
+				</StructuredListCell>
+				<StructuredListCell>
+					{@const musicians = data.musiciansForSongs[song.id]}
+					{#if musicians !== undefined}
+						{#each musicians as musician, j}
+							{musician.participantName} - {musician.instrumentName}
+							<Button
+								size="small"
+								kind="ghost"
+								class="removePerson"
+								on:click={() => {
+									selectedSong = i
+									selectedUser = musician.participantName
+									selectedInstrument = musician.instrumentName
+									selectedUserEntry = j
+									openDelUser = true
+								}}
+							>
+								X
+							</Button>
+							<br />
+						{/each}
+					{/if}
 				</StructuredListCell>
 				<StructuredListCell>
 					<Button
@@ -215,13 +208,14 @@
 
 <Modal
 	bind:open={openAdd}
-	modalHeading="Login"
+	modalHeading="Add participant to line-up"
 	primaryButtonText="Confirm"
 	on:click:button--primary={() => {
 		AddParticipantToSong()
 		openAdd = false
 	}}
 	hasScrollingContent
+	class="addParticipantModal"
 >
 	<Form>
 		<ComboBox
@@ -233,8 +227,6 @@
 		<br />
 		<TextInput bind:value={instrument} required labelText="Instrument" />
 	</Form>
-	<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-	/><br />
 </Modal>
 
 <style>
@@ -245,5 +237,9 @@
 		padding: 0px !important;
 		margin: 2px 0px !important;
 		border: 0px;
+	}
+
+	:global(.addParticipantModal .bx--modal-content) {
+		height: 30rem;
 	}
 </style>

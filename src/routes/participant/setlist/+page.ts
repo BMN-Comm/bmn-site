@@ -39,7 +39,7 @@ export const load: PageLoad = async () => {
 	// Get the participants documents
 	const participantQuery = query(collection(db, 'users'), where('__name__', 'in', parents))
 	const _ = (await getDocs(participantQuery)).docs.forEach((doc) => {
-		namesMap[doc.id] = doc.data().name
+		namesMap[doc.id] = { participantName: doc.data().name }
 	})
 
 	// For each song, add the [participant, instrument] tuple to it's key in the map
@@ -48,14 +48,22 @@ export const load: PageLoad = async () => {
 		let m = musiciansForSongs[sid]
 		let p: { participantName: string; instrumentName: string }[] = []
 
-		// TODO: Rienk haal kringeltjes weg/ refactor :)
 		if (m != undefined) {
-			p = [...m, [namesMap[parents[i]]!, playsInRefs[i].part]]
+			p = m
+			p.push({
+				participantName: namesMap[parents[i]].participantName,
+				instrumentName: playsInRefs[i].part
+			})
 		} else {
-			p = [[namesMap[parents[i]]!, playsInRefs[i].part]]
+			p = [
+				{
+					participantName: namesMap[parents[i]].participantName,
+					instrumentName: playsInRefs[i].part
+				}
+			]
 		}
 
-		musiciansForSongs[sid] = p!
+		musiciansForSongs[sid] = p
 	}
 
 	return { songs, musiciansForSongs }

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {
 		Column,
-		ExpandableTile,
 		Grid,
 		Row,
 		StructuredList,

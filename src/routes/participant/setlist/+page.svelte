@@ -1,8 +1,7 @@
 <script lang="ts">
+	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import type { song } from '$lib/types/domain/song'
-	import { isValidUrl } from '$lib/util/urlValidation'
 	import {
-		Button,
 		Column,
 		Grid,
 		Row,
@@ -11,11 +10,12 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { PlayFilledAlt } from 'carbon-icons-svelte'
 
 	export let data: {
 		songs: song[]
-		musiciansForSongs: Map<string, [string, string][]>
+		musiciansForSongs: {
+			[songId: string]: { participantName: string; instrumentName: string }[]
+		}
 	}
 </script>
 
@@ -33,30 +33,20 @@
 				<StructuredListCell head>Line-up</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
-		{#each data.songs as song, i}
+		{#each data.songs as song}
 			<StructuredListRow>
 				<StructuredListCell>{song.name}</StructuredListCell>
 				<StructuredListCell>{song.artist}</StructuredListCell>
-				<StructuredListCell
-					>{@const validUrl = isValidUrl(song.link)}
-					<Button
-						href={validUrl ? song.link : undefined}
-						target="blank"
-						kind="ghost"
-						size="small"
-						iconDescription={validUrl ? song.link : 'Invalid URL'}
-						icon={PlayFilledAlt}
-						disabled={!validUrl}
-					/></StructuredListCell
-				>
 				<StructuredListCell>
-					{#each Object.entries(data.musiciansForSongs) as [key, value]}
-						{#if key == song.id}
-							{#each value as musician}
-								{musician[0]} - {musician[1]}<br />
-							{/each}
-						{/if}
-					{/each}
+					<PlayLinkButton url={song.link} />
+				</StructuredListCell>
+				<StructuredListCell>
+					{@const musicians = data.musiciansForSongs[song.id]}
+					{#if musicians !== undefined}
+						{#each musicians as musician, j}
+							{musician.participantName} - {musician.instrumentName}<br />
+						{/each}
+					{/if}
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
