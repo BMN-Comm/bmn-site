@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {
 		Button,
+		Checkbox,
 		Column,
 		Grid,
 		Modal,
@@ -10,9 +11,8 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import type { song } from '$lib/types/domain/song'
 	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
-	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+	import { arrayUnion, arrayRemove, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import { invalidateAll } from '$app/navigation'
@@ -23,6 +23,7 @@
 	let openRemark = false
 	let openDel = false
 	let openAdd = false
+	let filterFavourites = false
 	let remarkText: string
 	let selectedSong: number
 
@@ -40,12 +41,41 @@
 		updateDoc(editionRef, {
 			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].song.id))
 		})
+		invalidateAll()
+	}
+
+	async function FavouriteSong(songId: string) {
+		// TODO: use current committee
+		const committeeRef = doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU')
+		const songRef = doc(db, 'songs', songId)
+		await updateDoc(committeeRef, {
+			likesSongs: arrayUnion(songRef)
+		})
+		invalidateAll()
+	}
+
+	async function UnfavouriteSong(songId: string) {
+		// TODO: use current committee
+		const committeeRef = doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU')
+		const songRef = doc(db, 'songs', songId)
+		await updateDoc(committeeRef, {
+			likesSongs: arrayRemove(songRef)
+		})
+		invalidateAll()
 	}
 </script>
 
 <Grid>
 	<Row>
-		<Column><h1 class="titleText">Suggestions</h1></Column>
+		<Column
+			><h1 class="titleText">Suggestions</h1>
+			<Checkbox
+				labelText="Filter Favourites"
+				on:change={() => {
+					filterFavourites = !filterFavourites
+				}}
+			/>
+		</Column>
 	</Row>
 
 	<StructuredList condensed>
@@ -61,66 +91,76 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		{#each data.suggestions as { song, user }, i}
-			<StructuredListRow>
-				<StructuredListCell>
-					{user}
-				</StructuredListCell>
-				<StructuredListCell>
-					{song.name}
-				</StructuredListCell>
-				<StructuredListCell>
-					{song.artist}
-				</StructuredListCell>
-				<StructuredListCell>
-					{song.genre}
-				</StructuredListCell>
-				<StructuredListCell>
-					<PlayLinkButton url={song.link} />
-				</StructuredListCell>
-				<StructuredListCell>
-					<Button
-						kind="danger-tertiary"
-						size="small"
-						iconDescription="Like"
-						icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
-					/>
-				</StructuredListCell>
-				<StructuredListCell>
-					<Button
-						kind="danger-tertiary"
-						size="small"
-						iconDescription="Delete"
-						icon={MusicRemove}
-						on:click={() => {
-							selectedSong = i
-							openDel = true
-						}}
-					/>
-					{#if song.remark && song.remark.length > 0}
+			{#if (filterFavourites && data.favouriteSongs[song.id]) || !filterFavourites}
+				<StructuredListRow>
+					<StructuredListCell>
+						{user}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.name}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.artist}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.genre}
+					</StructuredListCell>
+					<StructuredListCell>
+						<PlayLinkButton url={song.link} />
+					</StructuredListCell>
+					<StructuredListCell>
 						<Button
-							kind="tertiary"
+							kind="danger-tertiary"
 							size="small"
-							iconDescription="Remarks"
-							icon={Chat}
+							iconDescription="Like"
+							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
+							class={data.favouriteSongs[song.id] ? 'yesFave' : 'noFave'}
+							on:click={data.favouriteSongs[song.id]
+								? () => {
+										UnfavouriteSong(song.id)
+								  }
+								: () => {
+										FavouriteSong(song.id)
+								  }}
+						/>
+					</StructuredListCell>
+					<StructuredListCell>
+						<Button
+							kind="danger-tertiary"
+							size="small"
+							iconDescription="Delete"
+							icon={MusicRemove}
 							on:click={() => {
-								remarkText = song.remark
-								openRemark = true
+								selectedSong = i
+								openDel = true
 							}}
 						/>
-					{/if}
-					<Button
-						kind="secondary"
-						size="small"
-						iconDescription="Add to setlist"
-						icon={MusicAdd}
-						on:click={() => {
-							selectedSong = i
-							openAdd = true
-						}}
-						class={song.user.id === '3ClGLhR2ctxg6ZPn0Ls7' ? 'ilanButton' : 'addButton'}
-					/>
-				</StructuredListCell>
-			</StructuredListRow>
+						{#if song.remark && song.remark.length > 0}
+							<Button
+								kind="tertiary"
+								size="small"
+								iconDescription="Remarks"
+								icon={Chat}
+								on:click={() => {
+									remarkText = song.remark
+									openRemark = true
+								}}
+							/>
+						{/if}
+						<Button
+							kind="secondary"
+							size="small"
+							iconDescription="Add to setlist"
+							icon={MusicAdd}
+							on:click={() => {
+								selectedSong = i
+								openAdd = true
+							}}
+							class={song.user.id === '3ClGLhR2ctxg6ZPn0Ls7' ? 'ilanButton' : 'addButton'}
+						/>
+					</StructuredListCell>
+				</StructuredListRow>
+			{/if}
 		{/each}
 	</StructuredList>
 </Grid>
@@ -180,5 +220,10 @@
 		animation: rainbow 2.5s linear !important;
 		animation-iteration-count: infinite !important;
 		background-color: rgba(0, 0, 0, 0) !important;
+	}
+	:global(.yesFave) {
+		background-color: #b81921 !important;
+		border-color: #b81921 !important;
+		color: white !important;
 	}
 </style>
