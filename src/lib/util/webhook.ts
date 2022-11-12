@@ -124,16 +124,16 @@ async function sendWebhookMessage(params: {
 	avatar_url: string
 	embeds: Record<string, unknown>[]
 }) {
-	// await fetch(PUBLIC_DISCORD_WEBHOOK_URL, {
-	// 	method: 'POST',
-	// 	mode: 'cors',
-	// 	cache: 'no-cache',
-	// 	credentials: 'same-origin',
-	// 	headers: {
-	// 		'Content-type': 'application/json'
-	// 	},
-	// 	redirect: 'follow',
-	// 	referrerPolicy: 'no-referrer',
-	// 	body: JSON.stringify(params)
-	// })
+	await fetch(PUBLIC_DISCORD_WEBHOOK_URL, {
+		method: 'POST',
+		mode: 'cors',
+		cache: 'no-cache',
+		credentials: 'same-origin',
+		headers: {
+			'Content-type': 'application/json'
+		},
+		redirect: 'follow',
+		referrerPolicy: 'no-referrer',
+		body: JSON.stringify(params)
+	})
 }
