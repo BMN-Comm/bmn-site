@@ -15,8 +15,10 @@
 	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
+	import { invalidateAll } from '$app/navigation'
+	import type { PageData } from './$types'
 
-	export let data: { suggestions: { song: song; user: string }[] }
+	export let data: PageData
 
 	let openRemark = false
 	let openDel = false
@@ -29,8 +31,7 @@
 		const docRef = doc(db, 'songs', data.suggestions[selectedSong].song.id)
 		await deleteDoc(docRef)
 
-		data.suggestions.splice(selectedSong, 1)
-		data.suggestions = data.suggestions
+		invalidateAll()
 	}
 
 	async function addToSetlist() {

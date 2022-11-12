@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import { db } from '$lib/firebase/client/firebase'
-	import type { song } from '$lib/types/domain/song'
-	import type { user } from '$lib/types/domain/user'
+	import type { PageData } from './$types'
 	import {
 		Button,
 		Column,
@@ -31,18 +31,7 @@
 		where
 	} from 'firebase/firestore'
 
-	export let data: {
-		songs: song[]
-		// Een goed tijdje bezig geweest dit om te schrijven, maar gaf steeds problemen
-		// dus als je iets weet laat maar weten xd
-		musiciansForSongs: {
-			[songId: string]: { participantName: string; instrumentName: string }[]
-		}
-		users: user[]
-		namesMap: { [userId: string]: { participantName: string } }
-	}
-
-	console.log(data.musiciansForSongs)
+	export let data: PageData
 
 	let selectedSong: number
 	let selectedUserEntry: number
@@ -65,12 +54,12 @@
 		updateDoc(editionRef, {
 			songs: arrayRemove(doc(db, 'songs', data.songs[selectedSong].id))
 		})
-		data.songs.splice(selectedSong, 1)
-		data.songs = data.songs
+		invalidateAll()
 	}
 
 	async function AddParticipantToSong() {
 		await addDoc(collection(db, 'users/' + participant + '/playsSongInEdition'), {
+			// TODO: use current edition
 			edition: doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40'),
 			part: instrument,
 			song: doc(db, 'songs', data.songs[selectedSong].id)
@@ -79,6 +68,8 @@
 			...data.musiciansForSongs[data.songs[selectedSong].id],
 			{ participantName: data.namesMap[participant].participantName, instrumentName: instrument }
 		]
+
+		invalidateAll()
 	}
 
 	async function RemoveParticipantFromSong() {
@@ -95,7 +86,7 @@
 
 		await deleteDoc(playsInDoc)
 
-		data.musiciansForSongs = data.musiciansForSongs
+		invalidateAll()
 	}
 </script>
 

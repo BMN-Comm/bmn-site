@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
-	import type { song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
+	import type { PageData } from './$types'
 	import {
 		Column,
 		Grid,
@@ -13,13 +12,9 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 
-	export let data: {
-		rehearsal: rehearsal
-		rehearsalId: string
-		rehearsalSongs: rehearsalSong[]
-		songs: song[]
-		musicians: Map<string, [string, string][]>
-	}
+	export let data: PageData
+
+	const { rehearsal, songs, musicians } = data
 </script>
 
 <Grid>
@@ -35,24 +30,25 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>
-			{#each data.songs as song, i}
-				<StructuredListRow>
-					<StructuredListCell>{song.name}</StructuredListCell>
-					<StructuredListCell
-						>{getTimeString(data.rehearsalSongs[i].startTime)} -
-						{getTimeString(data.rehearsalSongs[i].endTime)}
-					</StructuredListCell>
-					<StructuredListCell>
-						{#each Object.entries(data.musicians) as [key, value]}
-							{#if key == song.id}
-								{#each value as musician}
-									{musician[0]} - {musician[1]}<br />
+			{#if songs != undefined}
+				{#each songs as song, i}
+					<StructuredListRow>
+						<StructuredListCell>{song.name}</StructuredListCell>
+						<StructuredListCell
+							>{getTimeString(rehearsal.songsToRehearse[i].startTime)} -
+							{getTimeString(rehearsal.songsToRehearse[i].endTime)}
+						</StructuredListCell>
+						<StructuredListCell>
+							{@const musiciansForSong = musicians[song.id]}
+							{#if musicians !== undefined}
+								{#each musiciansForSong as musician}
+									{musician.participantName} - {musician.instrumentName}<br />
 								{/each}
 							{/if}
-						{/each}
-					</StructuredListCell>
-				</StructuredListRow>
-			{/each}
+						</StructuredListCell>
+					</StructuredListRow>
+				{/each}
+			{/if}
 		</StructuredListBody>
 	</StructuredList>
 </Grid>
