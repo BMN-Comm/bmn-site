@@ -9,9 +9,9 @@
 		StructuredListBody,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import type { announcement } from '$lib/types/domain/announcement'
+	import type { PageData } from './$types'
 
-	export let data: { announcements: announcement[] }
+	export let data: PageData
 </script>
 
 <Grid>

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { rehearsal } from '$lib/types/domain/rehearsal'
-	import type { availability } from '$lib/types/domain/availability'
 	import {
 		Column,
 		Grid,
@@ -13,18 +11,14 @@
 	} from 'carbon-components-svelte'
 	import { CheckmarkOutline, Launch, MisuseOutline } from 'carbon-icons-svelte'
 	import { getTimeString } from '$lib/util/timeString'
+	import type { PageData } from './$types'
 
-	export let data: { rehearsals: rehearsal[]; availability: availability[] }
-
-	let rehearsalAvailability = Object.assign(
-		{},
-		...data.availability.map((x) => ({ [x.rehearsal.id]: x.available }))
-	)
+	export let data: PageData
 </script>
 
 <Grid>
 	<Row padding>
-		<Column><h1>Planned rehearsals</h1></Column>
+		<Column><h1>Your availability</h1></Column>
 	</Row>
 	<StructuredList>
 		<StructuredListHead>
@@ -36,7 +30,7 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>
-			{#each data.rehearsals as rehearsal, i}
+			{#each data.rehearsals as rehearsal}
 				<StructuredListRow>
 					<StructuredListCell>
 						{rehearsal.startTime.toDate().toDateString()}
@@ -49,10 +43,10 @@
 						{rehearsal.location}
 					</StructuredListCell>
 					<StructuredListCell>
-						{#if rehearsal.id in rehearsalAvailability}
-							<div class="checkmark"><CheckmarkOutline /></div>
+						{#if data.availability[rehearsal.id] !== undefined}
+							<CheckmarkOutline class="checkmark" />
 						{:else}
-							<div class="cross"><MisuseOutline /></div>
+							<MisuseOutline class="cross" />
 						{/if}
 					</StructuredListCell>
 					<StructuredListCell>
@@ -65,10 +59,10 @@
 </Grid>
 
 <style>
-	.checkmark {
+	:global(.checkmark) {
 		color: green;
 	}
-	.cross {
+	:global(.cross) {
 		color: red;
 	}
 </style>

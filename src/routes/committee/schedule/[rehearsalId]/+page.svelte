@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { newRehearsalSong, rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
+	import type { newRehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
 	import { newSchedule } from '$lib/util/webhook'
+	import type { PageData } from './$types'
 	import {
 		Button,
 		Column,
@@ -19,34 +20,24 @@
 		StructuredListRow,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
 	import { Add, Save } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
 
-	export let data: {
-		rehearsal: rehearsal
-		rehearsalId: string
-		rehearsalSongs: rehearsalSong[]
-		songs: song[]
-		musicians: { [songId: string]: [participantName: string, instrumentName: string][] }
-		editionSongs: song[]
-	}
+	export let data: PageData
+
+	const { rehearsal, songs, musicians, editionSongs } = data
 
 	let openModal = false
 	let startTime: string
 	let endTime: string
 	let songId: string
 
-	let editionSongs: DropdownItem[] = data.editionSongs.map(
-		(s) => ({ id: s.id, text: s.name } as DropdownItem)
-	)
-
 	async function addSong() {
 		let rehearsalSong: newRehearsalSong
 
-		if (!data.editionSongs.some((s: song) => s.id == songId)) return
+		if (!editionSongs.some((s: song) => s.id == songId)) return
 
-		let rehearsalDay = data.rehearsal.startTime.toDate()
+		let rehearsalDay = rehearsal.startTime.toDate()
 		let startDate = rehearsalDay
 		let endDate = rehearsalDay
 		let start = startTime.split(':')
@@ -61,16 +52,13 @@
 			endTime: Timestamp.fromDate(endDate)
 		}
 
-		await setDoc(
-			doc(collection(db, 'rehearsals', data.rehearsalId, 'songsToRehearse')),
-			rehearsalSong!
-		)
+		await setDoc(doc(collection(db, 'rehearsals', rehearsal.id, 'songsToRehearse')), rehearsalSong!)
 	}
 </script>
 
 <Grid>
 	<Row padding>
-		<Column><h1>Rehearsals {data.rehearsal.startTime.toDate().toDateString()}</h1></Column>
+		<Column><h1>Rehearsals {rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
 	<Row>
 		<Column>
@@ -87,7 +75,7 @@
 				iconDescription="Save schedule"
 				icon={Save}
 				on:click={() => {
-					newSchedule(data.rehearsal)
+					newSchedule(rehearsal)
 				}}
 			/>
 		</Column>
@@ -101,22 +89,21 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		<StructuredListBody>
-			{#if data.songs != undefined}
-				{#each data.songs as song, i}
+			{#if songs != undefined}
+				{#each songs as song, i}
 					<StructuredListRow>
 						<StructuredListCell>{song.name}</StructuredListCell>
 						<StructuredListCell
-							>{getTimeString(data.rehearsalSongs[i].startTime)} -
-							{getTimeString(data.rehearsalSongs[i].endTime)}
+							>{getTimeString(rehearsal.songsToRehearse[i].startTime)} -
+							{getTimeString(rehearsal.songsToRehearse[i].endTime)}
 						</StructuredListCell>
 						<StructuredListCell>
-							{#each Object.entries(data.musicians) as [key, value]}
-								{#if key == song.id}
-									{#each value as musician}
-										{musician[0]} - {musician[1]}<br />
-									{/each}
-								{/if}
-							{/each}
+							{@const musiciansForSong = musicians[song.id]}
+							{#if musicians !== undefined}
+								{#each musiciansForSong as musician}
+									{musician.participantName} - {musician.instrumentName}<br />
+								{/each}
+							{/if}
 						</StructuredListCell>
 					</StructuredListRow>
 				{/each}
@@ -141,7 +128,12 @@
 		<Grid>
 			<Row padding>
 				<Column>
-					<ComboBox titleText="Song" items={editionSongs} bind:selectedId={songId} required />
+					<ComboBox
+						titleText="Song"
+						items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
+						bind:selectedId={songId}
+						required
+					/>
 				</Column>
 			</Row>
 			<Row>

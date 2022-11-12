@@ -119,17 +119,21 @@ function createWebhookMessage(
 	}
 }
 
-async function sendWebhookMessage(params: any) {
-	const response = await fetch(PUBLIC_DISCORD_WEBHOOK_URL, {
-		method: 'POST',
-		mode: 'cors',
-		cache: 'no-cache',
-		credentials: 'same-origin',
-		headers: {
-			'Content-type': 'application/json'
-		},
-		redirect: 'follow',
-		referrerPolicy: 'no-referrer',
-		body: JSON.stringify(params)
-	})
+async function sendWebhookMessage(params: {
+	username: string
+	avatar_url: string
+	embeds: Record<string, unknown>[]
+}) {
+	// await fetch(PUBLIC_DISCORD_WEBHOOK_URL, {
+	// 	method: 'POST',
+	// 	mode: 'cors',
+	// 	cache: 'no-cache',
+	// 	credentials: 'same-origin',
+	// 	headers: {
+	// 		'Content-type': 'application/json'
+	// 	},
+	// 	redirect: 'follow',
+	// 	referrerPolicy: 'no-referrer',
+	// 	body: JSON.stringify(params)
+	// })
 }
