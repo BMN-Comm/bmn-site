@@ -22,8 +22,10 @@
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
 	import { newRehearsalPost } from '$lib/util/webhook'
+	import { invalidateAll } from '$app/navigation'
+	import type { PageData } from './$types'
 
-	export let data: { rehearsals: rehearsal[] }
+	export let data: PageData
 
 	let openModal = false
 	let openDel = false
@@ -34,53 +36,43 @@
 
 	let selectedRehearsal: number
 
+	/** Add a new rehearsal date to the database */
 	async function addRehearsal() {
-		let start: Timestamp
-		let end: Timestamp
-
-		// TODO: Rienk: check of dit beter kan
 		let dateSplit = date.split('/')
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
 
-		let sDate: Date = new Date(
-			+dateSplit[2],
-			+dateSplit[1] - 1,
-			+dateSplit[0],
-			+sTimeSplit[0],
-			+sTimeSplit[1]
-		)
-		let eDate: Date = new Date(
-			+dateSplit[2],
-			+dateSplit[1] - 1,
-			+dateSplit[0],
-			+eTimeSplit[0],
-			+eTimeSplit[1]
-		)
-
-		start = Timestamp.fromDate(sDate)
-		end = Timestamp.fromDate(eDate)
-
-		const newRehearsal = doc(collection(db, 'rehearsals'))
-
 		let rehearsal = {
 			// TODO: Use current edition
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
-			startTime: start,
-			endTime: end,
+			startTime: Timestamp.fromDate(
+				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
+			),
+			endTime: Timestamp.fromDate(
+				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +eTimeSplit[0], +eTimeSplit[1])
+			),
 			location
 		}
 
+		const newRehearsal = doc(collection(db, 'rehearsals'))
+
 		await setDoc(newRehearsal, rehearsal)
 		newRehearsalPost(newRehearsal.id, rehearsal)
+
+		date = ''
+		startTime = '18:00'
+		endTime = '21:00'
+		openModal = false
+
+		invalidateAll()
 	}
 
-	function removeRehearsal() {
-		data.rehearsals.splice(selectedRehearsal, 1)
-		data = data
+	/** Remove a rehearsal from the database */
+	async function removeRehearsal() {
+		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsal].id)
+		await deleteDoc(docRef)
 
-		const docRef = doc(db, 'songs', data.rehearsals[selectedRehearsal].id)
-		deleteDoc(docRef)
+		invalidateAll()
 	}
 </script>
 
@@ -131,7 +123,7 @@
 							size="small"
 							iconDescription="Show availability"
 							icon={Person}
-							href={`/committee/schedule/availability/${rehearsal.id}`}
+							href={`/committee/schedule/${rehearsal.id}/availability`}
 						/>
 						<Button
 							kind="danger-tertiary"

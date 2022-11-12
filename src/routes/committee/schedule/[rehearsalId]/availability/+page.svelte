@@ -1,8 +1,6 @@
 <script lang="ts">
-	import type { availability } from '$lib/types/domain/availability'
-	import type { rehearsal } from '$lib/types/domain/rehearsal'
-	import type { user } from '$lib/types/domain/user'
 	import { getTimeString } from '$lib/util/timeString'
+	import type { PageData } from './$types'
 	import {
 		Button,
 		Grid,
@@ -14,11 +12,8 @@
 	} from 'carbon-components-svelte'
 	import { Chat } from 'carbon-icons-svelte'
 
-	export let data: {
-		users: { [id: string]: user }
-		availabilities: { [id: string]: availability }
-		rehearsal: rehearsal
-	}
+	export let data: PageData
+
 	let reasonText: string = ''
 	let openReason: boolean = false
 </script>
@@ -32,14 +27,14 @@
 				<StructuredListCell head>Availability</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
-		{#each Object.entries(data.users) as [id, user]}
+		{#each data.users as user}
 			<StructuredListRow>
 				<StructuredListCell>
 					{user.name}
 				</StructuredListCell>
 				<StructuredListCell>
-					{#if id in data.availabilities}
-						{@const availability = data.availabilities[id]}
+					{#if user.id in data.availabilities}
+						{@const availability = data.availabilities[user.id]}
 						{#if availability.available}
 							{getTimeString(availability.startTime)} -
 							{getTimeString(availability.endTime)}
@@ -53,8 +48,7 @@
 								iconDescription="Remarks"
 								icon={Chat}
 								on:click={() => {
-									// Ja deze check is dubbel, maar nu heb k geen kringeltjes :)
-									if (availability.reason !== undefined) reasonText = availability.reason
+									reasonText = availability.reason ?? ''
 									openReason = true
 								}}
 							/>
