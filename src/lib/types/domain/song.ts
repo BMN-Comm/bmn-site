@@ -11,3 +11,10 @@ export type song = {
 	suggestionDate: Timestamp
 	user: DocumentReference // Reference to user path
 }
+
+export type playsSong = {
+	id: string
+	edition: DocumentReference
+	part: string
+	song: DocumentReference
+}
