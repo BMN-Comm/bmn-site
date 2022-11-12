@@ -4,16 +4,33 @@
 		SideNavItems,
 		SideNavLink,
 		SideNavDivider,
-		Content
+		Content,
+		HeaderNavItem
 	} from 'carbon-components-svelte'
 	import type { sidebarContextType } from 'src/routes/+layout.svelte'
 	import { getContext } from 'svelte'
 
+	import { page } from '$app/stores'
+
 	const { open } = getContext<sidebarContextType>('sidebar')
+
+	$: innerWidth = 0
 </script>
+
+<svelte:window bind:innerWidth />
 
 <SideNav bind:isOpen={$open}>
 	<SideNavItems>
+		{#if innerWidth < 1056}
+			<SideNavLink text="Home" href="/" />
+			{#if $page.data.user?.commissie}
+				<HeaderNavItem text="Committee" href="/committee" />
+			{/if}
+			{#if $page.data.user?.admin}
+				<HeaderNavItem text="Admin" href="/admin-portal/claims" />
+			{/if}
+			<SideNavDivider />
+		{/if}
 		<SideNavLink text="Announcements" href="/participant/announcements" />
 		<SideNavLink text="Setlist" href="/participant/setlist" />
 		<SideNavLink text="My songs" href="/participant/mySongs" />
