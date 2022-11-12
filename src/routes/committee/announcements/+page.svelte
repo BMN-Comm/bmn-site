@@ -19,16 +19,16 @@
 	import { db } from '$lib/firebase/client/firebase'
 	import { Timestamp } from 'firebase/firestore'
 	import { newNewsPost } from '$lib/util/webhook'
+	import type { PageData } from './$types'
+	import { invalidateAll } from '$app/navigation'
 
-	export let data: { announcements: announcement[] }
+	export let data: PageData
 
 	let openNew = false
 	let openDel = false
 	let title: string
 	let message: string
 	let selectedAnnouncement: number = 0
-
-	console.log(data.announcements)
 
 	async function AddAnnouncement() {
 		const user = doc(db, 'users', $page.data.user!.databaseId)
@@ -53,15 +53,14 @@
 			...newAnnouncement
 		} as announcement
 
-		data.announcements = [newAnnouncementElement, ...data.announcements]
+		invalidateAll()
 	}
 
 	async function RemoveAnnouncement() {
 		const announcementRef = doc(db, 'announcements', data.announcements[selectedAnnouncement].id)
 		await deleteDoc(announcementRef)
 
-		data.announcements.splice(selectedAnnouncement, 1)
-		data.announcements = data.announcements
+		invalidateAll()
 	}
 </script>
 
