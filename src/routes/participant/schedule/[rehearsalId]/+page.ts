@@ -1,12 +1,12 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
-import type { song } from '$lib/types/domain/song'
+import type { playsSong, song } from '$lib/types/domain/song'
+import type { user } from '$lib/types/domain/user'
 import {
 	query,
 	collection,
 	orderBy,
 	getDocs,
-	DocumentReference,
 	doc,
 	getDoc,
 	collectionGroup,
@@ -16,89 +16,80 @@ import type { PageLoad } from './$types'
 
 export const ssr = false
 
-type playsSong = {
-	id: string
-	edition: DocumentReference
-	part: string
-	song: DocumentReference
-}
-
 export const load: PageLoad = async ({ params }) => {
 	await verifyUserLoggedIn()
 
-	const rehearsal = (await getDoc(doc(db, 'rehearsals/', params.rehearsalId))).data() as rehearsal
+	// Get the rehearsal
+	const rehearsalDoc = doc(db, 'rehearsals/', params.rehearsalId)
+	const rehearsal = { id: rehearsalDoc.id, ...(await getDoc(rehearsalDoc)).data() } as rehearsal
 
 	// Get all the songs that need to be rehearsed on this day
 	const rehearsalSongsQuery = query(
-		collection(db, 'rehearsals/' + params.rehearsalId + '/songsToRehearse'),
+		collection(rehearsalDoc, 'songsToRehearse'),
 		orderBy('startTime')
 	)
-	const rehearsalSongs = (await getDocs(rehearsalSongsQuery)).docs.map(
+	rehearsal.songsToRehearse = (await getDocs(rehearsalSongsQuery)).docs.map(
 		(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
 	)
 
-	// Get the document ids of the songs
-	const s = rehearsalSongs.map((rehearsalSong) => rehearsalSong.song.id)
+	let songs
 
-	if (s.length < 1) {
-		return {
-			rehearsal: rehearsal,
-			rehearsalId: params.rehearsalId,
-			rehearsalSongs: rehearsalSongs,
-			songs: [],
-			musicians: []
-		}
-	}
-
-	// Get the song objects from the rehearsal songs
-	const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', s))
-	const songs = (await getDocs(songsQuery)).docs.map(
-		(doc) => ({ id: doc.id, ...doc.data() } as song)
-	)
-
-	let musiciansForSongs: {
+	const musiciansForSongs: {
 		[songId: string]: { participantName: string; instrumentName: string }[]
 	} = {}
 
-	// Get the playsSongInEdition for all participants on this rehearsal day
-	const sRef = s.map((item) => doc(db, 'songs/' + item))
-	const playsInQuery = query(collectionGroup(db, 'playsSongInEdition'), where('song', 'in', sRef))
-	const playsInDocs = (await getDocs(playsInQuery)).docs
-	const playsInRefs = playsInDocs.map((doc) => ({ id: doc.id, ...doc.data() } as playsSong))
+	if (rehearsal.songsToRehearse.length > 0) {
+		// Get the document ids of the songs
+		const songIds = rehearsal.songsToRehearse.map((rehearsalSong) => rehearsalSong.song.id)
 
-	// Get the participants ids, as they are the parents of the playsSongInEditions
-	const parents = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
+		// Get the song objects from the rehearsal songs
+		const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', songIds))
+		const songDocs = (await getDocs(songsQuery)).docs
+		songs = songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
-	// Map user document id to user name
-	let namesMap: { [userId: string]: { participantName: string } } = {}
+		// Get the playsSongInEdition for all participants on this rehearsal day
+		const playsInQuery = query(
+			collectionGroup(db, 'playsSongInEdition'),
+			where(
+				'song',
+				'in',
+				songDocs.map((song) => song.ref)
+			)
+		)
+		const playsInDocs = (await getDocs(playsInQuery)).docs
 
-	// Get the participants documents
-	const participantQuery = query(collection(db, 'users'), where('__name__', 'in', parents))
-	const _ = (await getDocs(participantQuery)).docs.forEach((doc) => {
-		namesMap[doc.id] = doc.data().name
-	})
+		// Get all the participants that play these songs
+		const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
+		const participantQuery = query(collection(db, 'users'), where('__name__', 'in', participantIds))
+		const participants = (await getDocs(participantQuery)).docs.map(
+			(participant) =>
+				({
+					id: participant.id,
+					...participant.data()
+				} as user)
+		)
 
-	// For each song, add the [participant, instrument] tuple to it's key in the map
-	for (let i = 0; i < playsInRefs.length; i++) {
-		let sid = playsInRefs[i].song.id
-		let m = musiciansForSongs[sid]
-		let p: { participantName: string; instrumentName: string }[] = []
+		// Add them to the dictionary for the songs they play
+		for (const playsInSong of playsInDocs) {
+			const participant = participants.find((x) => x.id === playsInSong.ref.parent.parent?.id)
+			if (!participant) throw new Error('Participant was not loaded, something is wrong')
 
-		// TODO: Rienk haal kringeltjes weg/ refactor :)
-		if (m != undefined) {
-			p = [...m, [namesMap[parents[i]]!, playsInRefs[i].part]]
-		} else {
-			p = [[namesMap[parents[i]]!, playsInRefs[i].part]]
+			const playsInSongData = playsInSong.data()
+			// Create array if not exists
+			if (!musiciansForSongs[playsInSongData.song.id])
+				musiciansForSongs[playsInSongData.song.id] = []
+
+			// Add musician
+			musiciansForSongs[playsInSongData.song.id].push({
+				participantName: participant.name,
+				instrumentName: playsInSongData.part
+			})
 		}
-
-		musiciansForSongs[sid] = p!
 	}
 
 	return {
-		rehearsal: rehearsal,
-		rehearsalId: params.rehearsalId,
-		rehearsalSongs: rehearsalSongs,
-		songs: songs,
+		rehearsal,
+		songs,
 		musicians: musiciansForSongs
 	}
 }

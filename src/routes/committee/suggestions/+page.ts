@@ -11,6 +11,8 @@ import {
 	doc
 } from 'firebase/firestore'
 import type { committee } from '$lib/types/domain/committee'
+import { toDict } from '$lib/util/dict'
+import type { song } from '$lib/types/domain/song'
 
 export const ssr = false
 
@@ -29,9 +31,8 @@ export const load: PageLoad = async () => {
 		collection(db, 'users'),
 		where('__name__', 'in', suggestionUserDocuments)
 	)
-	const usersDict = Object.assign(
-		{},
-		...(await getDocs(usersQuery)).docs.map((document) => ({
+	const usersDict = toDict(
+		(await getDocs(usersQuery)).docs.map((document) => ({
 			[document.id]: document.data().name
 		}))
 	)
@@ -52,7 +53,7 @@ export const load: PageLoad = async () => {
 		suggestions: suggestions.map((doc) => {
 			const data = doc.data()
 			return {
-				song: { id: doc.id, ...data },
+				song: { id: doc.id, ...data } as song,
 				user: usersDict[data.user.id]
 			}
 		}),
