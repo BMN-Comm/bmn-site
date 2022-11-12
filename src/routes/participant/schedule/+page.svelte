@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {
 		Column,
-		ExpandableTile,
 		Grid,
 		Row,
 		StructuredList,
@@ -10,11 +9,11 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import type { rehearsal } from '$lib/types/domain/rehearsal'
 	import { Launch } from 'carbon-icons-svelte'
 	import { getTimeString } from '$lib/util/timeString'
+	import type { PageData } from './$types'
 
-	export let data: { rehearsals: rehearsal[] }
+	export let data: PageData
 </script>
 
 <Grid>

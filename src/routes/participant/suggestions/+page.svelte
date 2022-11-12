@@ -12,7 +12,7 @@
 		TextArea,
 		ToastNotification
 	} from 'carbon-components-svelte'
-	import { collection, doc, DocumentReference, setDoc, Timestamp } from 'firebase/firestore'
+	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
 
 	let title: string
 	let artist: string
