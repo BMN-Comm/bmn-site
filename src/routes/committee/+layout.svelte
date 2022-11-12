@@ -27,7 +27,6 @@
 		{/if}
 		<SideNavLink text="Announcements" href="/committee/announcements" />
 		<SideNavLink text="Setlist" href="/committee/setlist" />
-		<SideNavLink text="My songs" href="/committee/mySongs" />
 		<SideNavLink text="Suggestions" href="/committee/suggestions" />
 		<SideNavDivider />
 		<SideNavLink text="Rehearsals" href="/committee/schedule" />
