@@ -1,7 +1,9 @@
 <script lang="ts">
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
-	import type { song } from '$lib/types/domain/song'
+	import type { PageData } from './$types'
+	import { page } from '$app/stores'
 	import {
+		Checkbox,
 		Column,
 		Grid,
 		Row,
@@ -11,17 +13,22 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 
-	export let data: {
-		songs: song[]
-		musiciansForSongs: {
-			[songId: string]: { participantName: string; instrumentName: string }[]
-		}
-	}
+	export let data: PageData
+
+	let filterOwnSongs = false
 </script>
 
 <Grid>
 	<Row>
-		<Column><h1 class="titleText">Setlist</h1></Column>
+		<Column>
+			<h1 class="titleText">Setlist</h1>
+			<Checkbox
+				labelText="Show only my songs"
+				on:change={() => {
+					filterOwnSongs = !filterOwnSongs
+				}}
+			/>
+		</Column>
 	</Row>
 
 	<StructuredList condensed>
@@ -34,21 +41,27 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		{#each data.songs as song}
-			<StructuredListRow>
-				<StructuredListCell>{song.name}</StructuredListCell>
-				<StructuredListCell>{song.artist}</StructuredListCell>
-				<StructuredListCell>
-					<PlayLinkButton url={song.link} />
-				</StructuredListCell>
-				<StructuredListCell>
-					{@const musicians = data.musiciansForSongs[song.id]}
-					{#if musicians !== undefined}
-						{#each musicians as musician, j}
-							{musician.participantName} - {musician.instrumentName}<br />
-						{/each}
-					{/if}
-				</StructuredListCell>
-			</StructuredListRow>
+			{@const musicians = data.musiciansForSongs[song.id]}
+			{#if (filterOwnSongs && musicians
+					.map((musician) => {
+						return musician.participantId == $page.data.user?.databaseId
+					})
+					.includes(true)) || !filterOwnSongs}
+				<StructuredListRow>
+					<StructuredListCell>{song.name}</StructuredListCell>
+					<StructuredListCell>{song.artist}</StructuredListCell>
+					<StructuredListCell>
+						<PlayLinkButton url={song.link} />
+					</StructuredListCell>
+					<StructuredListCell>
+						{#if musicians !== undefined}
+							{#each musicians as musician}
+								{musician.participantName} - {musician.instrumentName}<br />
+							{/each}
+						{/if}
+					</StructuredListCell>
+				</StructuredListRow>
+			{/if}
 		{/each}
 	</StructuredList>
 </Grid>

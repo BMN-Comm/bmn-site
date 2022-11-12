@@ -67,8 +67,8 @@
 
 <Grid>
 	<Row>
-		<Column
-			><h1 class="titleText">Suggestions</h1>
+		<Column>
+			<h1 class="titleText">Suggestions</h1>
 			<Checkbox
 				labelText="Filter Favourites"
 				on:change={() => {
