@@ -64,10 +64,6 @@
 			part: instrument,
 			song: doc(db, 'songs', data.songs[selectedSong].id)
 		})
-		data.musiciansForSongs[data.songs[selectedSong].id] = [
-			...data.musiciansForSongs[data.songs[selectedSong].id],
-			{ participantName: data.namesMap[participant].participantName, instrumentName: instrument }
-		]
 
 		invalidateAll()
 	}
