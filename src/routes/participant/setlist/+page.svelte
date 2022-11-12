@@ -12,6 +12,7 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
+	import { useDeviceLanguage } from 'firebase/auth'
 
 	export let data: PageData
 
@@ -42,11 +43,7 @@
 		</StructuredListHead>
 		{#each data.songs as song}
 			{@const musicians = data.musiciansForSongs[song.id]}
-			{#if (filterOwnSongs && musicians
-					.map((musician) => {
-						return musician.participantId == $page.data.user?.databaseId
-					})
-					.includes(true)) || !filterOwnSongs}
+			{#if (filterOwnSongs && musicians.some((m) => m.participantId === $page.data.user?.databaseId)) || !filterOwnSongs}
 				<StructuredListRow>
 					<StructuredListCell>{song.name}</StructuredListCell>
 					<StructuredListCell>{song.artist}</StructuredListCell>
