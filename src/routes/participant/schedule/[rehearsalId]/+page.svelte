@@ -44,7 +44,7 @@
 		<StructuredListBody>
 			{#if songs != undefined}
 				{#each songs as song, i}
-					{#if (filterOwnSongs && musicians[song.id].some((m) => m.participantId === $page.data.user?.databaseId)) || !filterOwnSongs}
+					{#if !filterOwnSongs || musicians[song.id].some((m) => m.participantId === $page.data.user?.databaseId)}
 						<StructuredListRow>
 							<StructuredListCell>{song.name}</StructuredListCell>
 							<StructuredListCell>

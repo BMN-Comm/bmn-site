@@ -43,7 +43,7 @@
 		</StructuredListHead>
 		{#each data.songs as song}
 			{@const musicians = data.musiciansForSongs[song.id]}
-			{#if (filterOwnSongs && musicians.some((m) => m.participantId === $page.data.user?.databaseId)) || !filterOwnSongs}
+			{#if !filterOwnSongs || musicians.some((m) => m.participantId === $page.data.user?.databaseId)}
 				<StructuredListRow>
 					<StructuredListCell>{song.name}</StructuredListCell>
 					<StructuredListCell>{song.artist}</StructuredListCell>
