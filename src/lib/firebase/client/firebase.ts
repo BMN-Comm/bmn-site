@@ -46,6 +46,7 @@ async function signOut() {
 	await fbSignOut(firebaseAuth)
 	await setToken('')
 	invalidateAll()
+	window.location.replace('/')
 }
 
 export const auth = {
