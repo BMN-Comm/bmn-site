@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {
 		SideNav,
 		SideNavItems,
@@ -9,13 +9,17 @@
 	} from 'carbon-components-svelte'
 
 	import { page } from '$app/stores'
+	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import { getContext } from 'svelte'
+
+	const { open } = getContext<sidebarContextType>('sidebar')
 
 	$: innerWidth = 0
 </script>
 
 <svelte:window bind:innerWidth />
 
-<SideNav isOpen>
+<SideNav bind:isOpen={$open}>
 	<SideNavItems>
 		{#if innerWidth < 1056}
 			<SideNavLink text="Home" href="/" />
