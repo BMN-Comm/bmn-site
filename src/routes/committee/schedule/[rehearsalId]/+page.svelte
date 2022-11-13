@@ -22,6 +22,7 @@
 	} from 'carbon-components-svelte'
 	import { Add, Save } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import { invalidateAll } from '$app/navigation'
 
 	export let data: PageData
 
@@ -53,6 +54,13 @@
 		}
 
 		await setDoc(doc(collection(db, 'rehearsals', rehearsal.id, 'songsToRehearse')), rehearsalSong!)
+
+		openModal = false
+		startTime = ''
+		endTime = ''
+		songId = ''
+
+		invalidateAll()
 	}
 </script>
 

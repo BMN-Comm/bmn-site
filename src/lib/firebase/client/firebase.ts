@@ -10,8 +10,16 @@ const firebaseAuth = getAuth(app)
 
 let currentUser: User | undefined | null
 
-firebaseAuth.onAuthStateChanged((user) => {
+firebaseAuth.onAuthStateChanged(async (user) => {
 	currentUser = user
+	const currentTime = Date.now()
+	if (currentUser) {
+		const token = await currentUser.getIdTokenResult()
+		// If the token was just issued, we should refresh it on the server
+		if (Date.parse(token.issuedAtTime) > currentTime) {
+			setToken(token.token, currentUser)
+		}
+	}
 })
 
 /**

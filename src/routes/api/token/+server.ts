@@ -28,10 +28,7 @@ export const POST: RequestHandler = async (event) => {
 				),
 				{
 					path: '/',
-					httpOnly: true,
-					// Make sure the token only expires after a year
-					// (Keep in mind this does mean that people need to log out and in if for example the custom claims have changed)
-					maxAge: 31536000
+					httpOnly: true
 				}
 			)
 		}
