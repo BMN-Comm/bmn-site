@@ -35,7 +35,7 @@ export const load: PageLoad = async ({ params }) => {
 	let songs
 
 	const musiciansForSongs: {
-		[songId: string]: { participantName: string; instrumentName: string }[]
+		[songId: string]: { participantName: string; instrumentName: string; participantId: string }[]
 	} = {}
 
 	if (rehearsal.songsToRehearse.length > 0) {
@@ -82,7 +82,8 @@ export const load: PageLoad = async ({ params }) => {
 			// Add musician
 			musiciansForSongs[playsInSongData.song.id].push({
 				participantName: participant.name,
-				instrumentName: playsInSongData.part
+				instrumentName: playsInSongData.part,
+				participantId: participant.id
 			})
 		}
 	}

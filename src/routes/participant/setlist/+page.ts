@@ -21,7 +21,7 @@ export const load: PageLoad = async () => {
 	)
 
 	let musiciansForSongs: {
-		[songId: string]: { participantName: string; instrumentName: string }[]
+		[songId: string]: { participantName: string; instrumentName: string; participantId: string }[]
 	} = {}
 
 	// Get the playsSongInEdition for all participants on this rehearsal day
@@ -46,19 +46,21 @@ export const load: PageLoad = async () => {
 	for (let i = 0; i < playsInRefs.length; i++) {
 		let sid = playsInRefs[i].song.id
 		let m = musiciansForSongs[sid]
-		let p: { participantName: string; instrumentName: string }[] = []
+		let p: { participantName: string; instrumentName: string; participantId: string }[] = []
 
 		if (m != undefined) {
 			p = m
 			p.push({
 				participantName: namesMap[parents[i]].participantName,
-				instrumentName: playsInRefs[i].part
+				instrumentName: playsInRefs[i].part,
+				participantId: parents[i]
 			})
 		} else {
 			p = [
 				{
 					participantName: namesMap[parents[i]].participantName,
-					instrumentName: playsInRefs[i].part
+					instrumentName: playsInRefs[i].part,
+					participantId: parents[i]
 				}
 			]
 		}
