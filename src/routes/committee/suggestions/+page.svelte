@@ -6,7 +6,6 @@
 		Grid,
 		Modal,
 		Row,
-		StructuredList,
 		StructuredListCell,
 		StructuredListHead,
 		StructuredListRow
@@ -15,6 +14,7 @@
 	import { arrayUnion, arrayRemove, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
 
@@ -78,7 +78,7 @@
 		</Column>
 	</Row>
 
-	<StructuredList condensed>
+	<ScrollableList>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>User</StructuredListCell>
@@ -161,8 +161,8 @@
 					</StructuredListCell>
 				</StructuredListRow>
 			{/if}
-		{/each}
-	</StructuredList>
+		{/each}</ScrollableList
+	>
 </Grid>
 
 <Modal passiveModal modalHeading="Remark" bind:open={openRemark}>

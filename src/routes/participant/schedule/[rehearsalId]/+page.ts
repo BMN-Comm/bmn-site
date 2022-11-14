@@ -1,6 +1,6 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
-import type { playsSong, song } from '$lib/types/domain/song'
+import type { song } from '$lib/types/domain/song'
 import type { user } from '$lib/types/domain/user'
 import {
 	query,
