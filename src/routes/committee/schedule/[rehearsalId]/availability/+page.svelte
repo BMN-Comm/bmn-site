@@ -5,12 +5,12 @@
 		Button,
 		Grid,
 		Modal,
-		StructuredList,
 		StructuredListCell,
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { Chat } from 'carbon-icons-svelte'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
 
@@ -20,7 +20,7 @@
 
 <h1>Rehearsals {data.rehearsal.startTime.toDate().toDateString()}</h1>
 <Grid>
-	<StructuredList>
+	<ScrollableList>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Participant</StructuredListCell>
@@ -59,7 +59,7 @@
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
-	</StructuredList>
+	</ScrollableList>
 </Grid>
 
 <Modal passiveModal modalHeading="Reason" bind:open={openReason}>

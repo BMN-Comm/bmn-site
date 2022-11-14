@@ -8,7 +8,6 @@
 		Grid,
 		Modal,
 		Row,
-		StructuredList,
 		StructuredListBody,
 		StructuredListCell,
 		StructuredListHead,
@@ -16,7 +15,6 @@
 		TextInput,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import type { rehearsal } from '$lib/types/domain/rehearsal'
 	import { Add, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
@@ -24,6 +22,7 @@
 	import { newRehearsalPost } from '$lib/util/webhook'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
 
@@ -91,7 +90,7 @@
 			/>
 		</Column>
 	</Row>
-	<StructuredList>
+	<ScrollableList>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Date</StructuredListCell>
@@ -139,7 +138,7 @@
 				</StructuredListRow>
 			{/each}
 		</StructuredListBody>
-	</StructuredList>
+	</ScrollableList>
 </Grid>
 
 <Modal

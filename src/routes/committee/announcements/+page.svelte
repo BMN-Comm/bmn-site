@@ -45,13 +45,9 @@
 			authorUser: user
 		}
 
-		let newAnnouncementRef = await addDoc(collection(db, 'announcements'), newAnnouncement)
+		await addDoc(collection(db, 'announcements'), newAnnouncement)
 
 		newNewsPost(newAnnouncement)
-		let newAnnouncementElement: announcement = {
-			id: newAnnouncementRef.id,
-			...newAnnouncement
-		} as announcement
 
 		invalidateAll()
 	}
@@ -66,8 +62,8 @@
 
 <Grid>
 	<Row>
-		<Column
-			><h1>Announcements</h1>
+		<Column>
+			<h1>Announcements</h1>
 			<Button
 				icon={Add}
 				iconDescription="New Announcement"

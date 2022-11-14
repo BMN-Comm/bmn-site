@@ -13,7 +13,6 @@
 		Grid,
 		Modal,
 		Row,
-		StructuredList,
 		StructuredListBody,
 		StructuredListCell,
 		StructuredListHead,
@@ -22,6 +21,7 @@
 	} from 'carbon-components-svelte'
 	import { Add, Save } from 'carbon-icons-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
 
 	export let data: PageData
@@ -88,7 +88,7 @@
 			/>
 		</Column>
 	</Row>
-	<StructuredList>
+	<ScrollableList>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Title</StructuredListCell>
@@ -117,7 +117,7 @@
 				{/each}
 			{/if}
 		</StructuredListBody>
-	</StructuredList>
+	</ScrollableList>
 </Grid>
 
 <Modal

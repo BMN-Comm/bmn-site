@@ -3,7 +3,6 @@
 		Column,
 		Grid,
 		Row,
-		StructuredList,
 		StructuredListBody,
 		StructuredListCell,
 		StructuredListHead,
@@ -12,6 +11,7 @@
 	import { Launch } from 'carbon-icons-svelte'
 	import { getTimeString } from '$lib/util/timeString'
 	import type { PageData } from './$types'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
 </script>
@@ -20,7 +20,7 @@
 	<Row padding>
 		<Column><h1>Planned rehearsals</h1></Column>
 	</Row>
-	<StructuredList>
+	<ScrollableList>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Date</StructuredListCell>
@@ -47,5 +47,5 @@
 				</StructuredListRow>
 			{/each}
 		</StructuredListBody>
-	</StructuredList>
+	</ScrollableList>
 </Grid>

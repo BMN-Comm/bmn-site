@@ -1,9 +1,9 @@
 <script lang="ts">
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import {
 		Grid,
 		Row,
 		Column,
-		StructuredList,
 		StructuredListCell,
 		StructuredListRow
 	} from 'carbon-components-svelte'
@@ -17,7 +17,7 @@
 		<Column><h1>Announcements</h1></Column>
 	</Row>
 
-	<StructuredList>
+	<ScrollableList>
 		{#each data.announcements as announcement}
 			<StructuredListRow>
 				<StructuredListCell>
@@ -29,5 +29,5 @@
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
-	</StructuredList>
+	</ScrollableList>
 </Grid>

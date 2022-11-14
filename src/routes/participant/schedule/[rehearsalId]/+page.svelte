@@ -13,6 +13,7 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
 
@@ -33,7 +34,7 @@
 			/>
 		</Column>
 	</Row>
-	<StructuredList>
+	<ScrollableList>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Title</StructuredListCell>
@@ -64,5 +65,5 @@
 				{/each}
 			{/if}
 		</StructuredListBody>
-	</StructuredList>
+	</ScrollableList>
 </Grid>

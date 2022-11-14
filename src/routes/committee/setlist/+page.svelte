@@ -11,7 +11,6 @@
 		Grid,
 		Modal,
 		Row,
-		StructuredList,
 		StructuredListCell,
 		StructuredListHead,
 		StructuredListRow,
@@ -30,6 +29,7 @@
 		updateDoc,
 		where
 	} from 'firebase/firestore'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
 
@@ -91,7 +91,7 @@
 		<Column><h1 class="titleText">Setlist</h1></Column>
 	</Row>
 
-	<StructuredList condensed>
+	<ScrollableList condensed>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Title</StructuredListCell>
@@ -154,7 +154,7 @@
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
-	</StructuredList>
+	</ScrollableList>
 </Grid>
 
 <Modal

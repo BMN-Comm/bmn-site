@@ -33,7 +33,6 @@
 		{/if}
 		<SideNavLink text="Announcements" href="/participant/announcements" />
 		<SideNavLink text="Setlist" href="/participant/setlist" />
-		<SideNavLink text="My songs" href="/participant/mySongs" />
 		<SideNavLink text="Suggestions" href="/participant/suggestions" />
 		<SideNavDivider />
 		<SideNavLink text="Schedule" href="/participant/schedule" />

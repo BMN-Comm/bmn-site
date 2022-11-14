@@ -7,12 +7,12 @@
 		Column,
 		Grid,
 		Row,
-		StructuredList,
 		StructuredListCell,
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { useDeviceLanguage } from 'firebase/auth'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
 
@@ -32,7 +32,7 @@
 		</Column>
 	</Row>
 
-	<StructuredList condensed>
+	<ScrollableList condensed>
 		<StructuredListHead>
 			<StructuredListRow head>
 				<StructuredListCell head>Title</StructuredListCell>
@@ -60,5 +60,5 @@
 				</StructuredListRow>
 			{/if}
 		{/each}
-	</StructuredList>
+	</ScrollableList>
 </Grid>
