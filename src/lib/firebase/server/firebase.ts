@@ -69,4 +69,10 @@ async function updateClaim(uid: string, claim: string, value: true | undefined) 
 	return await admin.auth().setCustomUserClaims(uid, currentClaims)
 }
 
+/** Update the password of a user */
+export async function updatePassword(uid: string, newPassword: string) {
+	initializeFirebase()
+	await admin.auth().updateUser(uid, { password: newPassword })
+}
+
 export const db = getFirestore(initializeFirebase())

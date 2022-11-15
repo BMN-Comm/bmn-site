@@ -9,7 +9,7 @@
 	} from 'carbon-components-svelte'
 
 	import { auth } from '$lib/firebase/client/firebase'
-	import SignoutForUser from '$lib/components/signoutForUser.svelte'
+	import UserDropdown from '$lib/components/userDropdown.svelte'
 
 	let modalOpen = false
 	$: loginError = false
@@ -33,7 +33,7 @@
 <!-- The login component which is a login button, or a signout dropdown -->
 <div class="login-wrapper">
 	{#if $page.data.user}
-		<SignoutForUser user={$page.data.user} />
+		<UserDropdown user={$page.data.user} />
 	{:else}
 		<Button class="login-button" on:click={() => (modalOpen = true)}>Login</Button>
 	{/if}
