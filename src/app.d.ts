@@ -6,9 +6,9 @@
 declare namespace App {
 	interface Locals {
 		userid: string
-		decodedToken: DecodedIdToken | null
+		decodedToken: import('firebase-admin/lib/auth/token-verifier').DecodedIdToken | null
 		session: {
-			user: (UserSession & { databaseId: string; admin: boolean; commissie: boolean }) | undefined
+			user: import('./lib/types/myUserSession').MyUserInfo | undefined
 		}
 	}
 	// interface Platform {}

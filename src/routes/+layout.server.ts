@@ -13,7 +13,13 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		const dbUser = userDocs.docs[0]
 
 		return {
-			user: { ...locals.session.user, databaseId: dbUser.id, name: dbUser.data().name }
+			user: {
+				...locals.session.user,
+				databaseId: dbUser.id,
+				name: dbUser.data().name,
+				// I don't really understand why it couldn't figure this out on its own
+				toJSON: locals.session.user.toJSON
+			}
 		}
 	}
 	return { user: undefined }
