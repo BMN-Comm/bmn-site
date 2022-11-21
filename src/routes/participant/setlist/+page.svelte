@@ -11,7 +11,6 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { useDeviceLanguage } from 'firebase/auth'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 
 	export let data: PageData
