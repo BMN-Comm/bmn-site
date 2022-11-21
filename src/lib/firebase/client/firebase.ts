@@ -12,7 +12,7 @@ let currentUser: User | undefined | null
 
 firebaseAuth.onAuthStateChanged(async (user) => {
 	currentUser = user
-	const currentTime = new Date(Date.now())
+	const currentTime = new Date(Date.now() - 30000) // Add a bit of a buffer, of 30 seconds
 	if (currentUser) {
 		const token = await currentUser.getIdTokenResult()
 		// If the token was just issued, we should refresh it on the server, offset it with one hour because
