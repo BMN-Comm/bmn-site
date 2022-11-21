@@ -1,6 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
 import type { user } from '$lib/types/domain/user'
-import { collection, collectionGroup, getDocs, query, where } from 'firebase/firestore'
+import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
 
 /** Get a dictionary of the musicians that play on the given songs */
 export async function GetMusisciansThatPlaySongs(ids: string[]) {
@@ -9,8 +9,7 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 	} = {}
 
 	// Get the song objects from the rehearsal songs
-	const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', ids))
-	const songDocs = (await getDocs(songsQuery)).docs
+	const songDocs = await Promise.all(ids.map((id) => getDoc(doc(db, 'songs/' + id))))
 
 	if (songDocs.length === 0) return musiciansForSongs
 
@@ -34,8 +33,10 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 
 	// Get all the participants that play these songs
 	const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
-	const participantQuery = query(collection(db, 'users'), where('__name__', 'in', participantIds))
-	const participants = (await getDocs(participantQuery)).docs.map(
+	const participantDocs = await Promise.all(
+		participantIds.map((id) => getDoc(doc(db, 'users/' + id)))
+	)
+	const participants = participantDocs.map(
 		(participant) =>
 			({
 				id: participant.id,
