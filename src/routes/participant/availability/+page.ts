@@ -17,7 +17,7 @@ export const load: PageLoad = async ({ parent }) => {
 	)
 
 	const availabilityQuery = query(
-		collection(db, 'users/' + (await parent()).user.databaseId + '/availability'),
+		collection(db, 'users/' + (await parent()).user!.databaseId + '/availability'),
 		orderBy('startTime')
 	)
 	const availability = toDict(

@@ -11,10 +11,11 @@
 		TextInput
 	} from 'carbon-components-svelte'
 	import { Save } from 'carbon-icons-svelte'
-	import { collection, doc, setDoc, Timestamp, updateDoc } from 'firebase/firestore'
+	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { page } from '$app/stores'
 	import { getTimeString } from '$lib/util/timeString'
 	import type { PageData } from './$types'
+	import { newTimeOnDay } from '$lib/util/date'
 
 	export let data: PageData
 
@@ -23,25 +24,50 @@
 
 	let available: boolean = data.availability?.available ?? true
 	let remarksText: string | undefined = data.availability?.reason
+
 	let startTime: string = getTimeString(data.availability?.startTime ?? data.rehearsal.startTime)
 	let endTime: string = getTimeString(data.availability?.endTime ?? data.rehearsal.endTime)
 
+	let startTimeInvalid: boolean = false
+	let endTimeInvalid: boolean = false
+
 	async function SaveAvailability() {
-		const startDate = data.rehearsal.startTime.toDate()
-		const endDate = data.rehearsal.endTime.toDate()
-		if (available) {
-			const start = startTime.split(':')
-			const end = endTime.split(':')
-			startDate.setHours(+start[0], +start[1])
-			endDate.setHours(+end[0], +end[1])
+		const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
+
+		startTimeInvalid = !timeRegex.test(startTime)
+		endTimeInvalid = !timeRegex.test(endTime)
+
+		if (startTimeInvalid || endTimeInvalid) return
+
+		const rehearsalStart = data.rehearsal.startTime.toDate()
+		const rehearsalEnd = data.rehearsal.endTime.toDate()
+
+		// If the participant is not available, this is for the entire rehearsal
+		if (!available) {
+			startTime = minTime
+			endTime = maxTime
 		}
+
+		const start = startTime.split(':')
+		const end = endTime.split(':')
+
+		const availableStart = newTimeOnDay(rehearsalStart, parseInt(start[0]), parseInt(start[1]))
+		const availableEnd = newTimeOnDay(rehearsalEnd, parseInt(end[0]), parseInt(end[1]))
+
+		startTimeInvalid =
+			rehearsalStart > availableStart ||
+			rehearsalEnd < availableStart ||
+			availableStart > availableEnd
+		endTimeInvalid = rehearsalStart > availableEnd || rehearsalEnd < availableEnd
+
+		if (startTimeInvalid || endTimeInvalid) return
 
 		const newAvailibilityDoc: newAvailability = {
 			available,
 			rehearsal: data.availability?.rehearsal ?? doc(db, 'rehearsals/' + data.rehearsal.id),
 			reason: remarksText,
-			startTime: Timestamp.fromDate(startDate),
-			endTime: Timestamp.fromDate(endDate)
+			startTime: Timestamp.fromDate(availableStart),
+			endTime: Timestamp.fromDate(availableEnd)
 		}
 
 		const availabilityRef =
@@ -52,6 +78,14 @@
 		await setDoc(availabilityRef, newAvailibilityDoc)
 
 		window.location.replace('/participant/availability')
+	}
+
+	function toggleAvailable() {
+		available = !available
+		if (!available) {
+			startTime = minTime
+			endTime = maxTime
+		}
 	}
 </script>
 
@@ -68,27 +102,25 @@
 			<TimePicker
 				labelText="Start time"
 				bind:value={startTime}
-				min={minTime}
-				max={maxTime}
 				disabled={!available}
+				required
+				invalid={startTimeInvalid}
 			/>
 		</Column>
 		<Column sm={2} lg={2}>
 			<TimePicker
 				labelText="End time"
 				bind:value={endTime}
-				min={minTime}
-				max={maxTime}
 				disabled={!available}
+				required
+				invalid={endTimeInvalid}
 			/>
 		</Column>
 		<Column sm={4} lg={12} padding>
 			<Checkbox
 				labelText="Not Available"
 				checked={!available}
-				on:change={() => {
-					available = !available
-				}}
+				on:change={() => toggleAvailable()}
 			/>
 		</Column>
 	</Row>
@@ -107,3 +139,10 @@
 		</Column>
 	</Row>
 </Grid>
+
+<style>
+	/* For some reasong this one is set to 2,5rem with messed up the formatting */
+	:global(.bx--text-input--invalid) {
+		padding-right: 16px;
+	}
+</style>

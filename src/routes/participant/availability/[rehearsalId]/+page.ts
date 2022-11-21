@@ -14,7 +14,7 @@ export const load: PageLoad = async ({ params, parent }) => {
 	const rehearsal = { id: rehearsalDoc.id, ...rehearsalDoc.data() } as unknown as rehearsal
 
 	const availabilityQuery = query(
-		collection(db, 'users/' + (await parent()).user.databaseId + '/availability'),
+		collection(db, 'users/' + (await parent()).user!.databaseId + '/availability'),
 		where('rehearsal', '==', rehearsalRef)
 	)
 
