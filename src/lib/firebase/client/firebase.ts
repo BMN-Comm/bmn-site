@@ -18,6 +18,7 @@ firebaseAuth.onAuthStateChanged(async (user) => {
 		// If the token was just issued, we should refresh it on the server, offset it with one hour because
 		if (new Date(Date.parse(token.issuedAtTime)) > currentTime) {
 			setToken(token.token, currentUser)
+			invalidateAll()
 		}
 	}
 })
