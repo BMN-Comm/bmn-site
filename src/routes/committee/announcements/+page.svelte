@@ -142,7 +142,7 @@
 		openDel = false
 	}}
 >
-	<p>Remove announcement {data.announcements[selectedAnnouncement].title}?</p>
+	<p>Remove announcement {data.announcements[selectedAnnouncement]?.title}?</p>
 </Modal>
 
 <style>
