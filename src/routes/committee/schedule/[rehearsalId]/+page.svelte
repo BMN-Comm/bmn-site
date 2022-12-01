@@ -19,7 +19,7 @@
 		StructuredListRow,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import { Add, Save, MusicRemove } from 'carbon-icons-svelte'
+	import { Add, MusicRemove, LogoDiscord } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
@@ -96,10 +96,9 @@
 				}}
 			/>
 
-			<!-- TODO: Zelf opslaan -->
 			<Button
-				iconDescription="Save schedule"
-				icon={Save}
+				iconDescription="Send notification"
+				icon={LogoDiscord}
 				on:click={() => {
 					newSchedule(rehearsal)
 				}}
@@ -162,28 +161,30 @@
 		addSong()
 	}}
 >
-	<Form>
-		<Grid>
-			<Row padding>
-				<Column>
-					<ComboBox
-						titleText="Song"
-						items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
-						bind:selectedId={songId}
-						required
-					/>
-				</Column>
-			</Row>
-			<Row>
-				<Column>
-					<TimePicker labelText="From" bind:value={startTime} required />
-				</Column>
-				<Column>
-					<TimePicker labelText="Till" bind:value={endTime} required />
-				</Column>
-			</Row>
-		</Grid>
-	</Form>
+	<div class="modal">
+		<Form>
+			<Grid>
+				<Row padding>
+					<Column>
+						<ComboBox
+							titleText="Song"
+							items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
+							bind:selectedId={songId}
+							required
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<Column>
+						<TimePicker labelText="From" bind:value={startTime} required />
+					</Column>
+					<Column>
+						<TimePicker labelText="Till" bind:value={endTime} required />
+					</Column>
+				</Row>
+			</Grid>
+		</Form>
+	</div>
 </Modal>
 
 <Modal
@@ -203,3 +204,9 @@
 >
 	<p>Remove song?</p>
 </Modal>
+
+<style>
+	.modal {
+		height: 500px;
+	}
+</style>
