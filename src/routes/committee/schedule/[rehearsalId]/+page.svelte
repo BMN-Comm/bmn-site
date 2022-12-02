@@ -19,8 +19,8 @@
 		StructuredListRow,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import { Add, Save } from 'carbon-icons-svelte'
-	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import { Add, MusicRemove, LogoDiscord } from 'carbon-icons-svelte'
+	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
 
@@ -32,6 +32,9 @@
 	let startTime: string
 	let endTime: string
 	let songId: string
+
+	let selectedSong: number
+	let openDel = false
 
 	async function addSong() {
 		let rehearsalSong: newRehearsalSong
@@ -62,6 +65,21 @@
 
 		invalidateAll()
 	}
+
+	async function removeSong() {
+		if (songs != undefined) {
+			const docRef = doc(
+				db,
+				'rehearsals',
+				rehearsal.id,
+				'songsToRehearse',
+				rehearsal.songsToRehearse[selectedSong].id
+			)
+			await deleteDoc(docRef)
+
+			invalidateAll()
+		}
+	}
 </script>
 
 <Grid>
@@ -78,10 +96,9 @@
 				}}
 			/>
 
-			<!-- TODO: Zelf opslaan -->
 			<Button
-				iconDescription="Save schedule"
-				icon={Save}
+				iconDescription="Send notification"
+				icon={LogoDiscord}
 				on:click={() => {
 					newSchedule(rehearsal)
 				}}
@@ -101,8 +118,8 @@
 				{#each songs as song, i}
 					<StructuredListRow>
 						<StructuredListCell>{song.name}</StructuredListCell>
-						<StructuredListCell
-							>{getTimeString(rehearsal.songsToRehearse[i].startTime)} -
+						<StructuredListCell>
+							{getTimeString(rehearsal.songsToRehearse[i].startTime)} -
 							{getTimeString(rehearsal.songsToRehearse[i].endTime)}
 						</StructuredListCell>
 						<StructuredListCell>
@@ -112,6 +129,18 @@
 									{musician.participantName} - {musician.instrumentName}<br />
 								{/each}
 							{/if}
+						</StructuredListCell>
+						<StructuredListCell>
+							<Button
+								kind="danger-tertiary"
+								size="small"
+								iconDescription="Remove song"
+								icon={MusicRemove}
+								on:click={() => {
+									selectedSong = i
+									openDel = true
+								}}
+							/>
 						</StructuredListCell>
 					</StructuredListRow>
 				{/each}
@@ -132,26 +161,52 @@
 		addSong()
 	}}
 >
-	<Form>
-		<Grid>
-			<Row padding>
-				<Column>
-					<ComboBox
-						titleText="Song"
-						items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
-						bind:selectedId={songId}
-						required
-					/>
-				</Column>
-			</Row>
-			<Row>
-				<Column>
-					<TimePicker labelText="From" bind:value={startTime} required />
-				</Column>
-				<Column>
-					<TimePicker labelText="Till" bind:value={endTime} required />
-				</Column>
-			</Row>
-		</Grid>
-	</Form>
+	<div class="modal">
+		<Form>
+			<Grid>
+				<Row padding>
+					<Column>
+						<ComboBox
+							titleText="Song"
+							items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
+							bind:selectedId={songId}
+							required
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<Column>
+						<TimePicker labelText="From" bind:value={startTime} required />
+					</Column>
+					<Column>
+						<TimePicker labelText="Till" bind:value={endTime} required />
+					</Column>
+				</Row>
+			</Grid>
+		</Form>
+	</div>
 </Modal>
+
+<Modal
+	danger
+	modalHeading="Remove song"
+	primaryButtonText="Remove"
+	primaryButtonIcon={MusicRemove}
+	secondaryButtonText="Cancel"
+	bind:open={openDel}
+	on:click:button--primary={() => {
+		removeSong()
+		openDel = false
+	}}
+	on:click:button--secondary={() => {
+		openDel = false
+	}}
+>
+	<p>Remove song?</p>
+</Modal>
+
+<style>
+	.modal {
+		height: 500px;
+	}
+</style>

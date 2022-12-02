@@ -49,19 +49,22 @@ export const load: PageLoad = async ({ params }) => {
 		songs = songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
 		// Get the playsSongInEdition for all participants on this rehearsal day
-		const playsInQuery = query(
-			collectionGroup(db, 'playsSongInEdition'),
-			where(
-				'song',
-				'in',
-				songDocs.map((song) => song.ref)
-			)
-		)
+		// const playsInQuery = query(
+		// 	collectionGroup(db, 'playsSongInEdition'),
+		// 	where(
+		// 		'song',
+		// 		'in',
+		// 		songDocs.map((song) => song.ref)
+		// 	)
+		// )
+		// const playsInDocs = (await getDocs(playsInQuery)).docs
+
+		const playsInQuery = query(collectionGroup(db, 'playsSongInEdition'))
 		const playsInDocs = (await getDocs(playsInQuery)).docs
 
 		// Get all the participants that play these songs
 		const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
-		const participantQuery = query(collection(db, 'users'), where('__name__', 'in', participantIds))
+		const participantQuery = query(collection(db, 'users')) //, where('__name__', 'in', participantIds))
 		const participants = (await getDocs(participantQuery)).docs.map(
 			(participant) =>
 				({
@@ -92,7 +95,7 @@ export const load: PageLoad = async ({ params }) => {
 	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
 	const songRefs = edition.songs.map((ref) => ref.id)
 
-	const editionSongsQuery = query(collection(db, 'songs'), where('__name__', 'in', songRefs))
+	const editionSongsQuery = query(collection(db, 'songs')) //, where('__name__', 'in', songRefs))
 	const editionSongs = (await getDocs(editionSongsQuery)).docs.map(
 		(doc) => ({ id: doc.id, ...doc.data() } as song)
 	)
