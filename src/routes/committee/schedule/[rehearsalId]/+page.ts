@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 import type { user } from '$lib/types/domain/user'
+import { QueryWhereIn } from '$lib/util/QueryWhereIn'
 
 export const ssr = false
 
@@ -61,6 +62,16 @@ export const load: PageLoad = async ({ params }) => {
 
 		const playsInQuery = query(collectionGroup(db, 'playsSongInEdition'))
 		const playsInDocs = (await getDocs(playsInQuery)).docs
+
+		console.log(playsInDocs)
+
+		const playsInDocs2 = await QueryWhereIn(
+			collectionGroup(db, 'playsSongInEdition'),
+			songDocs.map((song) => song.ref),
+			'song'
+		)
+
+		console.log(playsInDocs2)
 
 		// Get all the participants that play these songs
 		const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
