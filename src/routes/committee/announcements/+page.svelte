@@ -91,7 +91,7 @@
 				</StructuredListCell>
 				<StructuredListCell>
 					<h2>{announcement.title}</h2>
-					<span>{announcement.content}</span>
+					<span class="announcementMessage">{announcement.content}</span>
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
@@ -153,5 +153,9 @@
 		padding: 0px !important;
 		margin: 2px 0px !important;
 		border: 0px;
+	}
+
+	:global(.announcementMessage) {
+		white-space: pre-wrap;
 	}
 </style>

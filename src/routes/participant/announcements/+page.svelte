@@ -25,9 +25,15 @@
 				</StructuredListCell>
 				<StructuredListCell>
 					<h2>{announcement.title}</h2>
-					<span>{announcement.content}</span>
+					<span class="announcementMessage">{announcement.content}</span>
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
 	</ScrollableList>
 </Grid>
+
+<style>
+	:global(.announcementMessage) {
+		white-space: pre-wrap;
+	}
+</style>
