@@ -1,11 +1,15 @@
+:root {
+    --committee-colour: #00b380;
+}
+
 .rehearsalLinkText {
-    color: #00b380;
+    color: var(--committee-colour);
     text-decoration: underline;
-    text-decoration-color: #00b380;
+    text-decoration-color: var(--committee-colour);
 }
 
 a {
-    color: #00b380;
+    color: var(--committee-colour);
     text-decoration: underline;
-    text-decoration-color: #00b380;
+    text-decoration-color: var(--committee-colour);
 }
