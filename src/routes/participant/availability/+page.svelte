@@ -32,9 +32,11 @@
 		<StructuredListBody>
 			{#each data.rehearsals as rehearsal}
 				<StructuredListRow>
-					<StructuredListCell>
-						{rehearsal.startTime.toDate().toDateString()}
-					</StructuredListCell>
+					<a href={`/participant/availability/${rehearsal.id}`}>
+						<StructuredListCell>
+							<div class="rehearsalLinkText">{rehearsal.startTime.toDate().toDateString()}</div>
+						</StructuredListCell>
+					</a>
 					<StructuredListCell>
 						{getTimeString(rehearsal.startTime)} -
 						{getTimeString(rehearsal.endTime)}
@@ -48,9 +50,6 @@
 						{:else}
 							<MisuseOutline class="cross" />
 						{/if}
-					</StructuredListCell>
-					<StructuredListCell>
-						<a href={`/participant/availability/${rehearsal.id}`}><Launch /></a>
 					</StructuredListCell>
 				</StructuredListRow>
 			{/each}
