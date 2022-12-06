@@ -9,8 +9,7 @@ import {
 	getDocs,
 	doc,
 	getDoc,
-	collectionGroup,
-	where
+	collectionGroup
 } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 import type { user } from '$lib/types/domain/user'
@@ -45,38 +44,19 @@ export const load: PageLoad = async ({ params }) => {
 		const songIds = rehearsal.songsToRehearse.map((rehearsalSong) => rehearsalSong.song.id)
 
 		// Get the song objects from the rehearsal songs
-		const songsQuery = query(collection(db, 'songs'), where('__name__', 'in', songIds))
-		const songDocs = (await getDocs(songsQuery)).docs
+		const songDocs = await QueryWhereIn(collection(db, 'songs'), '__name__', songIds)
 		songs = songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
-		// Get the playsSongInEdition for all participants on this rehearsal day
-		// const playsInQuery = query(
-		// 	collectionGroup(db, 'playsSongInEdition'),
-		// 	where(
-		// 		'song',
-		// 		'in',
-		// 		songDocs.map((song) => song.ref)
-		// 	)
-		// )
-		// const playsInDocs = (await getDocs(playsInQuery)).docs
-
-		const playsInQuery = query(collectionGroup(db, 'playsSongInEdition'))
-		const playsInDocs = (await getDocs(playsInQuery)).docs
-
-		console.log(playsInDocs)
-
-		const playsInDocs2 = await QueryWhereIn(
+		const playsInDocs = await QueryWhereIn(
 			collectionGroup(db, 'playsSongInEdition'),
-			songDocs.map((song) => song.ref),
-			'song'
+			'song',
+			songDocs.map((song) => song.ref)
 		)
-
-		console.log(playsInDocs2)
 
 		// Get all the participants that play these songs
 		const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
-		const participantQuery = query(collection(db, 'users')) //, where('__name__', 'in', participantIds))
-		const participants = (await getDocs(participantQuery)).docs.map(
+		const participantDocs = await QueryWhereIn(collection(db, 'users'), '__name__', participantIds)
+		const participants = participantDocs.map(
 			(participant) =>
 				({
 					id: participant.id,
@@ -106,10 +86,8 @@ export const load: PageLoad = async ({ params }) => {
 	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
 	const songRefs = edition.songs.map((ref) => ref.id)
 
-	const editionSongsQuery = query(collection(db, 'songs')) //, where('__name__', 'in', songRefs))
-	const editionSongs = (await getDocs(editionSongsQuery)).docs.map(
-		(doc) => ({ id: doc.id, ...doc.data() } as song)
-	)
+	const editionSongsDocs = await QueryWhereIn(collection(db, 'songs'), '__name__', songRefs)
+	const editionSongs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
 	return {
 		rehearsal,
