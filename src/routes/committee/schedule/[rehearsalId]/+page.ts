@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 import type { user } from '$lib/types/domain/user'
-import { QueryWhereIn } from '$lib/util/QueryWhereIn'
+import { QueryWhereIn } from '$lib/util/queryWhereIn'
 
 export const ssr = false
 

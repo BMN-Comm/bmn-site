@@ -1,6 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
 import type { user } from '$lib/types/domain/user'
-import { QueryWhereIn } from '$lib/util/QueryWhereIn'
+import { QueryWhereIn } from '$lib/util/queryWhereIn'
 import { collection, collectionGroup, doc, getDoc } from 'firebase/firestore'
 
 /** Get a dictionary of the musicians that play on the given songs */

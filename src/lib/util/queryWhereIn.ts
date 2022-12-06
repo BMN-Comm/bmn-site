@@ -9,18 +9,6 @@ import {
 } from 'firebase/firestore'
 
 export async function QueryWhereIn(
-	collection: CollectionReference<DocumentData>,
-	fieldToCheck: string,
-	list: any[]
-): Promise<QueryDocumentSnapshot<DocumentData>[]>
-
-export async function QueryWhereIn(
-	collection: Query<DocumentData>,
-	fieldToCheck: string,
-	list: any[]
-): Promise<QueryDocumentSnapshot<DocumentData>[]>
-
-export async function QueryWhereIn(
 	collection: CollectionReference<DocumentData> | Query<DocumentData>,
 	fieldToCheck: string,
 	list: any[]
