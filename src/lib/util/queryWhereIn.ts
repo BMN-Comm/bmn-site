@@ -8,7 +8,14 @@ import {
 	Query
 } from 'firebase/firestore'
 
-export async function QueryWhereIn(
+/**
+ * Batches an in-query to get past the 10 filter limit
+ * @param collection - The Collection or CollectionGroup the retrieve data from
+ * @param fieldToCheck - The field to filter on. Note: document id = '__name__'
+ * @param list - The filter items
+ * @returns The retrieved documents matching the filter
+ */
+export async function QueryWhereInBatched(
 	collection: CollectionReference<DocumentData> | Query<DocumentData>,
 	fieldToCheck: string,
 	list: any[]

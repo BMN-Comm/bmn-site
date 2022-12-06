@@ -1,6 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
 import type { user } from '$lib/types/domain/user'
-import { QueryWhereIn } from '$lib/util/queryWhereIn'
+import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
 import { collection, collectionGroup, doc, getDoc } from 'firebase/firestore'
 
 /** Get a dictionary of the musicians that play on the given songs */
@@ -10,7 +10,7 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 	} = {}
 
 	// Get the song objects from the rehearsal songs
-	const songDocs = await QueryWhereIn(collection(db, 'songs'), '__name__', ids)
+	const songDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids)
 
 	if (songDocs.length === 0) return musiciansForSongs
 
@@ -19,7 +19,7 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 		musiciansForSongs[song.id] = []
 	}
 
-	const playsInDocs = await QueryWhereIn(
+	const playsInDocs = await QueryWhereInBatched(
 		collectionGroup(db, 'playsSongInEdition'),
 		'song',
 		songDocs.map((song) => song.ref)
