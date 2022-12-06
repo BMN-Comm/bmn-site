@@ -21,6 +21,7 @@
 	import { newNewsPost } from '$lib/util/webhook'
 	import type { PageData } from './$types'
 	import { invalidateAll } from '$app/navigation'
+	import { prevent_default } from 'svelte/internal'
 
 	export let data: PageData
 
@@ -91,7 +92,7 @@
 				</StructuredListCell>
 				<StructuredListCell>
 					<h2>{announcement.title}</h2>
-					<span>{announcement.content}</span>
+					<span class="announcementMessage">{announcement.content}</span>
 				</StructuredListCell>
 			</StructuredListRow>
 		{/each}
@@ -105,7 +106,10 @@
 	primaryButtonText="Send"
 	hasScrollingContent
 	hasForm
-	on:submit={(e) => {
+	preventCloseOnClickOutside={true}
+	shouldSubmitOnEnter={false}
+	selectorPrimaryFocus="#title"
+	on:click:button--primary={(e) => {
 		e.preventDefault()
 		AddAnnouncement()
 		openNew = false
@@ -115,7 +119,7 @@
 		<Grid>
 			<Row padding>
 				<Column>
-					<TextInput labelText="Title*" bind:value={title} required />
+					<TextInput labelText="Title*" bind:value={title} required id="title" />
 				</Column>
 			</Row>
 			<Row>
@@ -153,5 +157,9 @@
 		padding: 0px !important;
 		margin: 2px 0px !important;
 		border: 0px;
+	}
+
+	:global(.announcementMessage) {
+		white-space: pre-wrap;
 	}
 </style>
