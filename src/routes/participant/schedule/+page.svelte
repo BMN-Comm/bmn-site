@@ -31,9 +31,11 @@
 		<StructuredListBody>
 			{#each data.rehearsals as rehearsal, i}
 				<StructuredListRow>
-					<StructuredListCell>
-						{rehearsal.startTime.toDate().toDateString()}
-					</StructuredListCell>
+					<a href={`/participant/schedule/${rehearsal.id}`}>
+						<StructuredListCell>
+							<div class="rehearsalLinkText">{rehearsal.startTime.toDate().toDateString()}</div>
+						</StructuredListCell>
+					</a>
 					<StructuredListCell>
 						{getTimeString(rehearsal.startTime)} -
 						{getTimeString(rehearsal.endTime)}
@@ -41,11 +43,10 @@
 					<StructuredListCell>
 						{rehearsal.location}
 					</StructuredListCell>
-					<StructuredListCell>
-						<a href={`/participant/schedule/${rehearsal.id}`}><Launch /></a>
-					</StructuredListCell>
 				</StructuredListRow>
 			{/each}
 		</StructuredListBody>
 	</ScrollableList>
 </Grid>
+
+
