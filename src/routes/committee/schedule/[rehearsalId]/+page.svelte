@@ -36,8 +36,8 @@
 		if (!editionSongs.some((s: song) => s.id == songId)) return
 
 		let rehearsalDay = rehearsal.startTime.toDate()
-		let startDate = rehearsalDay
-		let endDate = rehearsalDay
+		let startDate = new Date(rehearsalDay)
+		let endDate = new Date(rehearsalDay)
 		let start = startTime.split(':')
 		let end = endTime.split(':')
 		startDate.setHours(+start[0], +start[1])
