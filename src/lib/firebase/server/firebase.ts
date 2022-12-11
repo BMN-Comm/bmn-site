@@ -15,12 +15,15 @@ function initializeFirebase() {
 }
 
 /** Verify and decode the given token */
-export async function decodeToken(token: string): Promise<DecodedIdToken | null> {
+export async function decodeToken(token: string): Promise<DecodedIdToken | 'token-expired' | null> {
 	if (!token || token === 'null' || token === 'undefined') return null
 	try {
 		initializeFirebase()
 		return await admin.auth().verifyIdToken(token)
-	} catch (err) {
+	} catch (err: any) {
+		console.log(err)
+		if (err.errorInfo.code === 'auth/id-token-expired') return 'token-expired'
+
 		console.log(err)
 		return null
 	}

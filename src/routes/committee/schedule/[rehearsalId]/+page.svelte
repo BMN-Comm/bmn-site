@@ -2,7 +2,6 @@
 	import { db } from '$lib/firebase/client/firebase'
 	import type { newRehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
-	import { getTimeString } from '$lib/util/timeString'
 	import { newSchedule } from '$lib/util/webhook'
 	import type { PageData } from './$types'
 	import {
@@ -13,28 +12,23 @@
 		Grid,
 		Modal,
 		Row,
-		StructuredListBody,
-		StructuredListCell,
-		StructuredListHead,
-		StructuredListRow,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import { Add, MusicRemove, LogoDiscord } from 'carbon-icons-svelte'
+	import { Add, LogoDiscord } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
-	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
+
+	import ScheduleTimeline from '$lib/components/scheduling/ScheduleTimeline.svelte'
+	import SongAvailibilityTimeline from '$lib/components/scheduling/SongAvailibilityTimeline.svelte'
 
 	export let data: PageData
 
-	const { rehearsal, songs, musicians, editionSongs } = data
+	const { rehearsal, songs, musicians, editionSongs, availabilityForMusicians } = data
 
 	let openModal = false
 	let startTime: string
 	let endTime: string
 	let songId: string
-
-	let selectedSong: number
-	let openDel = false
 
 	async function addSong() {
 		let rehearsalSong: newRehearsalSong
@@ -66,19 +60,11 @@
 		invalidateAll()
 	}
 
-	async function removeSong() {
-		if (songs != undefined) {
-			const docRef = doc(
-				db,
-				'rehearsals',
-				rehearsal.id,
-				'songsToRehearse',
-				rehearsal.songsToRehearse[selectedSong].id
-			)
-			await deleteDoc(docRef)
+	async function removeSong(songToDelete: string) {
+		const docRef = doc(db, 'rehearsals', rehearsal.id, 'songsToRehearse', songToDelete)
+		await deleteDoc(docRef)
 
-			invalidateAll()
-		}
+		invalidateAll()
 	}
 </script>
 
@@ -86,6 +72,8 @@
 	<Row padding>
 		<Column><h1>Rehearsals {rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
+	<Row padding><Column>* = somebody did not fill in their availability</Column></Row>
+
 	<Row>
 		<Column>
 			<Button
@@ -105,48 +93,28 @@
 			/>
 		</Column>
 	</Row>
-	<ScrollableList>
-		<StructuredListHead>
-			<StructuredListRow head>
-				<StructuredListCell head>Title</StructuredListCell>
-				<StructuredListCell head>Time</StructuredListCell>
-				<StructuredListCell head>Line-up</StructuredListCell>
-			</StructuredListRow>
-		</StructuredListHead>
-		<StructuredListBody>
-			{#if songs != undefined}
-				{#each songs as song, i}
-					<StructuredListRow>
-						<StructuredListCell>{song.name}</StructuredListCell>
-						<StructuredListCell>
-							{getTimeString(rehearsal.songsToRehearse[i].startTime)} -
-							{getTimeString(rehearsal.songsToRehearse[i].endTime)}
-						</StructuredListCell>
-						<StructuredListCell>
-							{@const musiciansForSong = musicians[song.id]}
-							{#if musicians !== undefined}
-								{#each musiciansForSong as musician}
-									{musician.participantName} - {musician.instrumentName}<br />
-								{/each}
-							{/if}
-						</StructuredListCell>
-						<StructuredListCell>
-							<Button
-								kind="danger-tertiary"
-								size="small"
-								iconDescription="Remove song"
-								icon={MusicRemove}
-								on:click={() => {
-									selectedSong = i
-									openDel = true
-								}}
-							/>
-						</StructuredListCell>
-					</StructuredListRow>
-				{/each}
-			{/if}
-		</StructuredListBody>
-	</ScrollableList>
+	<hr />
+	<ScheduleTimeline
+		startTime={rehearsal.startTime.toDate()}
+		endTime={rehearsal.endTime.toDate()}
+		songsToRehearse={rehearsal.songsToRehearse}
+		songs={data.songs}
+		deleteSong={(id) => removeSong(id)}
+	/>
+	<hr />
+
+	<!-- TODO: Edition songs -->
+	{#if songs != undefined}
+		{#each songs as song}
+			<SongAvailibilityTimeline
+				startTime={rehearsal.startTime.toDate()}
+				endTime={rehearsal.endTime.toDate()}
+				{song}
+				musicians={musicians[song.id]}
+				musicianAvailabilities={availabilityForMusicians}
+			/>
+		{/each}
+	{/if}
 </Grid>
 
 <Modal
@@ -185,24 +153,6 @@
 			</Grid>
 		</Form>
 	</div>
-</Modal>
-
-<Modal
-	danger
-	modalHeading="Remove song"
-	primaryButtonText="Remove"
-	primaryButtonIcon={MusicRemove}
-	secondaryButtonText="Cancel"
-	bind:open={openDel}
-	on:click:button--primary={() => {
-		removeSong()
-		openDel = false
-	}}
-	on:click:button--secondary={() => {
-		openDel = false
-	}}
->
-	<p>Remove song?</p>
 </Modal>
 
 <style>

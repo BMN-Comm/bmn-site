@@ -2,10 +2,11 @@
 	import { StructuredList } from 'carbon-components-svelte'
 
 	export let condensed: boolean | undefined = undefined
+	export let classname: string | undefined = undefined
 </script>
 
 <div class="list-container">
-	<StructuredList {condensed}>
+	<StructuredList {condensed} class={classname}>
 		<slot />
 	</StructuredList>
 </div>

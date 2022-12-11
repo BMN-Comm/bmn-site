@@ -14,6 +14,8 @@ import {
 } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 import type { user } from '$lib/types/domain/user'
+import { toDict } from '$lib/util/dict'
+import type { availability } from '$lib/types/domain/availability'
 
 export const ssr = false
 
@@ -34,9 +36,10 @@ export const load: PageLoad = async ({ params }) => {
 	)
 
 	let songs
+	let availability
 
 	const musiciansForSongs: {
-		[songId: string]: { participantName: string; instrumentName: string }[]
+		[songId: string]: { participantId: string; participantName: string; instrumentName: string }[]
 	} = {}
 
 	if (rehearsal.songsToRehearse.length > 0) {
@@ -85,10 +88,25 @@ export const load: PageLoad = async ({ params }) => {
 
 			// Add musician
 			musiciansForSongs[playsInSongData.song.id].push({
+				participantId: participant.id,
 				participantName: participant.name,
 				instrumentName: playsInSongData.part
 			})
 		}
+
+		const availabilityQuery = query(
+			collectionGroup(db, 'availability'),
+			where('rehearsal', '==', doc(db, 'rehearsals/', params.rehearsalId))
+		)
+		const allAvailability = (await getDocs(availabilityQuery)).docs
+
+		availability = toDict(
+			participantIds.map((participantId) => ({
+				[participantId]: allAvailability
+					.find((x) => x.ref.parent.parent!.id === participantId)
+					?.data() as availability | undefined
+			}))
+		)
 	}
 
 	// Get all songs of the edition -- TODO: Auto current edition?
@@ -102,8 +120,9 @@ export const load: PageLoad = async ({ params }) => {
 
 	return {
 		rehearsal,
-		songs,
+		songs: songs ?? [],
 		musicians: musiciansForSongs,
-		editionSongs
+		editionSongs,
+		availabilityForMusicians: availability
 	}
 }
