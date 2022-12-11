@@ -21,21 +21,20 @@
 	)
 
 	// Create a list of songs along with range when it is planned, sorted by starting time
-	const songsWithPeriod = songsToRehearse
-		.map((song) => {
-			const songStartDate = song.startTime.toDate()
-			const songEndDate = song.endTime.toDate()
-			const relativeStart =
-				songStartDate.getHours() * 60 + songStartDate.getMinutes() - startMinutes
-			const relativeEnd = songEndDate.getHours() * 60 + songEndDate.getMinutes() - startMinutes
-			return {
-				rehearsalSongId: song.id,
-				relativeStart,
-				relativeEnd,
-				songId: song.song.id,
-				length: relativeEnd - relativeStart
-			}
-		})
+	$: songsWithPeriod = songsToRehearse.map((song) => {
+		const songStartDate = song.startTime.toDate()
+		const songEndDate = song.endTime.toDate()
+		const relativeStart = songStartDate.getHours() * 60 + songStartDate.getMinutes() - startMinutes
+		const relativeEnd = songEndDate.getHours() * 60 + songEndDate.getMinutes() - startMinutes
+		return {
+			rehearsalSongId: song.id,
+			relativeStart,
+			relativeEnd,
+			songId: song.song.id,
+			length: relativeEnd - relativeStart
+		}
+	})
+	$: sortedSongsWithPeriod = songsWithPeriod
 		// For some reason js sorted incorrectly when using min, so I'm using this approachs
 		.sort((x, y) => Math.max(x.relativeStart, y.relativeStart))
 		.reverse()
@@ -54,24 +53,26 @@
 <!-- Row for songs that will be played -->
 <Row class="timeline">
 	<!-- If there is free space at the beginning, or no songs at all, fill up the space -->
-	{#if songsWithPeriod.length === 0 || songsWithPeriod[0].relativeStart > 0}
+	{#if sortedSongsWithPeriod.length === 0 || sortedSongsWithPeriod[0].relativeStart > 0}
 		<TimelineBlock
-			relativeWidth={songsWithPeriod.length === 0 ? totalMinutes : songsWithPeriod[0].relativeStart}
+			relativeWidth={sortedSongsWithPeriod.length === 0
+				? 100
+				: (sortedSongsWithPeriod[0].relativeStart * 100) / totalMinutes}
 		/>
 	{/if}
-	{#each songsWithPeriod as songToRehearse, i}
+	{#each sortedSongsWithPeriod as songToRehearse, i}
 		<!-- Render each song in the timeline -->
 		<TimelineBlock
 			relativeWidth={(songToRehearse.length * 100) / totalMinutes}
 			song={songs.find((x) => x.id == songToRehearse.songId)}
 			deleteSong={() => deleteSong(songToRehearse.rehearsalSongId)}
 		/>
-		{@const a = console.log(songToRehearse.relativeEnd, songsWithPeriod[i + 1]?.relativeStart)}
-		{#if (songsToRehearse.length === i + 1 && songToRehearse.relativeEnd < totalMinutes) || (songsToRehearse.length > i + 1 && songToRehearse.relativeEnd < songsWithPeriod[i + 1]?.relativeStart)}
+		{#if (songsToRehearse.length === i + 1 && songToRehearse.relativeEnd < totalMinutes) || (songsToRehearse.length > i + 1 && songToRehearse.relativeEnd < sortedSongsWithPeriod[i + 1]?.relativeStart)}
 			<TimelineBlock
-				relativeWidth={songsWithPeriod.length === 0
-					? totalMinutes
-					: (songsWithPeriod[i].length * 100) / totalMinutes}
+				relativeWidth={songsToRehearse.length === i + 1
+					? ((totalMinutes - songToRehearse.relativeEnd) * 100) / totalMinutes
+					: ((sortedSongsWithPeriod[i + 1]?.relativeStart - songToRehearse.relativeEnd) * 100) /
+					  totalMinutes}
 			/>
 		{/if}
 	{/each}

@@ -36,25 +36,24 @@ export const load: PageLoad = async ({ params }) => {
 		(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
 	)
 
-	let songs
 	let availability
 
 	const musiciansForSongs: {
 		[songId: string]: { participantId: string; participantName: string; instrumentName: string }[]
 	} = {}
 
-	if (rehearsal.songsToRehearse.length > 0) {
-		// Get the document ids of the songs
-		const songIds = rehearsal.songsToRehearse.map((rehearsalSong) => rehearsalSong.song.id)
+	// Get all songs of the edition -- TODO: Auto current edition?
+	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
+	const songRefs = edition.songs.map((ref) => ref.id)
 
-		// Get the song objects from the rehearsal songs
-		const songDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songIds)
-		songs = songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
+	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
+	const songs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
+	if (songs.length > 0) {
 		const playsInDocs = await QueryWhereInBatched(
 			collectionGroup(db, 'playsSongInEdition'),
 			'song',
-			songDocs.map((song) => song.ref)
+			editionSongsDocs.map((song) => song.ref)
 		)
 
 		// Get all the participants that play these songs
@@ -106,18 +105,10 @@ export const load: PageLoad = async ({ params }) => {
 		)
 	}
 
-	// Get all songs of the edition -- TODO: Auto current edition?
-	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
-	const songRefs = edition.songs.map((ref) => ref.id)
-
-	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
-	const editionSongs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
-
 	return {
 		rehearsal,
-		songs: songs ?? [],
-		musicians: musiciansForSongs,
-		editionSongs,
+		songs,
+		musiciansForSongs,
 		availabilityForMusicians: availability
 	}
 }

@@ -23,7 +23,7 @@
 
 	export let data: PageData
 
-	const { rehearsal, songs, musicians, editionSongs, availabilityForMusicians } = data
+	const { rehearsal, musiciansForSongs, songs, availabilityForMusicians } = data
 
 	let openModal = false
 	let startTime: string
@@ -33,7 +33,7 @@
 	async function addSong() {
 		let rehearsalSong: newRehearsalSong
 
-		if (!editionSongs.some((s: song) => s.id == songId)) return
+		if (!songs.some((s: song) => s.id == songId)) return
 
 		let rehearsalDay = rehearsal.startTime.toDate()
 		let startDate = new Date(rehearsalDay)
@@ -50,21 +50,24 @@
 			endTime: Timestamp.fromDate(endDate)
 		}
 
-		await setDoc(doc(collection(db, 'rehearsals', rehearsal.id, 'songsToRehearse')), rehearsalSong!)
+		const rehearsalSongDoc = doc(collection(db, 'rehearsals', rehearsal.id, 'songsToRehearse'))
+
+		await setDoc(rehearsalSongDoc, rehearsalSong!)
 
 		openModal = false
 		startTime = ''
 		endTime = ''
 		songId = ''
 
-		invalidateAll()
+		rehearsal.songsToRehearse.push({ id: rehearsalSongDoc.id, ...rehearsalSong })
+		rehearsal.songsToRehearse = rehearsal.songsToRehearse
 	}
 
 	async function removeSong(songToDelete: string) {
 		const docRef = doc(db, 'rehearsals', rehearsal.id, 'songsToRehearse', songToDelete)
 		await deleteDoc(docRef)
 
-		invalidateAll()
+		rehearsal.songsToRehearse = rehearsal.songsToRehearse.filter((x) => x.id !== songToDelete)
 	}
 </script>
 
@@ -98,19 +101,18 @@
 		startTime={rehearsal.startTime.toDate()}
 		endTime={rehearsal.endTime.toDate()}
 		songsToRehearse={rehearsal.songsToRehearse}
-		songs={data.songs}
+		{songs}
 		deleteSong={(id) => removeSong(id)}
 	/>
 	<hr />
 
-	<!-- TODO: Edition songs -->
 	{#if songs != undefined}
 		{#each songs as song}
 			<SongAvailibilityTimeline
 				startTime={rehearsal.startTime.toDate()}
 				endTime={rehearsal.endTime.toDate()}
 				{song}
-				musicians={musicians[song.id]}
+				musicians={musiciansForSongs[song.id]}
 				musicianAvailabilities={availabilityForMusicians}
 			/>
 		{/each}
@@ -136,7 +138,7 @@
 					<Column>
 						<ComboBox
 							titleText="Song"
-							items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
+							items={songs.map((s) => ({ id: s.id, text: s.name }))}
 							bind:selectedId={songId}
 							required
 						/>

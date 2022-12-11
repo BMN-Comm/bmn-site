@@ -3,7 +3,6 @@
 	import type { availability } from '$lib/types/domain/availability'
 	import type { song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
-	import { error } from '@sveltejs/kit'
 	import {
 		Column,
 		Row,
