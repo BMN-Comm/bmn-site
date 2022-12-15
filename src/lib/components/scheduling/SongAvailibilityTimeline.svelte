@@ -23,46 +23,41 @@
 		instrumentName: string
 	}[]
 
-	export let musicianAvailabilities:
-		| {
-				[x: string]: availability | undefined
-		  }
-		| undefined
-
-	// Ugly, I know, might fix later
-	const nonNullMusicianAvailabilities = musicianAvailabilities!
+	export let musicianAvailabilities: {
+		[x: string]: availability | undefined
+	}
 
 	const startMinutes = startTime.getHours() * 60 + startTime.getMinutes()
 	const totalMinutes = endTime.getHours() * 60 + endTime.getMinutes() - startMinutes
 
+	// The minimum time to start is the maximum of all available start times
 	const minStartTime = Math.max(
 		...musicians.map((musician) => {
-			const musicianAvailable = nonNullMusicianAvailabilities[musician.participantId]
+			const musicianAvailable = musicianAvailabilities[musician.participantId]
 			if (!musicianAvailable || !musicianAvailable.available) return 0
 			const dateTime = musicianAvailable.startTime.toDate()
 			return dateTime.getHours() * 60 + dateTime.getMinutes() - startMinutes
 		})
 	)
+	// The maximum time to end is the minimum of all available end times
 	const maxEndTime = Math.min(
 		...musicians.map((musician) => {
-			const musicianAvailable = nonNullMusicianAvailabilities[musician.participantId]
+			const musicianAvailable = musicianAvailabilities[musician.participantId]
 			if (!musicianAvailable || !musicianAvailable.available) return totalMinutes
 			const dateTime = musicianAvailable.endTime.toDate()
 			return dateTime.getHours() * 60 + dateTime.getMinutes() - startMinutes
 		})
 	)
 
+	// Help vars, see if the slot is possible, everybody is available, and if there is somebody that did not fill in availability (SHAME)
 	const somebodyUnavailable = musicians.some(
 		(x) =>
-			nonNullMusicianAvailabilities[x.participantId] &&
-			!nonNullMusicianAvailabilities[x.participantId]!.available
+			musicianAvailabilities[x.participantId] && !musicianAvailabilities[x.participantId]!.available
 	)
-
-	const somebodyNotGiven = musicians.some((x) => !nonNullMusicianAvailabilities[x.participantId])
-
+	const somebodyNotGiven = musicians.some((x) => !musicianAvailabilities[x.participantId])
 	const timeslotPossible = minStartTime < maxEndTime
 
-	$: showParticipants = false
+	let showParticipants = false
 </script>
 
 <Row class="song-timeline">
@@ -105,13 +100,15 @@
 				style={`max-width: ${((totalMinutes - maxEndTime) / totalMinutes) * 100}% !important;`}
 			/>
 		{/if}
+	{:else}
+		<Column class="no-interval">No available overlap</Column>
 	{/if}
 </Row>
 {#if showParticipants}
 	<ScrollableList condensed classname="availability-list">
 		<StructuredListBody>
 			{#each musicians as musician}
-				{@const availability = nonNullMusicianAvailabilities[musician.participantId]}
+				{@const availability = musicianAvailabilities[musician.participantId]}
 				<StructuredListRow>
 					<StructuredListCell>{musician.participantName}</StructuredListCell>
 					<StructuredListCell>
@@ -151,7 +148,8 @@
 		top: 5px;
 	}
 
-	:global(.somebody-unavailable) {
+	:global(.somebody-unavailable),
+	:global(.no-interval) {
 		background-color: #ef0612;
 		text-align: center;
 		padding-top: 15px;

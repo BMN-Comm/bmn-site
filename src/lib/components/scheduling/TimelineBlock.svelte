@@ -20,7 +20,7 @@
 		return colour
 	}
 
-	const randomColor = song ? stringToColour(song.id) : '#808080'
+	$: randomColor = song ? stringToColour(song.id) : '#808080'
 </script>
 
 <div class="song-block" style={`width: ${relativeWidth}%; background-color: ${randomColor}`}>

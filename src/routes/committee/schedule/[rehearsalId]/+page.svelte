@@ -16,14 +16,13 @@
 	} from 'carbon-components-svelte'
 	import { Add, LogoDiscord } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
-	import { invalidateAll } from '$app/navigation'
 
 	import ScheduleTimeline from '$lib/components/scheduling/ScheduleTimeline.svelte'
 	import SongAvailibilityTimeline from '$lib/components/scheduling/SongAvailibilityTimeline.svelte'
 
 	export let data: PageData
 
-	const { rehearsal, musiciansForSongs, songs, availabilityForMusicians } = data
+	let { rehearsal, musiciansForSongs, songs, availabilityForMusicians } = data
 
 	let openModal = false
 	let startTime: string
@@ -59,8 +58,12 @@
 		endTime = ''
 		songId = ''
 
-		rehearsal.songsToRehearse.push({ id: rehearsalSongDoc.id, ...rehearsalSong })
-		rehearsal.songsToRehearse = rehearsal.songsToRehearse
+		rehearsal.songsToRehearse = [
+			...rehearsal.songsToRehearse,
+			{ id: rehearsalSongDoc.id, ...rehearsalSong }
+		]
+
+		rehearsal = rehearsal
 	}
 
 	async function removeSong(songToDelete: string) {
@@ -100,7 +103,7 @@
 	<ScheduleTimeline
 		startTime={rehearsal.startTime.toDate()}
 		endTime={rehearsal.endTime.toDate()}
-		songsToRehearse={rehearsal.songsToRehearse}
+		bind:songsToRehearse={rehearsal.songsToRehearse}
 		{songs}
 		deleteSong={(id) => removeSong(id)}
 	/>

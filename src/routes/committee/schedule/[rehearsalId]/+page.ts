@@ -57,7 +57,6 @@ export const load: PageLoad = async ({ params }) => {
 		)
 
 		// Get all the participants that play these songs
-		// TODO: Get all participants in the current edition
 		const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
 		const participantDocs = await QueryWhereInBatched(
 			collection(db, 'users'),
@@ -109,6 +108,6 @@ export const load: PageLoad = async ({ params }) => {
 		rehearsal,
 		songs,
 		musiciansForSongs,
-		availabilityForMusicians: availability
+		availabilityForMusicians: availability ?? {}
 	}
 }
