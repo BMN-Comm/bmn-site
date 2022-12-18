@@ -5,6 +5,13 @@ import { prerendering } from '$app/environment'
 // Hooks file used for server side functions, see https://kit.svelte.dev/docs/hooks
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// When asking for a refresh token or api token, resolve before the token can fail
+	if (
+		event.url.pathname?.startsWith('/refresh-token') ||
+		event.url.pathname?.startsWith('/api/token')
+	)
+		return resolve(event)
+
 	// If the app is prerendering during deploy, we don't want to run the rest of the code as it will cause env errors
 	if (prerendering) return await resolve(event)
 
@@ -13,7 +20,20 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	// See if an authentication cookie is set, then try to decode it.
 	const cookies = cookie.parse(event.request.headers.get('cookie') || '')
-	const decodedToken = cookies.__session && (await decodeToken(JSON.parse(cookies.__session).token))
+
+	const decodedToken =
+		(cookies.__session && (await decodeToken(JSON.parse(cookies.__session).token))) || null
+
+	// If we find out the token has expired, redirect to it can be refreshed.
+	if (decodedToken === 'token-expired')
+		return new Response('Trying auth refresh...', {
+			status: 302,
+			headers: new Headers({
+				status: '302',
+				Location: `/refresh-token?redirect=${event.request.url}`
+			})
+		})
+
 	event.locals.decodedToken = decodedToken
 
 	// Make sure that only users logged in with bmn@a-eskwadraat.nl are allowed to access the admin portal

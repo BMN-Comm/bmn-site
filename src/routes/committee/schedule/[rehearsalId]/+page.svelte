@@ -2,7 +2,6 @@
 	import { db } from '$lib/firebase/client/firebase'
 	import type { newRehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
-	import { getTimeString } from '$lib/util/timeString'
 	import { newSchedule } from '$lib/util/webhook'
 	import type { PageData } from './$types'
 	import {
@@ -13,33 +12,27 @@
 		Grid,
 		Modal,
 		Row,
-		StructuredListBody,
-		StructuredListCell,
-		StructuredListHead,
-		StructuredListRow,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import { Add, MusicRemove, LogoDiscord } from 'carbon-icons-svelte'
+	import { Add, LogoDiscord } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
-	import ScrollableList from '$lib/components/scrollableList.svelte'
-	import { invalidateAll } from '$app/navigation'
+
+	import ScheduleTimeline from '$lib/components/scheduling/ScheduleTimeline.svelte'
+	import SongAvailibilityTimeline from '$lib/components/scheduling/SongAvailibilityTimeline.svelte'
 
 	export let data: PageData
 
-	const { rehearsal, songs, musicians, editionSongs } = data
+	let { rehearsal, musiciansForSongs, songs, availabilityForMusicians } = data
 
 	let openModal = false
 	let startTime: string
 	let endTime: string
 	let songId: string
 
-	let selectedSong: number
-	let openDel = false
-
 	async function addSong() {
 		let rehearsalSong: newRehearsalSong
 
-		if (!editionSongs.some((s: song) => s.id == songId)) return
+		if (!songs.some((s: song) => s.id == songId)) return
 
 		let rehearsalDay = rehearsal.startTime.toDate()
 		let startDate = new Date(rehearsalDay)
@@ -56,29 +49,28 @@
 			endTime: Timestamp.fromDate(endDate)
 		}
 
-		await setDoc(doc(collection(db, 'rehearsals', rehearsal.id, 'songsToRehearse')), rehearsalSong!)
+		const rehearsalSongDoc = doc(collection(db, 'rehearsals', rehearsal.id, 'songsToRehearse'))
+
+		await setDoc(rehearsalSongDoc, rehearsalSong!)
 
 		openModal = false
 		startTime = ''
 		endTime = ''
 		songId = ''
 
-		invalidateAll()
+		rehearsal.songsToRehearse = [
+			...rehearsal.songsToRehearse,
+			{ id: rehearsalSongDoc.id, ...rehearsalSong }
+		]
+
+		rehearsal = rehearsal
 	}
 
-	async function removeSong() {
-		if (songs != undefined) {
-			const docRef = doc(
-				db,
-				'rehearsals',
-				rehearsal.id,
-				'songsToRehearse',
-				rehearsal.songsToRehearse[selectedSong].id
-			)
-			await deleteDoc(docRef)
+	async function removeSong(songToDelete: string) {
+		const docRef = doc(db, 'rehearsals', rehearsal.id, 'songsToRehearse', songToDelete)
+		await deleteDoc(docRef)
 
-			invalidateAll()
-		}
+		rehearsal.songsToRehearse = rehearsal.songsToRehearse.filter((x) => x.id !== songToDelete)
 	}
 </script>
 
@@ -86,6 +78,8 @@
 	<Row padding>
 		<Column><h1>Rehearsals {rehearsal.startTime.toDate().toDateString()}</h1></Column>
 	</Row>
+	<Row padding><Column>* = somebody did not fill in their availability</Column></Row>
+
 	<Row>
 		<Column>
 			<Button
@@ -105,48 +99,27 @@
 			/>
 		</Column>
 	</Row>
-	<ScrollableList>
-		<StructuredListHead>
-			<StructuredListRow head>
-				<StructuredListCell head>Title</StructuredListCell>
-				<StructuredListCell head>Time</StructuredListCell>
-				<StructuredListCell head>Line-up</StructuredListCell>
-			</StructuredListRow>
-		</StructuredListHead>
-		<StructuredListBody>
-			{#if songs != undefined}
-				{#each songs as song, i}
-					<StructuredListRow>
-						<StructuredListCell>{song.name}</StructuredListCell>
-						<StructuredListCell>
-							{getTimeString(rehearsal.songsToRehearse[i].startTime)} -
-							{getTimeString(rehearsal.songsToRehearse[i].endTime)}
-						</StructuredListCell>
-						<StructuredListCell>
-							{@const musiciansForSong = musicians[song.id]}
-							{#if musicians !== undefined}
-								{#each musiciansForSong as musician}
-									{musician.participantName} - {musician.instrumentName}<br />
-								{/each}
-							{/if}
-						</StructuredListCell>
-						<StructuredListCell>
-							<Button
-								kind="danger-tertiary"
-								size="small"
-								iconDescription="Remove song"
-								icon={MusicRemove}
-								on:click={() => {
-									selectedSong = i
-									openDel = true
-								}}
-							/>
-						</StructuredListCell>
-					</StructuredListRow>
-				{/each}
-			{/if}
-		</StructuredListBody>
-	</ScrollableList>
+	<hr />
+	<ScheduleTimeline
+		startTime={rehearsal.startTime.toDate()}
+		endTime={rehearsal.endTime.toDate()}
+		bind:songsToRehearse={rehearsal.songsToRehearse}
+		{songs}
+		deleteSong={(id) => removeSong(id)}
+	/>
+	<hr />
+
+	{#if songs != undefined}
+		{#each songs as song}
+			<SongAvailibilityTimeline
+				startTime={rehearsal.startTime.toDate()}
+				endTime={rehearsal.endTime.toDate()}
+				{song}
+				musicians={musiciansForSongs[song.id]}
+				musicianAvailabilities={availabilityForMusicians}
+			/>
+		{/each}
+	{/if}
 </Grid>
 
 <Modal
@@ -168,7 +141,7 @@
 					<Column>
 						<ComboBox
 							titleText="Song"
-							items={editionSongs.map((s) => ({ id: s.id, text: s.name }))}
+							items={songs.map((s) => ({ id: s.id, text: s.name }))}
 							bind:selectedId={songId}
 							required
 						/>
@@ -185,24 +158,6 @@
 			</Grid>
 		</Form>
 	</div>
-</Modal>
-
-<Modal
-	danger
-	modalHeading="Remove song"
-	primaryButtonText="Remove"
-	primaryButtonIcon={MusicRemove}
-	secondaryButtonText="Cancel"
-	bind:open={openDel}
-	on:click:button--primary={() => {
-		removeSong()
-		openDel = false
-	}}
-	on:click:button--secondary={() => {
-		openDel = false
-	}}
->
-	<p>Remove song?</p>
 </Modal>
 
 <style>

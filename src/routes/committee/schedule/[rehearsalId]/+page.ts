@@ -9,10 +9,13 @@ import {
 	getDocs,
 	doc,
 	getDoc,
-	collectionGroup
+	collectionGroup,
+	where
 } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 import type { user } from '$lib/types/domain/user'
+import { toDict } from '$lib/util/dict'
+import type { availability } from '$lib/types/domain/availability'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
 
 export const ssr = false
@@ -33,28 +36,27 @@ export const load: PageLoad = async ({ params }) => {
 		(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
 	)
 
-	let songs
+	let availability
 
 	const musiciansForSongs: {
-		[songId: string]: { participantName: string; instrumentName: string }[]
+		[songId: string]: { participantId: string; participantName: string; instrumentName: string }[]
 	} = {}
 
-	if (rehearsal.songsToRehearse.length > 0) {
-		// Get the document ids of the songs
-		const songIds = rehearsal.songsToRehearse.map((rehearsalSong) => rehearsalSong.song.id)
+	// Get all songs of the edition -- TODO: Auto current edition?
+	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
+	const songRefs = edition.songs.map((ref) => ref.id)
 
-		// Get the song objects from the rehearsal songs
-		const songDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songIds)
-		songs = songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
+	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
+	const songs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
+	if (songs.length > 0) {
 		const playsInDocs = await QueryWhereInBatched(
 			collectionGroup(db, 'playsSongInEdition'),
 			'song',
-			songDocs.map((song) => song.ref)
+			editionSongsDocs.map((song) => song.ref)
 		)
 
 		// Get all the participants that play these songs
-		// TODO: Get all participants in the current edition
 		const participantIds = playsInDocs.map((doc) => doc.ref.parent.parent?.id as string)
 		const participantDocs = await QueryWhereInBatched(
 			collection(db, 'users'),
@@ -81,23 +83,31 @@ export const load: PageLoad = async ({ params }) => {
 
 			// Add musician
 			musiciansForSongs[playsInSongData.song.id].push({
+				participantId: participant.id,
 				participantName: participant.name,
 				instrumentName: playsInSongData.part
 			})
 		}
+
+		const availabilityQuery = query(
+			collectionGroup(db, 'availability'),
+			where('rehearsal', '==', doc(db, 'rehearsals/', params.rehearsalId))
+		)
+		const allAvailability = (await getDocs(availabilityQuery)).docs
+
+		availability = toDict(
+			participantIds.map((participantId) => ({
+				[participantId]: allAvailability
+					.find((x) => x.ref.parent.parent!.id === participantId)
+					?.data() as availability | undefined
+			}))
+		)
 	}
-
-	// Get all songs of the edition -- TODO: Auto current edition?
-	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
-	const songRefs = edition.songs.map((ref) => ref.id)
-
-	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
-	const editionSongs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
 
 	return {
 		rehearsal,
 		songs,
-		musicians: musiciansForSongs,
-		editionSongs
+		musiciansForSongs,
+		availabilityForMusicians: availability ?? {}
 	}
 }

@@ -4,7 +4,7 @@ import type { LayoutServerLoad } from './$types'
 export const prerender = false
 
 export const load: LayoutServerLoad = async ({ locals }) => {
-	if (locals.session.user) {
+	if (locals.session?.user) {
 		const userDocs = await db
 			.collection('users')
 			.where('email', '==', locals.session.user.email)
