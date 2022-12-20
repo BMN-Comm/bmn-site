@@ -10,9 +10,17 @@
 		Button,
 		Form,
 		TextArea,
-		ToastNotification
+		ToastNotification,
+		StructuredListHead,
+		StructuredListRow,
+		StructuredListCell,
+		Modal
 	} from 'carbon-components-svelte'
 	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import type { PageData } from './$types'
+	import ScrollableList from '$lib/components/scrollableList.svelte'
+	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
+	import { Chat } from 'carbon-icons-svelte'
 
 	let title: string
 	let artist: string
@@ -21,9 +29,15 @@
 	let remark: string
 	let length: string
 
+	let remarkText: string
+	let openRemark: boolean = false
+
 	$: validLink = true
 
 	export let toasts: string[] = []
+	export let data: PageData
+
+	let { songDocs } = data
 
 	async function AddSuggestion() {
 		// TODO: Show error if failed
@@ -138,6 +152,60 @@
 		</Row>
 	</Grid>
 </Form>
+
+<Grid style="margin-top: 100px">
+	<Row>
+		<Column>
+			<h1 class="titleText">Your previous suggestions</h1>
+		</Column>
+	</Row>
+
+	<ScrollableList>
+		<StructuredListHead>
+			<StructuredListRow head>
+				<StructuredListCell head>Title</StructuredListCell>
+				<StructuredListCell head>Artist</StructuredListCell>
+				<StructuredListCell head>Genre</StructuredListCell>
+				<StructuredListCell head>Link</StructuredListCell>
+				<StructuredListCell head>Remarks</StructuredListCell>
+			</StructuredListRow>
+		</StructuredListHead>
+		{#each songDocs as song}
+			<StructuredListRow>
+				<StructuredListCell>
+					{song.name}
+				</StructuredListCell>
+				<StructuredListCell>
+					{song.artist}
+				</StructuredListCell>
+				<StructuredListCell>
+					{song.genre}
+				</StructuredListCell>
+				<StructuredListCell>
+					<PlayLinkButton url={song.link} />
+				</StructuredListCell>
+				<StructuredListCell>
+					{#if song.remark && song.remark.length > 0}
+						<Button
+							kind="tertiary"
+							size="small"
+							iconDescription="Remarks"
+							icon={Chat}
+							on:click={() => {
+								remarkText = song.remark
+								openRemark = true
+							}}
+						/>
+					{/if}
+				</StructuredListCell>
+			</StructuredListRow>
+		{/each}</ScrollableList
+	>
+</Grid>
+
+<Modal passiveModal modalHeading="Remark" bind:open={openRemark}>
+	<p>{remarkText}</p>
+</Modal>
 
 <style>
 	:global(.textinput-column) {
