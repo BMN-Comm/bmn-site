@@ -40,6 +40,7 @@
 	"type": "module",
 	"dependencies": {
 		"carbon-icons-svelte": "^11.1.0",
+		"csv-parse": "^5.3.3",
 		"firebase": "9.7",
 		"firebase-functions": "^4.0.2",
 		"svelte-carousel": "^1.0.20"

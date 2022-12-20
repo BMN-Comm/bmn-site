@@ -34,6 +34,7 @@
 		<SideNavLink text="Announcements" href="/participant/announcements" />
 		<SideNavLink text="Setlist" href="/participant/setlist" />
 		<SideNavLink text="Suggestions" href="/participant/suggestions" />
+		<SideNavLink text="Masterlist" href="/participant/masterlist" />
 		<SideNavDivider />
 		<SideNavLink text="Schedule" href="/participant/schedule" />
 		<SideNavLink text="Availability" href="/participant/availability" />
