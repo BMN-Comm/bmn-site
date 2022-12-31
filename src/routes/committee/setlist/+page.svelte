@@ -210,6 +210,10 @@
 			bind:selectedId={participant}
 			items={participantListItems}
 			required
+			shouldFilterItem={(item, value) => {
+				if (!value) return true
+				return item.text.toLowerCase().includes(value.toLowerCase())
+			}}
 		/>
 		<br />
 		<TextInput bind:value={instrument} required labelText="Instrument" />
