@@ -15,7 +15,7 @@
 		TextInput,
 		TimePicker
 	} from 'carbon-components-svelte'
-	import { Add, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
+	import { Add, Edit, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
@@ -26,8 +26,9 @@
 
 	export let data: PageData
 
-	let openModal = false
-	let openDel = false
+	let openAddModal = false
+	let openDeleteModal = false
+	let openEditModal = false
 	let location: string = "dB's"
 	let date: string
 	let startTime: string = '18:00'
@@ -61,9 +62,14 @@
 		date = ''
 		startTime = '18:00'
 		endTime = '21:00'
-		openModal = false
+		openAddModal = false
 
 		invalidateAll()
+	}
+
+	/** Edit a rehearsal in the database */
+	async function editRehearsal() {
+		... CONTINUE HERE!!
 	}
 
 	/** Remove a rehearsal from the database */
@@ -85,7 +91,7 @@
 				iconDescription="Add rehearsal"
 				icon={Add}
 				on:click={() => {
-					openModal = true
+					openAddModal = true
 				}}
 			/>
 		</Column>
@@ -125,13 +131,22 @@
 							href={`/committee/schedule/${rehearsal.id}/availability`}
 						/>
 						<Button
+							size="small"
+							iconDescription="Edit rehearsal"
+							icon={Edit}
+							on:click={() => {
+								selectedRehearsal = i
+								openEditModal = true
+							}}
+						/>
+						<Button
 							kind="danger-tertiary"
 							size="small"
 							iconDescription="Remove rehearsal"
 							icon={MusicRemove}
 							on:click={() => {
 								selectedRehearsal = i
-								openDel = true
+								openDeleteModal = true
 							}}
 						/>
 					</StructuredListCell>
@@ -142,7 +157,7 @@
 </Grid>
 
 <Modal
-	bind:open={openModal}
+	bind:open={openAddModal}
 	modalHeading="New rehearsal"
 	primaryButtonIcon={Add}
 	primaryButtonText="Add"
@@ -187,18 +202,34 @@
 </Modal>
 
 <Modal
+ 	modalHeading="Edit rehearsal"
+	primaryButtonText="Edit"
+	primaryButtonIcon={Edit}
+	secondaryButtonText="Cancel"
+	bind:open={openEditModal}
+	on:click:button--primary={() => {
+		editRehearsal()
+		openEditModal = false
+	}}
+	on:click:button--secondary={() => {
+		openEditModal = false
+	}}
+>
+</Modal>
+
+<Modal
 	danger
 	modalHeading="Remove rehearsal"
 	primaryButtonText="Remove"
 	primaryButtonIcon={MusicRemove}
 	secondaryButtonText="Cancel"
-	bind:open={openDel}
+	bind:open={openDeleteModal}
 	on:click:button--primary={() => {
 		removeRehearsal()
-		openDel = false
+		openDeleteModal = false
 	}}
 	on:click:button--secondary={() => {
-		openDel = false
+		openDeleteModal = false
 	}}
 >
 	<p>Remove rehearsal?</p>
