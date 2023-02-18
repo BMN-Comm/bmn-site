@@ -16,13 +16,14 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import { Add, Edit, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
-	import { collection, deleteDoc, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import { collection, deleteDoc, doc, getDoc, setDoc, Timestamp, type DocumentData } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
 	import { newRehearsalPost } from '$lib/util/webhook'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
+	import type { rehearsalInfo } from '$lib/types/domain/rehearsal'
 
 	export let data: PageData
 
@@ -34,7 +35,8 @@
 	let startTime: string = '18:00'
 	let endTime: string = '21:00'
 
-	let selectedRehearsal: number
+	let selectedRehearsalId: number
+	let selectedRehearsal: rehearsalInfo
 
 	/** Add a new rehearsal date to the database */
 	async function addRehearsal() {
@@ -42,7 +44,7 @@
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
 
-		let rehearsal = {
+		let rehearsal: rehearsalInfo = {
 			// TODO: Use current edition
 			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: Timestamp.fromDate(
@@ -69,12 +71,30 @@
 
 	/** Edit a rehearsal in the database */
 	async function editRehearsal() {
-		... CONTINUE HERE!!
+		let dateSplit = selectedRehearsal.date.split('/')
+		let sTimeSplit = startTime.split(':')
+		let eTimeSplit = endTime.split(':')
+
+		let rehearsal: rehearsalInfo = {
+			// TODO: Use current edition
+			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
+			startTime: Timestamp.fromDate(
+				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
+			),
+			endTime: Timestamp.fromDate(
+				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +eTimeSplit[0], +eTimeSplit[1])
+			),
+			location
+		}
+
+		const newRehearsal = doc(collection(db, 'rehearsals'))
+
+		await setDoc(newRehearsal, rehearsal)
 	}
 
 	/** Remove a rehearsal from the database */
 	async function removeRehearsal() {
-		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsal].id)
+		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id)
 		await deleteDoc(docRef)
 
 		invalidateAll()
@@ -134,8 +154,11 @@
 							size="small"
 							iconDescription="Edit rehearsal"
 							icon={Edit}
-							on:click={() => {
-								selectedRehearsal = i
+							on:click={async () => {
+								const rehearsalData = (await getDoc(doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id))).data()
+								if (!rehearsalData)
+									throw new Error("Error while querying the rehearsal data.")
+								selectedRehearsal = { edition: rehearsalData.edition, location: rehearsalData.location, startTime: rehearsalData.startTime, endTime: rehearsalData.endTime }
 								openEditModal = true
 							}}
 						/>
@@ -145,7 +168,7 @@
 							iconDescription="Remove rehearsal"
 							icon={MusicRemove}
 							on:click={() => {
-								selectedRehearsal = i
+								selectedRehearsalId = i
 								openDeleteModal = true
 							}}
 						/>
@@ -186,7 +209,7 @@
 				<Row>
 					<Column>
 						<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
-							<DatePickerInput labelText="Datum" placeholder="dd/mm/yyyy" />
+							<DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />
 						</DatePicker>
 					</Column>
 					<Column>
@@ -215,6 +238,37 @@
 		openEditModal = false
 	}}
 >
+<div class="modal">
+	<Form>
+		<Grid>
+			<Row padding>
+				<Column>
+					<TextInput
+						id="location"
+						labelText="Location"
+						placeholder="Location"
+						bind:value={selectedRehearsal.location}
+						required
+					/>
+				</Column>
+			</Row>
+			<Row>
+				<Column>
+					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={selectedRehearsal.date} required>
+						<DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />
+					</DatePicker>
+				</Column>
+				<Column>
+					<TimePicker labelText="From" bind:value={selectedRehearsal.startTime} required />
+				</Column>
+				<Column>
+					<TimePicker labelText="Till" bind:value={selectedRehearsal.endTime} required />
+				</Column>
+			</Row>
+		</Grid>
+	</Form>
+</div>
+
 </Modal>
 
 <Modal
