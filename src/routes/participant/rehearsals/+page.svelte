@@ -31,7 +31,7 @@
 		<StructuredListBody>
 			{#each data.rehearsals as rehearsal, i}
 				<StructuredListRow>
-					<a href={`/participant/schedule/${rehearsal.id}`}>
+					<a href={`/participant/rehearsals/${rehearsal.id}/schedule`}>
 						<StructuredListCell>
 							<div class="rehearsalLinkText">{rehearsal.startTime.toDate().toDateString()}</div>
 						</StructuredListCell>

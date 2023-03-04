@@ -16,14 +16,14 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import { Add, Edit, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
-	import { collection, deleteDoc, doc, getDoc, setDoc, Timestamp, type DocumentData } from 'firebase/firestore'
+	import { collection, deleteDoc, doc, getDoc, query, setDoc, Timestamp, where, type DocumentData } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
 	import { newRehearsalPost } from '$lib/util/webhook'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
-	import type { rehearsalInfo } from '$lib/types/domain/rehearsal'
+	import type { rehearsal, rehearsalInfo } from '$lib/types/domain/rehearsal'
 
 	export let data: PageData
 
@@ -36,7 +36,6 @@
 	let endTime: string = '21:00'
 
 	let selectedRehearsalId: number
-	let selectedRehearsal: rehearsalInfo
 
 	/** Add a new rehearsal date to the database */
 	async function addRehearsal() {
@@ -64,14 +63,18 @@
 		date = ''
 		startTime = '18:00'
 		endTime = '21:00'
-		openAddModal = false
 
 		invalidateAll()
 	}
 
 	/** Edit a rehearsal in the database */
 	async function editRehearsal() {
-		let dateSplit = selectedRehearsal.date.split('/')
+		// First delete the old document
+		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id)
+		await deleteDoc(docRef)
+
+		// Then add a new rehearsal with the new data
+		let dateSplit = date.split('/')
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
 
@@ -90,14 +93,41 @@
 		const newRehearsal = doc(collection(db, 'rehearsals'))
 
 		await setDoc(newRehearsal, rehearsal)
+
+		date = ''
+		startTime = '18:00'
+		endTime = '21:00'
+
+		invalidateAll()
 	}
 
 	/** Remove a rehearsal from the database */
 	async function removeRehearsal() {
 		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id)
+
 		await deleteDoc(docRef)
 
 		invalidateAll()
+	}
+
+	/** Set the current date and location of the active rehearsal */
+	function setRehearsalState(rehearsal: rehearsal) {
+		location = rehearsal.location
+
+		const startTimeDate = rehearsal.startTime.toDate()
+		const startTimeHours = startTimeDate.getHours()
+		const startTimeMinutes = startTimeDate.getMinutes()
+		startTime = startTimeHours + ':' + ("0" + startTimeMinutes).slice(-2)
+		
+		const endTimeDate = rehearsal.endTime.toDate()
+		const endTimeHours = endTimeDate.getHours()
+		const endTimeMinutes = endTimeDate.getMinutes()
+		endTime = endTimeHours + ':' + ("0" + endTimeMinutes).slice(-2)
+
+		const dateDay = startTimeDate.getDate()
+		const dateMonth = startTimeDate.getMonth() + 1
+		const dateYear = startTimeDate.getFullYear()
+		date = dateDay + '/' + dateMonth + '/' + dateYear
 	}
 </script>
 
@@ -142,23 +172,21 @@
 							size="small"
 							iconDescription="Open rehearsal"
 							icon={Launch}
-							href={`/committee/schedule/${rehearsal.id}`}
+							href={`/committee/rehearsals/${rehearsal.id}/schedule`}
 						/>
 						<Button
 							size="small"
 							iconDescription="Show availability"
 							icon={Person}
-							href={`/committee/schedule/${rehearsal.id}/availability`}
+							href={`/committee/rehearsals/${rehearsal.id}/availability`}
 						/>
 						<Button
 							size="small"
 							iconDescription="Edit rehearsal"
 							icon={Edit}
 							on:click={async () => {
-								const rehearsalData = (await getDoc(doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id))).data()
-								if (!rehearsalData)
-									throw new Error("Error while querying the rehearsal data.")
-								selectedRehearsal = { edition: rehearsalData.edition, location: rehearsalData.location, startTime: rehearsalData.startTime, endTime: rehearsalData.endTime }
+								selectedRehearsalId = i
+								setRehearsalState(rehearsal)
 								openEditModal = true
 							}}
 						/>
@@ -190,6 +218,7 @@
 	on:submit={(e) => {
 		e.preventDefault()
 		addRehearsal()
+		openAddModal = false
 	}}
 >
 	<div class="modal">
@@ -247,22 +276,22 @@
 						id="location"
 						labelText="Location"
 						placeholder="Location"
-						bind:value={selectedRehearsal.location}
+						bind:value={location}
 						required
 					/>
 				</Column>
 			</Row>
 			<Row>
 				<Column>
-					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={selectedRehearsal.date} required>
+					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
 						<DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />
 					</DatePicker>
 				</Column>
 				<Column>
-					<TimePicker labelText="From" bind:value={selectedRehearsal.startTime} required />
+					<TimePicker labelText="From" bind:value={startTime} required />
 				</Column>
 				<Column>
-					<TimePicker labelText="Till" bind:value={selectedRehearsal.endTime} required />
+					<TimePicker labelText="Till" bind:value={endTime} required />
 				</Column>
 			</Row>
 		</Grid>

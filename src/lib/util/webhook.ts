@@ -52,7 +52,7 @@ export async function newNewsPost(announcement: newAnnouncement) {
 export async function newSchedule(rehearsal: rehearsal) {
 	const params = createWebhookMessage(
 		'Schedule Live!',
-		'http://betamusicnight.nl/participant/schedule/' + rehearsal.id,
+		`http://betamusicnight.nl/participant/rehearsals/${rehearsal.id}/schedule`,
 		'Check the schedule by clicking the post title!',
 		'For rehearsal on ' + rehearsal.startTime.toDate().toDateString(),
 		[

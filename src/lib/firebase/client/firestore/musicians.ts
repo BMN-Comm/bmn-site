@@ -1,7 +1,7 @@
 import { db } from '$lib/firebase/client/firebase'
 import type { user } from '$lib/types/domain/user'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
-import { collection, collectionGroup, doc, getDoc } from 'firebase/firestore'
+import { collection, collectionGroup, doc, getDoc, query } from 'firebase/firestore'
 
 /** Get a dictionary of the musicians that play on the given songs */
 export async function GetMusisciansThatPlaySongs(ids: string[]) {
