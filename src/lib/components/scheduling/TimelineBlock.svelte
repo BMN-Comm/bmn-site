@@ -7,10 +7,10 @@
 	export let song: song | undefined = undefined
 	export let deleteSong: (() => void) | undefined = undefined
 
-	$: randomColor = song ? stringToColour(song.id) : '#808080'
+	console.log(relativeWidth)
 </script>
 
-<div class="song-block" style={`width: ${relativeWidth}%; background-color: ${randomColor}`}>
+<div class="song-block" style="--relative-width: {relativeWidth}%;">
 	<span class="title">{song?.name ?? 'Free'}</span>
 	{#if song}
 		<div
@@ -29,8 +29,15 @@
 
 <style>
 	.song-block {
-		height: 100px;
+		width: calc(var(--relative-width) - 4px);
+		height: 80px;
 		position: relative;
+		padding-left: 4px;
+		padding-right: 28px; 
+		border: 1px;
+		border-style: solid;
+		border-color: #ffffff;
+		margin: 2px;
 	}
 
 	.title {
