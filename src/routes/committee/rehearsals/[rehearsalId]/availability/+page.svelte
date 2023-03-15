@@ -17,12 +17,10 @@
 	const usersWithUndefinedAvailabilities = data.userAvailabilities.filter((x) => !x.availability)
 	const usersWithDefinedAvailabilities = data.userAvailabilities.filter((x) => !!x.availability)
 	const unavailableUsers = usersWithDefinedAvailabilities.filter((x) => !x.availability!.available).map(
-		(user) => {
-			return {
-				name: user.name,
-				reason: user.availability!.reason ? user.availability!.reason : 'No reason given'
-			}
-		}
+		(user) => ({
+			name: user.name,
+			reason: user.availability!.reason ? user.availability!.reason : 'No reason given'
+		})
 	)
 	const availableUsers = usersWithDefinedAvailabilities.filter((x) => x.availability!.available).map(
 		(user) => { 
