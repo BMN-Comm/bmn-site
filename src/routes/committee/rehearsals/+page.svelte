@@ -16,7 +16,7 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import { Add, Edit, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
-	import { collection, deleteDoc, doc, getDoc, query, setDoc, Timestamp, where, type DocumentData } from 'firebase/firestore'
+	import { collection, deleteDoc, doc, getDoc, query, setDoc, Timestamp, updateDoc, where, type DocumentData } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
 	import { newRehearsalPost } from '$lib/util/webhook'
@@ -30,7 +30,7 @@
 	let openAddModal = false
 	let openDeleteModal = false
 	let openEditModal = false
-	let location: string = "dB's"
+	let location: string = ''
 	let date: string
 	let startTime: string = '18:00'
 	let endTime: string = '21:00'
@@ -60,6 +60,7 @@
 		await setDoc(newRehearsal, rehearsal)
 		newRehearsalPost(newRehearsal.id, rehearsal)
 
+		location = ''
 		date = ''
 		startTime = '18:00'
 		endTime = '21:00'
@@ -71,29 +72,27 @@
 	async function editRehearsal() {
 		// First delete the old document
 		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id)
-		await deleteDoc(docRef)
 
 		// Then add a new rehearsal with the new data
+		console.log(date, startTime, endTime)
+
 		let dateSplit = date.split('/')
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
 
-		let rehearsal: rehearsalInfo = {
-			// TODO: Use current edition
-			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
+		console.log(dateSplit, sTimeSplit, eTimeSplit)
+
+		await updateDoc(docRef, {
 			startTime: Timestamp.fromDate(
 				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
 			),
 			endTime: Timestamp.fromDate(
 				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +eTimeSplit[0], +eTimeSplit[1])
 			),
-			location
-		}
+			location: location
+		})
 
-		const newRehearsal = doc(collection(db, 'rehearsals'))
-
-		await setDoc(newRehearsal, rehearsal)
-
+		location = ''
 		date = ''
 		startTime = '18:00'
 		endTime = '21:00'
@@ -113,21 +112,9 @@
 	/** Set the current date and location of the active rehearsal */
 	function setRehearsalState(rehearsal: rehearsal) {
 		location = rehearsal.location
-
-		const startTimeDate = rehearsal.startTime.toDate()
-		const startTimeHours = startTimeDate.getHours()
-		const startTimeMinutes = startTimeDate.getMinutes()
-		startTime = startTimeHours + ':' + ("0" + startTimeMinutes).slice(-2)
-		
-		const endTimeDate = rehearsal.endTime.toDate()
-		const endTimeHours = endTimeDate.getHours()
-		const endTimeMinutes = endTimeDate.getMinutes()
-		endTime = endTimeHours + ':' + ("0" + endTimeMinutes).slice(-2)
-
-		const dateDay = startTimeDate.getDate()
-		const dateMonth = startTimeDate.getMonth() + 1
-		const dateYear = startTimeDate.getFullYear()
-		date = dateDay + '/' + dateMonth + '/' + dateYear
+		startTime = rehearsal.startTime.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+		endTime = rehearsal.endTime.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+		date = rehearsal.startTime.toDate().toLocaleDateString(['en-GB'])
 	}
 </script>
 
@@ -267,37 +254,36 @@
 		openEditModal = false
 	}}
 >
-<div class="modal">
-	<Form>
-		<Grid>
-			<Row padding>
-				<Column>
-					<TextInput
-						id="location"
-						labelText="Location"
-						placeholder="Location"
-						bind:value={location}
-						required
-					/>
-				</Column>
-			</Row>
-			<Row>
-				<Column>
-					<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
-						<DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />
-					</DatePicker>
-				</Column>
-				<Column>
-					<TimePicker labelText="From" bind:value={startTime} required />
-				</Column>
-				<Column>
-					<TimePicker labelText="Till" bind:value={endTime} required />
-				</Column>
-			</Row>
-		</Grid>
-	</Form>
-</div>
-
+	<div class="modal">
+		<Form>
+			<Grid>
+				<Row padding>
+					<Column>
+						<TextInput
+							id="location"
+							labelText="Location"
+							placeholder="Location"
+							bind:value={location}
+							required
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<Column>
+						<DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={date} required>
+							<DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />
+						</DatePicker>
+					</Column>
+					<Column>
+						<TimePicker labelText="From" bind:value={startTime} required />
+					</Column>
+					<Column>
+						<TimePicker labelText="Till" bind:value={endTime} required />
+					</Column>
+				</Row>
+			</Grid>
+		</Form>
+	</div>
 </Modal>
 
 <Modal

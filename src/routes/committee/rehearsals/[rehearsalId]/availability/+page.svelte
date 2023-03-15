@@ -23,13 +23,11 @@
 		})
 	)
 	const availableUsers = usersWithDefinedAvailabilities.filter((x) => x.availability!.available).map(
-		(user) => { 
-			return {
-				name: user.name, 
-				startTime: getStartTime(user.availability!), 
-				endtime: getEndTime(user.availability!)
-			}
-		}
+		(user) => ({
+			name: user.name, 
+			startTime: getStartTime(user.availability!), 
+			endtime: getEndTime(user.availability!)
+		})
 	)
 
 	function getStartTime(availability: availability): string {

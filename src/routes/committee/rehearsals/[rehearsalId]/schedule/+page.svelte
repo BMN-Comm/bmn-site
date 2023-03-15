@@ -145,7 +145,7 @@
 							bind:selectedId={songId}
 							required
 							shouldFilterItem={(item, value) =>
-								value ? item.text.toLowerCase().includes(value.toLowerCase()) : true;
+								value ? item.text.toLowerCase().includes(value.toLowerCase()) : true
 							}
 						/>
 					</Column>

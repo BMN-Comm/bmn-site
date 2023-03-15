@@ -1,13 +1,10 @@
 <script lang="ts">
 	import type { song } from '$lib/types/domain/song'
-	import { stringToColour } from '$lib/util/stringToColour'
 	import { MusicRemove } from 'carbon-icons-svelte'
 
 	export let relativeWidth: number
 	export let song: song | undefined = undefined
 	export let deleteSong: (() => void) | undefined = undefined
-
-	console.log(relativeWidth)
 </script>
 
 <div class="song-block" style="--relative-width: {relativeWidth}%;">
