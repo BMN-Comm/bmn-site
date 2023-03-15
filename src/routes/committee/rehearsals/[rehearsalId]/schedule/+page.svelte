@@ -144,10 +144,9 @@
 							items={songs.map((s) => ({ id: s.id, text: s.name }))}
 							bind:selectedId={songId}
 							required
-							shouldFilterItem={(item, value) => {
-								if (!value) return true;
-								return item.text.toLowerCase().includes(value.toLowerCase())
-							}}
+							shouldFilterItem={(item, value) =>
+								value ? item.text.toLowerCase().includes(value.toLowerCase()) : true;
+							}
 						/>
 					</Column>
 				</Row>
