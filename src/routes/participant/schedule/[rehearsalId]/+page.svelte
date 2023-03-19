@@ -20,6 +20,15 @@
 	let filterOwnSongs = false
 
 	const { rehearsal, songs, musicians } = data
+	songs.sort(
+		(song1, song2) =>
+			rehearsal.songsToRehearse.find((rehearsalSong) => rehearsalSong.song.id === song1.id)!
+				.startTime.seconds -
+			rehearsal.songsToRehearse.find((rehearsalSong) => rehearsalSong.song.id === song2.id)!
+				.startTime.seconds
+	)
+
+	rehearsal.songsToRehearse.sort((song, song2) => song.startTime.seconds - song2.startTime.seconds)
 </script>
 
 <Grid>
