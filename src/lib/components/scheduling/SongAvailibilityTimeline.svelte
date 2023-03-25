@@ -81,9 +81,7 @@
 		{/if}
 	</div>
 
-	{#if somebodyUnavailable}
-		<Column class="somebody-unavailable">Somebody is unavailable</Column>
-	{:else if timeslotPossible}
+	{#if timeslotPossible}
 		{#if minStartTime > 0}
 			<Column
 				class="red"
@@ -91,7 +89,7 @@
 			/>
 		{/if}
 		<Column
-			class="green"
+			class={somebodyUnavailable ? "orange" : "green"}
 			style={`max-width: ${((maxEndTime - minStartTime) / totalMinutes) * 100}%;`}
 		/>
 		{#if maxEndTime < totalMinutes}
@@ -120,8 +118,12 @@
 								{getTimeString(availability.startTime)} -
 								{getTimeString(availability.endTime)}
 							{:else}
-								Unavailable: <br />
-								{availability.reason}
+								{#if availability.reason}
+									Unavailable: <br />
+									{availability.reason}
+								{:else}
+									Unavailable
+								{/if}
 							{/if}
 						{:else}
 							Availablity not given
@@ -157,6 +159,10 @@
 
 	:global(.red) {
 		background-color: #ef0612;
+	}
+
+	:global(.orange) {
+		background-color: #ff9f1a;
 	}
 
 	:global(.green) {

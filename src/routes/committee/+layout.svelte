@@ -33,7 +33,7 @@
 		<SideNavLink text="Setlist" href="/committee/setlist" />
 		<SideNavLink text="Suggestions" href="/committee/suggestions" />
 		<SideNavDivider />
-		<SideNavLink text="Rehearsals" href="/committee/schedule" />
+		<SideNavLink text="Rehearsals" href="/committee/rehearsals" />
 	</SideNavItems>
 </SideNav>
 

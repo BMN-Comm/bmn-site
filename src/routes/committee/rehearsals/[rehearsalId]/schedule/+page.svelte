@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { newRehearsalSong } from '$lib/types/domain/rehearsal'
+	import type { rehearsalSongInfo } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
 	import { newSchedule } from '$lib/util/webhook'
 	import type { PageData } from './$types'
@@ -30,7 +30,7 @@
 	let songId: string
 
 	async function addSong() {
-		let rehearsalSong: newRehearsalSong
+		let rehearsalSong: rehearsalSongInfo
 
 		if (!songs.some((s: song) => s.id == songId)) return
 
@@ -144,6 +144,9 @@
 							items={songs.map((s) => ({ id: s.id, text: s.name }))}
 							bind:selectedId={songId}
 							required
+							shouldFilterItem={(item, value) =>
+								value ? item.text.toLowerCase().includes(value.toLowerCase()) : true
+							}
 						/>
 					</Column>
 				</Row>

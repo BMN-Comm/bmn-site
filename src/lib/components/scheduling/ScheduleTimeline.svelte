@@ -45,9 +45,7 @@
 <Row class="helper-row">
 	{#each helperIntervals as interval}
 		<Column class="helper-column">
-			<p class="vertical-text">
-				{interval.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-			</p>
+			{interval.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 		</Column>
 	{/each}
 </Row>
@@ -82,12 +80,6 @@
 </Row>
 
 <style>
-	.vertical-text {
-		writing-mode: vertical-rl;
-		text-orientation: mixed;
-		margin-left: -10px;
-	}
-
 	:global(.timeline) {
 		margin: 0px !important;
 	}

@@ -35,7 +35,7 @@
 		<SideNavLink text="Setlist" href="/participant/setlist" />
 		<SideNavLink text="Suggestions" href="/participant/suggestions" />
 		<SideNavDivider />
-		<SideNavLink text="Schedule" href="/participant/schedule" />
+		<SideNavLink text="Rehearsals" href="/participant/rehearsals" />
 		<SideNavLink text="Availability" href="/participant/availability" />
 	</SideNavItems>
 </SideNav>
