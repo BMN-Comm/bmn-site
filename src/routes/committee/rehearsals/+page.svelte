@@ -70,18 +70,14 @@
 
 	/** Edit a rehearsal in the database */
 	async function editRehearsal() {
-		// First delete the old document
+		// Get the reference to the document
 		const docRef = doc(db, 'rehearsals', data.rehearsals[selectedRehearsalId].id)
-
-		// Then add a new rehearsal with the new data
-		console.log(date, startTime, endTime)
 
 		let dateSplit = date.split('/')
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
 
-		console.log(dateSplit, sTimeSplit, eTimeSplit)
-
+		// And update it in the database
 		await updateDoc(docRef, {
 			startTime: Timestamp.fromDate(
 				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
@@ -92,6 +88,7 @@
 			location: location
 		})
 
+		// Also reset the values for in the modal
 		location = ''
 		date = ''
 		startTime = '18:00'
