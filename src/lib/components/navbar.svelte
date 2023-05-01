@@ -65,10 +65,11 @@
 				<SideNavMenu text="Admin" href="/admin-portal/claims" target="_blank" />
 			{/if}
 			<!-- TODO: Add link based on configurable setting -->
-			<SideNavMenu
+			<SideNavLink
 				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9131/BtaMusicNight2023/Info"
 				text="Tickets!"
 				rel="noreferrer"
+				target="_blank"
 			/>
 		</SideNavItems>
 	</SideNav>
