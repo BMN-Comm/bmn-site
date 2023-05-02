@@ -5,7 +5,7 @@ import { prerendering } from '$app/environment'
 // Hooks file used for server side functions, see https://kit.svelte.dev/docs/hooks
 
 export const handle: Handle = async ({ event, resolve }) => {
-	if (event.url.pathname == '/tickets')
+	if (event.url.pathname?.toLowerCase() == '/tickets')
 		return new Response('redirecting...', {
 			status: 302,
 			headers: new Headers({
