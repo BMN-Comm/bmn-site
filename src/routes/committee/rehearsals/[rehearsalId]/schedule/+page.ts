@@ -1,6 +1,6 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import type { edition } from '$lib/types/domain/edition'
-import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
+import type { rehearsal, rehearsalRoom, rehearsalSong } from '$lib/types/domain/rehearsal'
 import type { song } from '$lib/types/domain/song'
 import {
 	query,
@@ -26,6 +26,21 @@ export const load: PageLoad = async ({ params }) => {
 	// Get the rehearsal
 	const rehearsalDoc = doc(db, 'rehearsals/', params.rehearsalId)
 	const rehearsal = { id: rehearsalDoc.id, ...(await getDoc(rehearsalDoc)).data() } as rehearsal
+
+	// Get all the rooms of a rehearsal
+	const rehearsalRoomsQuery = query(collection(rehearsalDoc, 'rooms'), orderBy('startTime'))
+	const roomDocs = (await getDocs(rehearsalRoomsQuery)).docs
+	const rooms = roomDocs.map((doc) => ({ id: doc.id, ...doc.data() } as rehearsalRoom))
+
+	// For each room, get the songs that should be rehearsed
+	roomDocs.forEach(async (roomDoc, i) => {
+		const roomSongsQuery = query(collection(roomDoc.ref, 'songsToRehearse'), orderBy('startTime'))
+		rooms[i].songsToRehearse = (await getDocs(roomSongsQuery)).docs.map(
+			(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
+		)
+	})
+
+	rehearsal.rooms = rooms
 
 	// Get all the songs that need to be rehearsed on this day
 	const rehearsalSongsQuery = query(

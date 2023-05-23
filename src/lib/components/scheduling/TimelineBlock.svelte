@@ -4,11 +4,12 @@
 
 	export let relativeWidth: number
 	export let song: song | undefined = undefined
+	export let text: string | undefined = undefined
 	export let deleteSong: (() => void) | undefined = undefined
 </script>
 
 <div class="song-block" style="--relative-width: {relativeWidth}%;">
-	<span class="title">{song?.name ?? 'Free'}</span>
+	<span class="title">{song?.name ?? text ?? 'Free'}</span>
 	{#if song}
 		<div
 			class="delete"
@@ -30,7 +31,7 @@
 		height: 80px;
 		position: relative;
 		padding-left: 4px;
-		padding-right: 28px; 
+		padding-right: 28px;
 		border: 1px;
 		border-style: solid;
 		border-color: #ffffff;

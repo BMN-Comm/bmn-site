@@ -16,7 +16,7 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import { Add, Edit, Launch, MusicRemove, Person } from 'carbon-icons-svelte'
-	import { collection, deleteDoc, doc, getDoc, query, setDoc, Timestamp, updateDoc, where, type DocumentData } from 'firebase/firestore'
+	import { collection, deleteDoc, doc, setDoc, Timestamp, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import { getTimeString } from '$lib/util/timeString'
 	import { newRehearsalPost } from '$lib/util/webhook'
@@ -109,8 +109,12 @@
 	/** Set the current date and location of the active rehearsal */
 	function setRehearsalState(rehearsal: rehearsal) {
 		location = rehearsal.location
-		startTime = rehearsal.startTime.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-		endTime = rehearsal.endTime.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+		startTime = rehearsal.startTime
+			.toDate()
+			.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+		endTime = rehearsal.endTime
+			.toDate()
+			.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 		date = rehearsal.startTime.toDate().toLocaleDateString(['en-GB'])
 	}
 </script>
@@ -238,7 +242,7 @@
 </Modal>
 
 <Modal
- 	modalHeading="Edit rehearsal"
+	modalHeading="Edit rehearsal"
 	primaryButtonText="Edit"
 	primaryButtonIcon={Edit}
 	secondaryButtonText="Cancel"
