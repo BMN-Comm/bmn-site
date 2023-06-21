@@ -1,15 +1,15 @@
 :root {
-    --committee-colour: #00b380;
+    --committee-colour-2023: #00b380;
 }
 
 .rehearsalLinkText {
-    color: var(--committee-colour);
+    color: var(--committee-colour-2023);
     text-decoration: underline;
-    text-decoration-color: var(--committee-colour);
+    text-decoration-color: var(--committee-colour-2023);
 }
 
 a {
-    color: var(--committee-colour);
+    color: var(--committee-colour-2023);
     text-decoration: underline;
-    text-decoration-color: var(--committee-colour);
+    text-decoration-color: var(--committee-colour-2023);
 }

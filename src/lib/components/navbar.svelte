@@ -3,9 +3,7 @@
 		Header,
 		HeaderNav,
 		HeaderNavItem,
-		HeaderNavMenu,
 		SideNav,
-		SideNavDivider,
 		SideNavItems,
 		SideNavLink,
 		SideNavMenu
@@ -25,10 +23,10 @@
 
 <div class="header-wrapper">
 	<Header bind:isSideNavOpen={$open} persistentHamburgerMenu={innerWidth < 1056}>
-		<img src="/BMN2023.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
+		<img src="BMN2023.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
-			<HeaderNavItem href="/#info" text="Info" />
+			<HeaderNavItem href="/about-us" text="About us" />
 			{#if $page.data.user}
 				<HeaderNavItem text="Participants" href="/participant" />
 			{/if}
@@ -54,7 +52,7 @@
 	<SideNav bind:isOpen={$open} class="sidenav">
 		<SideNavItems>
 			<SideNavLink href="/" text="Home" />
-			<SideNavLink href="/" text="Info" />
+			<SideNavLink href="/about-us" text="About us" />
 			{#if $page.data.user}
 				<SideNavLink text="Participants" href="/participant" />
 			{/if}
