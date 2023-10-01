@@ -10,7 +10,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			status: 302,
 			headers: new Headers({
 				status: '302',
-				Location: `https://forms.gle/i7uBXWsMG1bytcq37`
+				Location: `https://forms.gle/wHRwks5aiH9rLjxZ7`
 			})
 		})
 

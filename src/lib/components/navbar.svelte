@@ -40,7 +40,7 @@
 			{/if}
 			<!-- TODO: Add link based on configurable setting -->
 			<HeaderNavItem
-				href="https://forms.gle/i7uBXWsMG1bytcq37"
+				href="https://forms.gle/wHRwks5aiH9rLjxZ7"
 				text="Auditions!"
 				target="_blank"
 				rel="noreferrer"
@@ -66,7 +66,7 @@
 			{/if}
 			<!-- TODO: Add link based on configurable setting -->
 			<SideNavLink
-				href="https://forms.gle/i7uBXWsMG1bytcq37"
+				href="https://forms.gle/wHRwks5aiH9rLjxZ7"
 				text="Auditions!"
 				rel="noreferrer"
 				target="_blank"
