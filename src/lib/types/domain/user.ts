@@ -5,9 +5,8 @@ export type user = {
 	email: string
 	name: string
 	playsInstruments: { name: string }[]
-	playsSongInEdition: {
+	playsSongs: {
 		song: string // Reference to song
-		edition: string // Reference to edition
 		part: string
 	}[]
 	availability: availability[]

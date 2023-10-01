@@ -11,12 +11,13 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
-	import { arrayUnion, arrayRemove, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
+	import { editionId } from '$lib/types/domain/edition'
 
 	export let data: PageData
 
@@ -36,8 +37,7 @@
 	}
 
 	async function addToSetlist() {
-		// TODO: Use current edition
-		const editionRef = doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40')
+		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
 			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].song.id))
 		})
@@ -45,21 +45,17 @@
 	}
 
 	async function FavouriteSong(songId: string) {
-		// TODO: use current committee
-		const committeeRef = doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU')
 		const songRef = doc(db, 'songs', songId)
-		await updateDoc(committeeRef, {
-			likesSongs: arrayUnion(songRef)
+		await updateDoc(songRef, {
+			liked: true
 		})
 		invalidateAll()
 	}
 
 	async function UnfavouriteSong(songId: string) {
-		// TODO: use current committee
-		const committeeRef = doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU')
 		const songRef = doc(db, 'songs', songId)
-		await updateDoc(committeeRef, {
-			likesSongs: arrayRemove(songRef)
+		await updateDoc(songRef, {
+			liked: false
 		})
 		invalidateAll()
 	}

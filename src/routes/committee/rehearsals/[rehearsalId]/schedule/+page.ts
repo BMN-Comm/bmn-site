@@ -1,7 +1,7 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
-import type { edition } from '$lib/types/domain/edition'
 import type { rehearsal, rehearsalRoom, rehearsalSong } from '$lib/types/domain/rehearsal'
 import type { song } from '$lib/types/domain/song'
+import { editionId, type edition } from '$lib/types/domain/edition'
 import {
 	query,
 	collection,
@@ -57,8 +57,7 @@ export const load: PageLoad = async ({ params }) => {
 		[songId: string]: { participantId: string; participantName: string; instrumentName: string }[]
 	} = {}
 
-	// Get all songs of the edition -- TODO: Auto current edition?
-	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
+	const edition = (await getDoc(doc(db, editionId))).data() as edition
 	const songRefs = edition.songs.map((ref) => ref.id)
 
 	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
@@ -66,7 +65,7 @@ export const load: PageLoad = async ({ params }) => {
 
 	if (songs.length > 0) {
 		const playsInDocs = await QueryWhereInBatched(
-			collectionGroup(db, 'playsSongInEdition'),
+			collectionGroup(db, 'playsSongs'),
 			'song',
 			editionSongsDocs.map((song) => song.ref)
 		)

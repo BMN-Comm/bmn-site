@@ -44,8 +44,6 @@
 		let eTimeSplit = endTime.split(':')
 
 		let rehearsal: rehearsalInfo = {
-			// TODO: Use current edition
-			edition: doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'),
 			startTime: Timestamp.fromDate(
 				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
 			),

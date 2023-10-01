@@ -21,7 +21,6 @@
 	import { newNewsPost } from '$lib/util/webhook'
 	import type { PageData } from './$types'
 	import { invalidateAll } from '$app/navigation'
-	import { prevent_default } from 'svelte/internal'
 
 	export let data: PageData
 
@@ -34,12 +33,9 @@
 	async function AddAnnouncement() {
 		const user = doc(db, 'users', $page.data.user!.databaseId)
 
-		// TODO: use current edition
-		const edition = doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40')
 		const publishDate = Timestamp.fromDate(new Date())
 
 		const newAnnouncement: newAnnouncement = {
-			edition,
 			publishDate,
 			title,
 			content: message,

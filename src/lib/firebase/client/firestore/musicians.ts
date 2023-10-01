@@ -20,7 +20,7 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 	}
 
 	const playsInDocs = await QueryWhereInBatched(
-		collectionGroup(db, 'playsSongInEdition'),
+		collectionGroup(db, 'playsSongs'),
 		'song',
 		songDocs.map((song) => song.ref)
 	)
