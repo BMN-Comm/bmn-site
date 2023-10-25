@@ -7,7 +7,6 @@ export type rehearsal = {
 } & rehearsalInfo
 
 export type rehearsalInfo = {
-	edition: DocumentReference // Reference to edition
 	startTime: Timestamp
 	endTime: Timestamp
 	location: string

@@ -5,7 +5,6 @@ export type announcement = {
 } & newAnnouncement
 
 export type newAnnouncement = {
-	edition: DocumentReference // Reference to edition
 	publishDate: Timestamp
 	title: string
 	content: string

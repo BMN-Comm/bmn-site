@@ -1,11 +1,9 @@
-import type { DocumentReference } from "firebase/firestore"
+import type { DocumentReference } from 'firebase/firestore'
+
+// There is always only 1 edition, to keep track of the songs that are played. Maybe make this env variable at some point.
+export const editionId = 'editions/ZI3Eab1mXjHvCUS47o40'
 
 export type edition = {
 	id: string
-	year: number
-	songs: DocumentReference[] // List of references to song path
-	users: DocumentReference[] // List of references to user path
-	concertDate?: string
-	ticketLink?: string
-	auditionLink?: string
+	songs: DocumentReference[]
 }

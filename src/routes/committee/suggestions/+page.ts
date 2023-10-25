@@ -1,7 +1,6 @@
 import type { PageLoad } from './$types'
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
-import { query, collection, getDocs, orderBy, getDoc, doc } from 'firebase/firestore'
-import type { committee } from '$lib/types/domain/committee'
+import { query, collection, getDocs, orderBy } from 'firebase/firestore'
 import { toDict } from '$lib/util/dict'
 import type { song } from '$lib/types/domain/song'
 
@@ -22,17 +21,6 @@ export const load: PageLoad = async () => {
 		}))
 	)
 
-	const committee = // TODO: use current committee
-		(await getDoc(doc(db, 'committees', 'yAUoMLjaAoC6L5O9F4gU'))).data() as committee
-	const committeeFavouriteSongs = committee.likesSongs.map((s) => s.id)
-
-	const favouriteSongs = Object.assign(
-		{},
-		...suggestions.map((suggestion) => ({
-			[suggestion.id]: committeeFavouriteSongs.includes(suggestion.id) ? true : false
-		}))
-	)
-
 	// Bundle and return all data
 	return {
 		suggestions: suggestions.map((doc) => {
@@ -41,7 +29,6 @@ export const load: PageLoad = async () => {
 				song: { id: doc.id, ...data } as song,
 				user: usersDict[data.user.id]
 			}
-		}),
-		favouriteSongs
+		})
 	}
 }
