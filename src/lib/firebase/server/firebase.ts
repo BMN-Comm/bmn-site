@@ -51,7 +51,7 @@ export async function createUser(name: string, password: string, email: string) 
 export async function removeUser(dbUid: string, authUid: string) {
 	initializeFirebase()
 	await admin.auth().deleteUser(authUid)
-	db.doc(dbUid).delete()
+	db.doc('users/' + dbUid).delete()
 }
 
 /** Set for the given user id, the value of the given claim to true */
