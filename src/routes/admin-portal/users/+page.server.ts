@@ -13,8 +13,8 @@ export const load = async function () {
 			email: data.email,
 			name: data.name,
 			playsInstruments: [],
-			playsSongInEdition: [],
-			availibility: []
+			playsSongs: [],
+			availability: []
 		}
 	})
 

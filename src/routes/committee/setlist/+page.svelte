@@ -30,6 +30,7 @@
 		where
 	} from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
+	import { editionId } from '$lib/types/domain/edition'
 
 	export let data: PageData
 
@@ -49,8 +50,7 @@
 	let instrument: string
 
 	async function RemoveSongFromSetlist() {
-		// TODO: use current edition
-		const editionRef = doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40')
+		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
 			songs: arrayRemove(doc(db, 'songs', data.songs[selectedSong].id))
 		})
@@ -58,9 +58,7 @@
 	}
 
 	async function AddParticipantToSong() {
-		await addDoc(collection(db, 'users/' + participant + '/playsSongInEdition'), {
-			// TODO: use current edition
-			edition: doc(db, 'editions', 'ZI3Eab1mXjHvCUS47o40'),
+		await addDoc(collection(db, 'users/' + participant + '/playsSongs'), {
 			part: instrument,
 			song: doc(db, 'songs', data.songs[selectedSong].id)
 		})
@@ -74,7 +72,7 @@
 		const songRef = doc(db, 'songs', data.songs[selectedSong].id)
 
 		const playsInQuery = query(
-			collection(db, 'users', userId, 'playsSongInEdition'),
+			collection(db, 'users', userId, 'playsSongs'),
 			where('song', '==', songRef),
 			where('part', '==', selectedInstrument)
 		)

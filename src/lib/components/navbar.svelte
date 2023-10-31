@@ -38,8 +38,8 @@
 			{/if}
 			<!-- TODO: Add link based on configurable setting -->
 			<HeaderNavItem
-				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9131/BtaMusicNight2023/Info"
-				text="Tickets!"
+				href="https://forms.gle/wHRwks5aiH9rLjxZ7"
+				text="Auditions!"
 				target="_blank"
 				rel="noreferrer"
 			/>
@@ -60,13 +60,14 @@
 				<SideNavLink text="Committee" href="/committee" />
 			{/if}
 			{#if $page.data.user?.admin}
-				<SideNavMenu text="Admin" href="/admin-portal/claims" target="_blank" />
+				<SideNavLink text="Admin" href="/admin-portal/claims" target="_blank" />
 			{/if}
 			<!-- TODO: Add link based on configurable setting -->
-			<SideNavMenu
-				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9131/BtaMusicNight2023/Info"
-				text="Tickets!"
+			<SideNavLink
+				href="https://forms.gle/wHRwks5aiH9rLjxZ7"
+				text="Auditions!"
 				rel="noreferrer"
+				target="_blank"
 			/>
 		</SideNavItems>
 	</SideNav>

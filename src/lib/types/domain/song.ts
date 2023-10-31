@@ -9,12 +9,6 @@ export type song = {
 	genre: string
 	remark: string
 	suggestionDate: Timestamp
-	user: DocumentReference // Reference to user path
-}
-
-export type playsSong = {
-	id: string
-	edition: DocumentReference
-	part: string
-	song: DocumentReference
+	user: DocumentReference // Reference to user path,
+	liked: boolean
 }

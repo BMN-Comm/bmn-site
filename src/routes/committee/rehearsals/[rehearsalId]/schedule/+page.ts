@@ -1,7 +1,7 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
-import type { edition } from '$lib/types/domain/edition'
-import type { rehearsal, rehearsalSong } from '$lib/types/domain/rehearsal'
+import type { rehearsal, rehearsalRoom, rehearsalSong } from '$lib/types/domain/rehearsal'
 import type { song } from '$lib/types/domain/song'
+import { editionId, type edition } from '$lib/types/domain/edition'
 import {
 	query,
 	collection,
@@ -27,6 +27,21 @@ export const load: PageLoad = async ({ params }) => {
 	const rehearsalDoc = doc(db, 'rehearsals/', params.rehearsalId)
 	const rehearsal = { id: rehearsalDoc.id, ...(await getDoc(rehearsalDoc)).data() } as rehearsal
 
+	// Get all the rooms of a rehearsal
+	const rehearsalRoomsQuery = query(collection(rehearsalDoc, 'rooms'), orderBy('startTime'))
+	const roomDocs = (await getDocs(rehearsalRoomsQuery)).docs
+	const rooms = roomDocs.map((doc) => ({ id: doc.id, ...doc.data() } as rehearsalRoom))
+
+	// For each room, get the songs that should be rehearsed
+	roomDocs.forEach(async (roomDoc, i) => {
+		const roomSongsQuery = query(collection(roomDoc.ref, 'songsToRehearse'), orderBy('startTime'))
+		rooms[i].songsToRehearse = (await getDocs(roomSongsQuery)).docs.map(
+			(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
+		)
+	})
+
+	rehearsal.rooms = rooms
+
 	// Get all the songs that need to be rehearsed on this day
 	const rehearsalSongsQuery = query(
 		collection(rehearsalDoc, 'songsToRehearse'),
@@ -42,8 +57,7 @@ export const load: PageLoad = async ({ params }) => {
 		[songId: string]: { participantId: string; participantName: string; instrumentName: string }[]
 	} = {}
 
-	// Get all songs of the edition -- TODO: Auto current edition?
-	const edition = (await getDoc(doc(db, 'editions/ZI3Eab1mXjHvCUS47o40'))).data() as edition
+	const edition = (await getDoc(doc(db, editionId))).data() as edition
 	const songRefs = edition.songs.map((ref) => ref.id)
 
 	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
@@ -51,7 +65,7 @@ export const load: PageLoad = async ({ params }) => {
 
 	if (songs.length > 0) {
 		const playsInDocs = await QueryWhereInBatched(
-			collectionGroup(db, 'playsSongInEdition'),
+			collectionGroup(db, 'playsSongs'),
 			'song',
 			editionSongsDocs.map((song) => song.ref)
 		)
