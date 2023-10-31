@@ -6,6 +6,7 @@
 
 <div class="introduction-card">
 	<div class="introduction-img-div">
+		<!-- onerror hack to show the default picture when a file cannot be found because it does not exist -->
 		<img
 			class="introduction-img"
 			src={img_src}
