@@ -1,6 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
 import { editionId } from '$lib/types/domain/edition'
-import type { Song, SongSuggestion, SuggestedSong } from '$lib/types/domain/song'
+import type { Song, SuggestedSong } from '$lib/types/domain/song'
 import {
 	arrayUnion,
 	collection,
@@ -59,7 +59,7 @@ export async function createSong(song: Omit<Song, 'id'>) {
  * @param song The song suggestion to create a song from
  * @returns The id of the created song
  */
-export async function createSongFromSuggestion(song: SongSuggestion) {
+export async function createSongFromSuggestion(song: Omit<SuggestedSong, 'id' | 'liked'>) {
 	const suggestedSong = {
 		...song,
 		liked: false

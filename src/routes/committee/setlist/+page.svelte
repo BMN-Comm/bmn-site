@@ -31,8 +31,8 @@
 	} from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { editionId } from '$lib/types/domain/edition'
-	import { isValidUrl } from '$lib/util/urlValidation'
-	import { addSongToSetlist, createSong, getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
+	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
+	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
 
 	export let data: PageData
 
@@ -40,11 +40,6 @@
 	let selectedUserEntry: number
 	let selectedUser: string
 	let selectedInstrument: string
-
-	let addSongName: string
-	let addSongArtist: string
-	let addSongLink: string
-	$: validLink = true
 
 	let openDelSong = false
 	let openDelMusician = false
@@ -57,33 +52,6 @@
 
 	let participant: string
 	let instrument: string
-
-	async function CreateAndAddSongToSetlist() {
-		// TODO: Show error if failed
-		if (!isValidUrl(addSongLink)) {
-			console.log('invalid')
-			validLink = false
-			return
-		}
-
-		// Create the song
-		const song = {
-			name: addSongName,
-			artist: addSongArtist,
-			link: addSongLink
-		}
-		const songId = await createSong(song)
-
-		// Add the song to the setlist
-		addSongToSetlist(songId)
-
-		addSongName = ''
-		addSongArtist = ''
-		addSongLink = ''
-		validLink = true
-
-		invalidateAll()
-	}
 
 	async function RemoveSongFromSetlist() {
 		// Remove the song from the setlist
@@ -210,61 +178,7 @@
 	</ScrollableList>
 </Grid>
 
-<Modal
-	modalHeading="Add to setlist"
-	bind:open={openAddSong}
-	primaryButtonText="Add"
-	primaryButtonIcon={MusicAdd}
-	secondaryButtonText="Cancel"
-	hasForm
-	selectorPrimaryFocus="#name"
-	on:click:button--primary={async () => {
-		await CreateAndAddSongToSetlist()
-		openAddSong = false
-	}}
-	on:click:button--secondary={() => {
-		openAddSong = false
-	}}
->
-	<Form>
-		<Grid>
-			<Row padding>
-				<Column>
-					<TextInput
-						id="name"
-						labelText="Name"
-						placeholder="Name"
-						bind:value={addSongName}
-						required
-					/>
-				</Column>
-			</Row>
-			<Row padding>
-				<Column>
-					<TextInput
-						id="artist"
-						labelText="Artist"
-						placeholder="Artist"
-						bind:value={addSongArtist}
-						required
-					/>
-				</Column>
-			</Row>
-			<Row padding>
-				<Column >
-					<TextInput
-					id="link"
-					labelText="Link"
-					placeholder="Link"
-					bind:value={addSongLink}
-					invalid={!validLink}
-					invalidText={validLink ? undefined : 'Enter a valid link'}
-				/>
-				</Column>
-			</Row>
-		</Grid>
-	</Form>
-</Modal>
+<AddSongModal bind:openAddSong />
 
 <Modal
 	danger

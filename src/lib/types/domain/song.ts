@@ -7,8 +7,6 @@ export type Song = {
 	link: string
 }
 
-export type SongSuggestion = Omit<SuggestedSong, 'id' | 'liked'>
-
 export type SuggestedSong = Song & {
 	length: string
 	genre: string

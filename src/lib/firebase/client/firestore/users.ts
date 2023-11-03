@@ -1,17 +1,13 @@
 import { db } from '$lib/firebase/client/firebase'
 import { collection, getDocs, query } from 'firebase/firestore'
 import type { user } from '$lib/types/domain/user'
+import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
 
 /** Get data of the given user ids */
 export async function getUsers(ids?: string[]) {
-	const usersQuery = query(collection(db, 'users'))
-	const users = (await getDocs(usersQuery)).docs.map(
-		(user) => ({ id: user.id, ...user.data() } as user)
-	)
+	const userDocs = ids
+		? await QueryWhereInBatched(collection(db, 'users'), 'id', ids)
+		: (await getDocs(query(collection(db, 'users')))).docs
 
-	// If no ids are given, return all users
-	if (!ids) return users
-
-	// Otherwise, filter the users
-	return users.filter((user) => ids.includes(user.id))
+	return userDocs.map((user) => ({ id: user.id, ...user.data() } as user))
 }
