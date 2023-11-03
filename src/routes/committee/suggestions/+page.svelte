@@ -10,7 +10,7 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
+	import { Bat, Chat, Favorite, LogicalPartition, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
 	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
@@ -92,7 +92,7 @@
 			{#if (filterFavourites && favouriteSongs.includes(song)) || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
-						{song.user.id} 
+						{data.users.find((user) => user.id === song.user.id)?.name ?? "Unknown"} 
 					</StructuredListCell>
 					<StructuredListCell>
 						{song.name}

@@ -34,6 +34,7 @@
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { editionId } from '$lib/types/domain/edition'
 	import { isValidUrl } from '$lib/util/urlValidation'
+	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
 
 	export let data: PageData
 
@@ -95,10 +96,19 @@
 	}
 
 	async function RemoveSongFromSetlist() {
+		// Remove the song from the setlist
 		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
 			songs: arrayRemove(doc(db, 'songs', data.songs[selectedSong].id))
 		})
+
+		// If the song was not a suggestion (but added directly to the setlist), delete it from the database completely
+		const suggestionIds = (await getSuggestedSongs()).map((song) => song.id)
+		if (!suggestionIds.includes(data.songs[selectedSong].id)) {
+			const suggestionDoc = doc(db, 'songs', data.songs[selectedSong].id) 
+			await deleteDoc(suggestionDoc)
+		}
+
 		invalidateAll()
 	}
 

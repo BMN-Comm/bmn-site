@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types'
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { query, getDocs, where, doc, collectionGroup } from 'firebase/firestore'
-import { GetAllUsers } from '$lib/firebase/client/firestore/users'
+import { getUsers } from '$lib/firebase/client/firestore/users'
 import type { availability } from '$lib/types/domain/availability'
 
 export const ssr = false
@@ -9,7 +9,7 @@ export const ssr = false
 export const load: PageLoad = async ({ params }) => {
 	await verifyUserLoggedIn()
 
-	const users = await GetAllUsers()
+	const users = await getUsers()
 
 	const availabilityQuery = query(
 		collectionGroup(db, 'availability'),
