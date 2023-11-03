@@ -32,6 +32,7 @@
 		<SideNavLink text="Announcements" href="/committee/announcements" />
 		<SideNavLink text="Setlist" href="/committee/setlist" />
 		<SideNavLink text="Suggestions" href="/committee/suggestions" />
+		<SideNavLink text="Instruments" href="/committee/instruments" />
 		<SideNavDivider />
 		<SideNavLink text="Rehearsals" href="/committee/rehearsals" />
 	</SideNavItems>

@@ -1,4 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
+import { getInstruments } from '$lib/firebase/client/firestore/instruments'
+import type { Musician } from '$lib/types/domain/musician'
 import type { user } from '$lib/types/domain/user'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
 import { collection, collectionGroup, doc, getDoc } from 'firebase/firestore'
@@ -6,7 +8,7 @@ import { collection, collectionGroup, doc, getDoc } from 'firebase/firestore'
 /** Get a dictionary of the musicians that play on the given songs */
 export async function GetMusisciansThatPlaySongs(ids: string[]) {
 	const musiciansForSongs: {
-		[songId: string]: { participantName: string; instrumentName: string; participantId: string }[]
+		[songId: string]: Musician[]
 	} = {}
 
 	// Get the song objects from the rehearsal songs
@@ -40,18 +42,24 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 			} as user)
 	)
 
+	// Get all the instruments
+	const instruments = await getInstruments()
+
 	// Add them to the dictionary for the songs they play
 	for (const playsInSong of playsInDocs) {
 		const participant = participants.find((x) => x.id === playsInSong.ref.parent.parent?.id)
 		if (!participant) throw new Error('Participant was not loaded, something is wrong')
 
 		const playsInSongData = playsInSong.data()
+		const instrument = instruments.find((x) => x.id === playsInSongData.part.id)
+		if (!instrument) throw new Error('Instrument was not loaded, something is wrong')
 
 		// Add musician
 		musiciansForSongs[playsInSongData.song.id].push({
 			participantName: participant.name,
-			instrumentName: playsInSongData.part,
-			participantId: participant.id
+			participantId: participant.id,
+			instrumentName: instrument.name,
+			instrumentId: instrument.id
 		})
 	}
 

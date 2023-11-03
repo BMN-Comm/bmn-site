@@ -12,18 +12,7 @@ export const ssr = false
 export const load: PageLoad = async () => {
 	await verifyUserLoggedIn()
 
-	const editionRef = doc(db, editionId)
-	const edition = (await getDoc(editionRef)).data() as edition
-
-	const editionSongIds = edition.songs.map((s) => s.id)
-
-	const songs = await getSongs(editionSongIds)
-
-	const musiciansForSongs = GetMusisciansThatPlaySongs(editionSongIds)
-
-	const users = GetAllUsers()
-
 	const instruments = await getInstruments()
 
-	return { songs, musiciansForSongs, users, instruments }
+	return { instruments }
 }

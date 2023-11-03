@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
+	import type { Musician } from '$lib/types/domain/musician'
 	import type { rehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
@@ -14,11 +15,7 @@
 	export let songsToRehearse: rehearsalSong[]
 	export let songs: { [x: string]: song }
 	export let musicians: {
-		[songId: string]: {
-			participantName: string
-			instrumentName: string
-			participantId: string
-		}[]
+		[songId: string]: Musician[]
 	}
 
 	export let filterOwnSongs: boolean

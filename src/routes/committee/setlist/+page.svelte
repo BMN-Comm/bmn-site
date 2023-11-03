@@ -36,14 +36,19 @@
 
 	let selectedSong: number
 	let selectedUserEntry: number
-	let selectedUser: string
-	let selectedInstrument: string
+	let selectedUserId: string
+	let selectedUserName: string
+	let selectedInstrumentId: string
 	let openDel = false
 	let openDelUser = false
 	let openAdd = false
 
 	let participantListItems: DropdownItem[] = data.users.map(
 		(user) => ({ id: user.id, text: user.name } as DropdownItem)
+	)
+
+	let instrumentListItems: DropdownItem[] = data.instruments.map(
+		(instrument) => ({ id: instrument.id, text: instrument.name } as DropdownItem)
 	)
 
 	let participant: string
@@ -59,7 +64,7 @@
 
 	async function AddParticipantToSong() {
 		await addDoc(collection(db, 'users/' + participant + '/playsSongs'), {
-			part: instrument,
+			part: doc(db, 'instruments', instrument),
 			song: doc(db, 'songs', data.songs[selectedSong].id)
 		})
 
@@ -67,14 +72,13 @@
 	}
 
 	async function RemoveParticipantFromSong() {
-		const userQuery = query(collection(db, 'users'), where('name', '==', selectedUser))
-		const userId = (await getDocs(userQuery)).docs[0].id
 		const songRef = doc(db, 'songs', data.songs[selectedSong].id)
+		const instrumentRef = doc(db, 'instruments', selectedInstrumentId)
 
 		const playsInQuery = query(
-			collection(db, 'users', userId, 'playsSongs'),
+			collection(db, 'users', selectedUserId, 'playsSongs'),
 			where('song', '==', songRef),
-			where('part', '==', selectedInstrument)
+			where('part', '==', instrumentRef)
 		)
 		const playsInDoc = (await getDocs(playsInQuery)).docs[0].ref
 
@@ -116,8 +120,9 @@
 								class="removePerson"
 								on:click={() => {
 									selectedSong = i
-									selectedUser = musician.participantName
-									selectedInstrument = musician.instrumentName
+									selectedUserId = musician.participantId
+									selectedUserName = musician.participantName
+									selectedInstrumentId = musician.instrumentId
 									selectedUserEntry = j
 									openDelUser = true
 								}}
@@ -188,7 +193,7 @@
 		openDelUser = false
 	}}
 >
-	<p>Remove {selectedUser} from {data.songs[selectedSong]?.name}?</p>
+	<p>Remove {selectedUserName} from {data.songs[selectedSong]?.name}?</p>
 </Modal>
 
 <Modal
@@ -214,7 +219,16 @@
 			}}
 		/>
 		<br />
-		<TextInput bind:value={instrument} required labelText="Instrument" />
+		<ComboBox 
+			titleText="Instrument"
+			bind:selectedId={instrument}
+			items={instrumentListItems}
+			required
+			shouldFilterItem={(item, value) => {
+				if (!value) return true
+				return item.text.toLowerCase().includes(value.toLowerCase())
+			}}
+		/>
 	</Form>
 </Modal>
 
@@ -229,6 +243,6 @@
 	}
 
 	:global(.addParticipantModal .bx--modal-content) {
-		height: 30rem;
+		height: 25rem;
 	}
 </style>
