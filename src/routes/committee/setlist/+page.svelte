@@ -21,20 +21,18 @@
 	import {
 		addDoc,
 		arrayRemove,
-		arrayUnion,
 		collection,
 		deleteDoc,
 		doc,
 		getDocs,
 		query,
-		setDoc,
 		updateDoc,
 		where
 	} from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { editionId } from '$lib/types/domain/edition'
 	import { isValidUrl } from '$lib/util/urlValidation'
-	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
+	import { addSongToSetlist, createSong, getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
 
 	export let data: PageData
 
@@ -47,7 +45,6 @@
 	let addSongArtist: string
 	let addSongLink: string
 	$: validLink = true
-	let addSongLength: string
 
 	let openDelSong = false
 	let openDelMusician = false
@@ -69,27 +66,20 @@
 			return
 		}
 
-		let song = {
+		// Create the song
+		const song = {
 			name: addSongName,
 			artist: addSongArtist,
-			length: addSongLength,
 			link: addSongLink
 		}
-
-		const newSong = doc(collection(db, 'songs'))
-
-		await setDoc(newSong, song)
+		const songId = await createSong(song)
 
 		// Add the song to the setlist
-		const editionRef = doc(db, editionId)
-		updateDoc(editionRef, {
-			songs: arrayUnion(doc(db, 'songs', newSong.id))
-		})
+		addSongToSetlist(songId)
 
 		addSongName = ''
 		addSongArtist = ''
 		addSongLink = ''
-		addSongLength = ''
 		validLink = true
 
 		invalidateAll()
@@ -261,7 +251,7 @@
 				</Column>
 			</Row>
 			<Row padding>
-				<Column sm={4} md={4} lg={10}>
+				<Column >
 					<TextInput
 					id="link"
 					labelText="Link"
@@ -270,15 +260,6 @@
 					invalid={!validLink}
 					invalidText={validLink ? undefined : 'Enter a valid link'}
 				/>
-				</Column>
-				<Column sm={4} md={4} lg={6}>
-					<TextInput
-						id="length"
-						labelText="Length (mm:ss)*"
-						placeholder="Enter the length of the song"
-						bind:value={addSongLength}
-						pattern="[0-9][0-9]:[0-9][0-9]"
-					/>
 				</Column>
 			</Row>
 		</Grid>

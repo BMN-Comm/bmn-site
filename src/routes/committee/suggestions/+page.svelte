@@ -10,14 +10,14 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { Bat, Chat, Favorite, LogicalPartition, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
-	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
+	import {  deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
-	import { editionId } from '$lib/types/domain/edition'
+	import { addSongToSetlist } from '$lib/firebase/client/firestore/songs'
 
 	export let data: PageData
 
@@ -39,10 +39,7 @@
 	}
 
 	async function addToSetlist() {
-		const editionRef = doc(db, editionId)
-		updateDoc(editionRef, {
-			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSongIndex].id))
-		})
+		addSongToSetlist(data.suggestions[selectedSongIndex].id)
 		invalidateAll()
 	}
 
