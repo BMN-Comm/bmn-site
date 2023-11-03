@@ -2,7 +2,7 @@ import type { PageLoad } from './$types'
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { query, collection, getDocs, orderBy } from 'firebase/firestore'
 import { toDict } from '$lib/util/dict'
-import type { song } from '$lib/types/domain/song'
+import type { SuggestedSong } from '$lib/types/domain/song'
 
 export const ssr = false
 
@@ -26,9 +26,21 @@ export const load: PageLoad = async () => {
 		suggestions: suggestions.map((doc) => {
 			const data = doc.data()
 			return {
-				song: { id: doc.id, ...data } as song,
+				song: { id: doc.id, ...data } as SuggestedSong,
 				user: usersDict[data.user.id]
 			}
-		})
+		}),
+		favouriteSongs: Object.fromEntries(
+			suggestions
+				.map((doc) => {
+					const data = doc.data()
+					return {
+						song: { id: doc.id, ...data } as SuggestedSong,
+						user: usersDict[data.user.id]
+					}
+				})
+				.filter((suggestion) => suggestion.song.liked)
+				.map((suggestion) => [suggestion.song.id, suggestion.song])
+		)
 	}
 }

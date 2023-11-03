@@ -17,20 +17,23 @@
 		TextInput
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { MusicRemove, UserFollow } from 'carbon-icons-svelte'
+	import { MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
 	import {
 		addDoc,
 		arrayRemove,
+		arrayUnion,
 		collection,
 		deleteDoc,
 		doc,
 		getDocs,
 		query,
+		setDoc,
 		updateDoc,
 		where
 	} from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { editionId } from '$lib/types/domain/edition'
+	import { isValidUrl } from '$lib/util/urlValidation'
 
 	export let data: PageData
 
@@ -38,9 +41,17 @@
 	let selectedUserEntry: number
 	let selectedUser: string
 	let selectedInstrument: string
-	let openDel = false
-	let openDelUser = false
-	let openAdd = false
+
+	let addSongName: string
+	let addSongArtist: string
+	let addSongLink: string
+	$: validLink = true
+	let addSongLength: string
+
+	let openDelSong = false
+	let openDelMusician = false
+	let openAddMusician = false
+	let openAddSong = false
 
 	let participantListItems: DropdownItem[] = data.users.map(
 		(user) => ({ id: user.id, text: user.name } as DropdownItem)
@@ -48,6 +59,40 @@
 
 	let participant: string
 	let instrument: string
+
+	async function CreateAndAddSongToSetlist() {
+		// TODO: Show error if failed
+		if (!isValidUrl(addSongLink)) {
+			console.log('invalid')
+			validLink = false
+			return
+		}
+
+		let song = {
+			name: addSongName,
+			artist: addSongArtist,
+			length: addSongLength,
+			link: addSongLink
+		}
+
+		const newSong = doc(collection(db, 'songs'))
+
+		await setDoc(newSong, song)
+
+		// Add the song to the setlist
+		const editionRef = doc(db, editionId)
+		updateDoc(editionRef, {
+			songs: arrayUnion(doc(db, 'songs', newSong.id))
+		})
+
+		addSongName = ''
+		addSongArtist = ''
+		addSongLink = ''
+		addSongLength = ''
+		validLink = true
+
+		invalidateAll()
+	}
 
 	async function RemoveSongFromSetlist() {
 		const editionRef = doc(db, editionId)
@@ -87,8 +132,18 @@
 <Grid>
 	<Row>
 		<Column><h1 class="titleText">Setlist</h1></Column>
+		<Column>
+			<Button 
+				class="alignRight"
+				icon={MusicAdd}
+				iconDescription={"Add song to setlist"}
+				on:click={() => {
+					openAddSong = true
+				}}
+			/>
+		</Column>
 	</Row>
-
+	
 	<ScrollableList condensed>
 		<StructuredListHead>
 			<StructuredListRow head>
@@ -119,7 +174,7 @@
 									selectedUser = musician.participantName
 									selectedInstrument = musician.instrumentName
 									selectedUserEntry = j
-									openDelUser = true
+									openDelMusician = true
 								}}
 							>
 								X
@@ -136,7 +191,7 @@
 						icon={UserFollow}
 						on:click={() => {
 							selectedSong = i
-							openAdd = true
+							openAddMusician = true
 						}}
 					/>
 					<Button
@@ -146,7 +201,7 @@
 						icon={MusicRemove}
 						on:click={() => {
 							selectedSong = i
-							openDel = true
+							openDelSong = true
 						}}
 					/>
 				</StructuredListCell>
@@ -156,18 +211,83 @@
 </Grid>
 
 <Modal
+	modalHeading="Add to setlist"
+	bind:open={openAddSong}
+	primaryButtonText="Add"
+	primaryButtonIcon={MusicAdd}
+	secondaryButtonText="Cancel"
+	hasForm
+	selectorPrimaryFocus="#name"
+	on:click:button--primary={async () => {
+		await CreateAndAddSongToSetlist()
+		openAddSong = false
+	}}
+	on:click:button--secondary={() => {
+		openAddSong = false
+	}}
+>
+	<Form>
+		<Grid>
+			<Row padding>
+				<Column>
+					<TextInput
+						id="name"
+						labelText="Name"
+						placeholder="Name"
+						bind:value={addSongName}
+						required
+					/>
+				</Column>
+			</Row>
+			<Row padding>
+				<Column>
+					<TextInput
+						id="artist"
+						labelText="Artist"
+						placeholder="Artist"
+						bind:value={addSongArtist}
+						required
+					/>
+				</Column>
+			</Row>
+			<Row padding>
+				<Column sm={4} md={4} lg={10}>
+					<TextInput
+					id="link"
+					labelText="Link"
+					placeholder="Link"
+					bind:value={addSongLink}
+					invalid={!validLink}
+					invalidText={validLink ? undefined : 'Enter a valid link'}
+				/>
+				</Column>
+				<Column sm={4} md={4} lg={6}>
+					<TextInput
+						id="length"
+						labelText="Length (mm:ss)*"
+						placeholder="Enter the length of the song"
+						bind:value={addSongLength}
+						pattern="[0-9][0-9]:[0-9][0-9]"
+					/>
+				</Column>
+			</Row>
+		</Grid>
+	</Form>
+</Modal>
+
+<Modal
 	danger
 	modalHeading="Delete from setlist"
 	primaryButtonText="Delete"
 	primaryButtonIcon={MusicRemove}
 	secondaryButtonText="Cancel"
-	bind:open={openDel}
+	bind:open={openDelSong}
 	on:click:button--primary={() => {
 		RemoveSongFromSetlist()
-		openDel = false
+		openDelSong = false
 	}}
 	on:click:button--secondary={() => {
-		openDel = false
+		openDelSong = false
 	}}
 >
 	<p>Delete {data.songs[selectedSong]?.name}?</p>
@@ -179,25 +299,25 @@
 	primaryButtonText="Remove"
 	primaryButtonIcon={MusicRemove}
 	secondaryButtonText="Cancel"
-	bind:open={openDelUser}
+	bind:open={openDelMusician}
 	on:click:button--primary={() => {
 		RemoveParticipantFromSong()
-		openDelUser = false
+		openDelMusician = false
 	}}
 	on:click:button--secondary={() => {
-		openDelUser = false
+		openDelMusician = false
 	}}
 >
 	<p>Remove {selectedUser} from {data.songs[selectedSong]?.name}?</p>
 </Modal>
 
 <Modal
-	bind:open={openAdd}
+	bind:open={openAddMusician}
 	modalHeading="Add participant to line-up"
 	primaryButtonText="Confirm"
 	on:click:button--primary={() => {
 		AddParticipantToSong()
-		openAdd = false
+		openAddMusician = false
 	}}
 	hasScrollingContent
 	class="addParticipantModal"
@@ -230,5 +350,9 @@
 
 	:global(.addParticipantModal .bx--modal-content) {
 		height: 30rem;
+	}
+
+	:global(.alignRight) {
+		float: right;
 	}
 </style>

@@ -1,6 +1,6 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import type { rehearsal, rehearsalRoom, rehearsalSong } from '$lib/types/domain/rehearsal'
-import type { song } from '$lib/types/domain/song'
+import type { Song } from '$lib/types/domain/song'
 import { editionId, type edition } from '$lib/types/domain/edition'
 import {
 	query,
@@ -61,7 +61,7 @@ export const load: PageLoad = async ({ params }) => {
 	const songRefs = edition.songs.map((ref) => ref.id)
 
 	const editionSongsDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', songRefs)
-	const songs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as song))
+	const songs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as Song))
 
 	if (songs.length > 0) {
 		const playsInDocs = await QueryWhereInBatched(

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import type { availability } from '$lib/types/domain/availability'
-	import type { song } from '$lib/types/domain/song'
+	import type { Song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Column,
@@ -15,7 +15,7 @@
 	export let startTime: Date
 	export let endTime: Date
 
-	export let song: song
+	export let song: Song
 
 	export let musicians: {
 		participantId: string

@@ -26,11 +26,13 @@
 	let openAdd = false
 	let filterFavourites = false
 	let remarkText: string
-	let selectedSong: number
+	let selectedSongIndex: number
+
+	const favouriteSongs = data.suggestions.filter((song) => song.liked)
 
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
-		const docRef = doc(db, 'songs', data.suggestions[selectedSong].song.id)
+		const docRef = doc(db, 'songs', data.suggestions[selectedSongIndex].id)
 		await deleteDoc(docRef)
 
 		invalidateAll()
@@ -39,7 +41,7 @@
 	async function addToSetlist() {
 		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
-			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].song.id))
+			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSongIndex].id))
 		})
 		invalidateAll()
 	}
@@ -86,11 +88,11 @@
 				<StructuredListCell head>Options</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
-		{#each data.suggestions as { song, user }, i}
-			{#if (filterFavourites && data.favouriteSongs[song.id]) || !filterFavourites}
+		{#each data.suggestions as song, i}
+			{#if (filterFavourites && favouriteSongs.includes(song)) || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
-						{user}
+						{song.user.id} 
 					</StructuredListCell>
 					<StructuredListCell>
 						{song.name}
@@ -110,14 +112,12 @@
 							size="small"
 							iconDescription="Like"
 							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
-							class={data.favouriteSongs[song.id] ? 'yesFave' : 'noFave'}
-							on:click={data.favouriteSongs[song.id]
-								? () => {
-										UnfavouriteSong(song.id)
-								  }
-								: () => {
-										FavouriteSong(song.id)
-								  }}
+							class={favouriteSongs.includes(song) ? 'yesFave' : 'noFave'}
+							on:click={() => { 
+								favouriteSongs.includes(song)
+									? UnfavouriteSong(song.id)
+									: FavouriteSong(song.id)
+							}}
 						/>
 					</StructuredListCell>
 					<StructuredListCell>
@@ -127,7 +127,7 @@
 							iconDescription="Delete"
 							icon={MusicRemove}
 							on:click={() => {
-								selectedSong = i
+								selectedSongIndex = i
 								openDel = true
 							}}
 						/>
@@ -149,7 +149,7 @@
 							iconDescription="Add to setlist"
 							icon={MusicAdd}
 							on:click={() => {
-								selectedSong = i
+								selectedSongIndex = i
 								openAdd = true
 							}}
 							class={song.user.id === '3ClGLhR2ctxg6ZPn0Ls7' ? 'ilanButton' : 'addButton'}
@@ -179,7 +179,7 @@
 		openAdd = false
 	}}
 >
-	<p>Add {data.suggestions[selectedSong]?.song.name} to setlist?</p>
+	<p>Add {data.suggestions[selectedSongIndex]?.name} to setlist?</p>
 </Modal>
 
 <Modal
@@ -197,7 +197,7 @@
 		openDel = false
 	}}
 >
-	<p>Delete {data.suggestions[selectedSong]?.song.name}?</p>
+	<p>Delete {data.suggestions[selectedSongIndex]?.name}?</p>
 </Modal>
 
 <style>
