@@ -1,5 +1,7 @@
 import type { availability } from '$lib/types/domain/availability'
 
+export const bmnAdminUserId = 'Om9orRRBrIkeXhHTHELj'
+
 export type user = {
 	id: string
 	email: string
