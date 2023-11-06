@@ -54,16 +54,18 @@
 	let instrument: string
 
 	async function RemoveSongFromSetlist() {
+		const selectedSongId = data.songs[selectedSong].id
+
 		// Remove the song from the setlist
 		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
-			songs: arrayRemove(doc(db, 'songs', data.songs[selectedSong].id))
+			songs: arrayRemove(doc(db, 'songs', selectedSongId))
 		})
 
 		// If the song was not a suggestion (but added directly to the setlist), delete it from the database completely
-		const suggestionIds = (await getSuggestedSongs()).map((song) => song.id)
-		if (!suggestionIds.includes(data.songs[selectedSong].id)) {
-			const suggestionDoc = doc(db, 'songs', data.songs[selectedSong].id) 
+		const suggestionId = (await getSuggestedSongs([selectedSongId])).map((song) => song.id)
+		if (suggestionId.length === 0) {
+			const suggestionDoc = doc(db, 'songs', selectedSongId) 
 			await deleteDoc(suggestionDoc)
 		}
 

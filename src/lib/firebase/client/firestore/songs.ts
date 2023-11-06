@@ -1,17 +1,8 @@
 import { db } from '$lib/firebase/client/firebase'
 import { editionId } from '$lib/types/domain/edition'
 import type { Song, SuggestedSong } from '$lib/types/domain/song'
-import {
-	arrayUnion,
-	collection,
-	doc,
-	getDoc,
-	getDocs,
-	orderBy,
-	query,
-	setDoc,
-	updateDoc
-} from 'firebase/firestore'
+import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
+import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore'
 
 /**
  * Get the song data for the given ids
@@ -20,7 +11,7 @@ import {
  */
 export async function getSongs(ids: string[]) {
 	// Get the song objects from the rehearsal songs
-	const songDocs = await Promise.all(ids.map((id) => getDoc(doc(db, 'songs/' + id))))
+	const songDocs = await QueryWhereInBatched(collection(db, 'songs'), 'id', ids)
 	return songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as Song))
 }
 
@@ -30,17 +21,13 @@ export async function getSongs(ids: string[]) {
  * @returns The song data for the given ids, or all suggestions if no ids are given
  */
 export async function getSuggestedSongs(ids?: string[]) {
-	// Get all the suggestions
-	const suggestionsQuery = query(collection(db, 'songs'), orderBy('suggestionDate'))
-	const suggestions = (await getDocs(suggestionsQuery)).docs.map(
-		(doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong)
-	)
+	const songDocs = ids
+		? await QueryWhereInBatched(collection(db, 'songs'), 'id', ids)
+		: (await getDocs(query(collection(db, 'users')))).docs
 
-	// If no ids are given, return all suggestions
-	if (!ids) return suggestions
-
-	// Otherwise, filter the suggestions
-	return suggestions.filter((suggestion) => ids.includes(suggestion.id))
+	return songDocs
+		.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
+		.sort((a, b) => a.suggestionDate.seconds - b.suggestionDate.seconds)
 }
 
 /**
