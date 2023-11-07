@@ -11,7 +11,7 @@ import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc } from '
  */
 export async function getSongs(ids: string[]) {
 	// Get the song objects from the rehearsal songs
-	const songDocs = await QueryWhereInBatched(collection(db, 'songs'), 'id', ids)
+	const songDocs = await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids)
 	return songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as Song))
 }
 
@@ -22,7 +22,7 @@ export async function getSongs(ids: string[]) {
  */
 export async function getSuggestedSongs(ids?: string[]) {
 	const songDocs = ids
-		? await QueryWhereInBatched(collection(db, 'songs'), 'id', ids)
+		? await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids)
 		: (await getDocs(query(collection(db, 'users')))).docs
 
 	return songDocs

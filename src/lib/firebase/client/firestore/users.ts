@@ -6,7 +6,7 @@ import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
 /** Get data of the given user ids */
 export async function getUsers(ids?: string[]) {
 	const userDocs = ids
-		? await QueryWhereInBatched(collection(db, 'users'), 'id', ids)
+		? await QueryWhereInBatched(collection(db, 'users'), '__name__', ids)
 		: (await getDocs(query(collection(db, 'users')))).docs
 
 	return userDocs.map((user) => ({ id: user.id, ...user.data() } as user))
