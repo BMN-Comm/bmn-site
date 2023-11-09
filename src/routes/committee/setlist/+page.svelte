@@ -63,6 +63,9 @@
 			song: doc(db, 'songs', data.songs[selectedSong].id)
 		})
 
+		participant = ''
+		instrument = ''
+
 		invalidateAll()
 	}
 

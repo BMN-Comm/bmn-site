@@ -28,6 +28,8 @@
 	let remarkText: string
 	let selectedSong: number
 
+	const favouriteSongs = data.suggestions.filter((song) => song.liked)
+
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
 		const docRef = doc(db, 'songs', data.suggestions[selectedSong].id)

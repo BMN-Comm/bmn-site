@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { song } from '$lib/types/domain/song'
+	import type { Song } from '$lib/types/domain/song'
 	import { MusicRemove } from 'carbon-icons-svelte'
 
 	export let relativeWidth: number
-	export let song: song | undefined = undefined
+	export let song: Song | undefined = undefined
 	export let text: string | undefined = undefined
 	export let deleteSong: (() => void) | undefined = undefined
 </script>

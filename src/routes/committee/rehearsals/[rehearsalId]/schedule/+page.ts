@@ -17,6 +17,7 @@ import type { user } from '$lib/types/domain/user'
 import { toDict } from '$lib/util/dict'
 import type { availability } from '$lib/types/domain/availability'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
+import type { Musician } from '$lib/types/domain/musician'
 
 export const ssr = false
 
@@ -54,7 +55,7 @@ export const load: PageLoad = async ({ params }) => {
 	let availability
 
 	const musiciansForSongs: {
-		[songId: string]: { participantId: string; participantName: string; instrumentName: string }[]
+		[songId: string]: Musician[]
 	} = {}
 
 	const edition = (await getDoc(doc(db, editionId))).data() as edition
