@@ -11,13 +11,13 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
-	import { arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+	import {  deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
-	import { editionId } from '$lib/types/domain/edition'
+	import { addSongToSetlist } from '$lib/firebase/client/firestore/songs'
 
 	export let data: PageData
 
@@ -26,23 +26,22 @@
 	let openAdd = false
 	let filterFavourites = false
 	let remarkText: string
-	let selectedSong: number
+	let selectedSongIndex: number
+
+	const favouriteSongs = data.suggestions.filter((song) => song.liked)
 
 	const favouriteSongs = data.suggestions.filter((song) => song.liked)
 
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
-		const docRef = doc(db, 'songs', data.suggestions[selectedSong].id)
+		const docRef = doc(db, 'songs', data.suggestions[selectedSongIndex].id)
 		await deleteDoc(docRef)
 
 		invalidateAll()
 	}
 
 	async function addToSetlist() {
-		const editionRef = doc(db, editionId)
-		updateDoc(editionRef, {
-			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].id))
-		})
+		addSongToSetlist(data.suggestions[selectedSongIndex].id)
 		invalidateAll()
 	}
 
@@ -125,7 +124,7 @@
 							iconDescription="Delete"
 							icon={MusicRemove}
 							on:click={() => {
-								selectedSong = i
+								selectedSongIndex = i
 								openDel = true
 							}}
 						/>
@@ -147,7 +146,7 @@
 							iconDescription="Add to setlist"
 							icon={MusicAdd}
 							on:click={() => {
-								selectedSong = i
+								selectedSongIndex = i
 								openAdd = true
 							}}
 							class={song.user.id === '3ClGLhR2ctxg6ZPn0Ls7' ? 'ilanButton' : 'addButton'}
@@ -177,7 +176,7 @@
 		openAdd = false
 	}}
 >
-	<p>Add {data.suggestions[selectedSong]?.name} to setlist?</p>
+	<p>Add {data.suggestions[selectedSongIndex]?.name} to setlist?</p>
 </Modal>
 
 <Modal
@@ -195,7 +194,7 @@
 		openDel = false
 	}}
 >
-	<p>Delete {data.suggestions[selectedSong]?.name}?</p>
+	<p>Delete {data.suggestions[selectedSongIndex]?.name}?</p>
 </Modal>
 
 <style>
