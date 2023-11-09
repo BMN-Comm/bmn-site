@@ -63,9 +63,8 @@
 		})
 
 		// If the song was not a suggestion (but added directly to the setlist), delete it from the database completely
-		const suggestionId = (await getSuggestedSongs([selectedSongId])).map((song) => song.id)
-		if (suggestionId.length === 0) {
-			const suggestionDoc = doc(db, 'songs', selectedSongId) 
+		if ((await getSuggestedSongs([selectedSongId])).length === 0) {
+			const suggestionDoc = doc(db, 'songs', selectedSongId)
 			await deleteDoc(suggestionDoc)
 		}
 
@@ -103,17 +102,17 @@
 	<Row>
 		<Column><h1 class="titleText">Setlist</h1></Column>
 		<Column>
-			<Button 
+			<Button
 				class="alignRight"
 				icon={MusicAdd}
-				iconDescription={"Add song to setlist"}
+				iconDescription={'Add song to setlist'}
 				on:click={() => {
 					openAddSong = true
 				}}
 			/>
 		</Column>
 	</Row>
-	
+
 	<ScrollableList condensed>
 		<StructuredListHead>
 			<StructuredListRow head>

@@ -23,7 +23,7 @@ export async function getSongs(ids: string[]) {
 export async function getSuggestedSongs(ids?: string[]) {
 	const songDocs = ids
 		? await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids)
-		: (await getDocs(query(collection(db, 'users')))).docs
+		: (await getDocs(query(collection(db, 'songs')))).docs
 
 	return songDocs
 		.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
