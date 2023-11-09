@@ -17,7 +17,7 @@
 		TextInput
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { MusicRemove, UserFollow } from 'carbon-icons-svelte'
+	import { MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
 	import {
 		addDoc,
 		arrayRemove,
@@ -31,6 +31,8 @@
 	} from 'firebase/firestore'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import { editionId } from '$lib/types/domain/edition'
+	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
+	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
 
 	export let data: PageData
 
@@ -38,9 +40,11 @@
 	let selectedUserEntry: number
 	let selectedUser: string
 	let selectedInstrument: string
-	let openDel = false
-	let openDelUser = false
-	let openAdd = false
+
+	let openDelSong = false
+	let openDelMusician = false
+	let openAddMusician = false
+	let openAddSong = false
 
 	let participantListItems: DropdownItem[] = data.users.map(
 		(user) => ({ id: user.id, text: user.name } as DropdownItem)
@@ -50,10 +54,20 @@
 	let instrument: string
 
 	async function RemoveSongFromSetlist() {
+		const selectedSongId = data.songs[selectedSong].id
+
+		// Remove the song from the setlist
 		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
-			songs: arrayRemove(doc(db, 'songs', data.songs[selectedSong].id))
+			songs: arrayRemove(doc(db, 'songs', selectedSongId))
 		})
+
+		// If the song was not a suggestion (but added directly to the setlist), delete it from the database completely
+		if ((await getSuggestedSongs([selectedSongId])).length === 0) {
+			const suggestionDoc = doc(db, 'songs', selectedSongId)
+			await deleteDoc(suggestionDoc)
+		}
+
 		invalidateAll()
 	}
 
@@ -87,6 +101,16 @@
 <Grid>
 	<Row>
 		<Column><h1 class="titleText">Setlist</h1></Column>
+		<Column>
+			<Button
+				class="alignRight"
+				icon={MusicAdd}
+				iconDescription={'Add song to setlist'}
+				on:click={() => {
+					openAddSong = true
+				}}
+			/>
+		</Column>
 	</Row>
 
 	<ScrollableList condensed>
@@ -119,7 +143,7 @@
 									selectedUser = musician.participantName
 									selectedInstrument = musician.instrumentName
 									selectedUserEntry = j
-									openDelUser = true
+									openDelMusician = true
 								}}
 							>
 								X
@@ -136,7 +160,7 @@
 						icon={UserFollow}
 						on:click={() => {
 							selectedSong = i
-							openAdd = true
+							openAddMusician = true
 						}}
 					/>
 					<Button
@@ -146,7 +170,7 @@
 						icon={MusicRemove}
 						on:click={() => {
 							selectedSong = i
-							openDel = true
+							openDelSong = true
 						}}
 					/>
 				</StructuredListCell>
@@ -155,19 +179,21 @@
 	</ScrollableList>
 </Grid>
 
+<AddSongModal bind:openAddSong />
+
 <Modal
 	danger
 	modalHeading="Delete from setlist"
 	primaryButtonText="Delete"
 	primaryButtonIcon={MusicRemove}
 	secondaryButtonText="Cancel"
-	bind:open={openDel}
+	bind:open={openDelSong}
 	on:click:button--primary={() => {
 		RemoveSongFromSetlist()
-		openDel = false
+		openDelSong = false
 	}}
 	on:click:button--secondary={() => {
-		openDel = false
+		openDelSong = false
 	}}
 >
 	<p>Delete {data.songs[selectedSong]?.name}?</p>
@@ -179,25 +205,25 @@
 	primaryButtonText="Remove"
 	primaryButtonIcon={MusicRemove}
 	secondaryButtonText="Cancel"
-	bind:open={openDelUser}
+	bind:open={openDelMusician}
 	on:click:button--primary={() => {
 		RemoveParticipantFromSong()
-		openDelUser = false
+		openDelMusician = false
 	}}
 	on:click:button--secondary={() => {
-		openDelUser = false
+		openDelMusician = false
 	}}
 >
 	<p>Remove {selectedUser} from {data.songs[selectedSong]?.name}?</p>
 </Modal>
 
 <Modal
-	bind:open={openAdd}
+	bind:open={openAddMusician}
 	modalHeading="Add participant to line-up"
 	primaryButtonText="Confirm"
 	on:click:button--primary={() => {
 		AddParticipantToSong()
-		openAdd = false
+		openAddMusician = false
 	}}
 	hasScrollingContent
 	class="addParticipantModal"
@@ -230,5 +256,9 @@
 
 	:global(.addParticipantModal .bx--modal-content) {
 		height: 30rem;
+	}
+
+	:global(.alignRight) {
+		float: right;
 	}
 </style>
