@@ -28,9 +28,11 @@
 	let remarkText: string
 	let selectedSong: number
 
+	const favouriteSongIds = data.suggestions.filter((song) => song.liked).map((song) => song.id)
+
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
-		const docRef = doc(db, 'songs', data.suggestions[selectedSong].song.id)
+		const docRef = doc(db, 'songs', data.suggestions[selectedSong].id)
 		await deleteDoc(docRef)
 
 		invalidateAll()
@@ -39,7 +41,7 @@
 	async function addToSetlist() {
 		const editionRef = doc(db, editionId)
 		updateDoc(editionRef, {
-			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].song.id))
+			songs: arrayUnion(doc(db, 'songs', data.suggestions[selectedSong].id))
 		})
 		invalidateAll()
 	}
@@ -86,11 +88,11 @@
 				<StructuredListCell head>Options</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
-		{#each data.suggestions as { song, user }, i}
-			{#if (filterFavourites && data.favouriteSongs[song.id]) || !filterFavourites}
+		{#each data.suggestions as song, i}
+			{#if (filterFavourites && favouriteSongIds.includes(song.id)) || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
-						{user}
+						{data.users.find((user) => user.id === song.user.id)?.name ?? 'Unknown'}
 					</StructuredListCell>
 					<StructuredListCell>
 						{song.name}
@@ -110,14 +112,12 @@
 							size="small"
 							iconDescription="Like"
 							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
-							class={data.favouriteSongs[song.id] ? 'yesFave' : 'noFave'}
-							on:click={data.favouriteSongs[song.id]
-								? () => {
-										UnfavouriteSong(song.id)
-								  }
-								: () => {
-										FavouriteSong(song.id)
-								  }}
+							class={favouriteSongIds.includes(song.id) ? 'yesFave' : 'noFave'}
+							on:click={() => {
+								favouriteSongIds.includes(song.id)
+									? UnfavouriteSong(song.id)
+									: FavouriteSong(song.id)
+							}}
 						/>
 					</StructuredListCell>
 					<StructuredListCell>
@@ -179,7 +179,7 @@
 		openAdd = false
 	}}
 >
-	<p>Add {data.suggestions[selectedSong]?.song.name} to setlist?</p>
+	<p>Add {data.suggestions[selectedSong]?.name} to setlist?</p>
 </Modal>
 
 <Modal
@@ -197,7 +197,7 @@
 		openDel = false
 	}}
 >
-	<p>Delete {data.suggestions[selectedSong]?.song.name}?</p>
+	<p>Delete {data.suggestions[selectedSong]?.name}?</p>
 </Modal>
 
 <style>
