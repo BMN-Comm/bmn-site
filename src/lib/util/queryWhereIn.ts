@@ -5,8 +5,7 @@ import {
 	query,
 	where,
 	getDocs,
-	Query,
-	QueryConstraint
+	Query
 } from 'firebase/firestore'
 
 /**
@@ -20,14 +19,13 @@ import {
 export async function QueryWhereInBatched(
 	collection: CollectionReference<DocumentData> | Query<DocumentData>,
 	fieldToCheck: string,
-	list: any[],
-	queryContraints: QueryConstraint[] = []
+	list: any[]
 ): Promise<QueryDocumentSnapshot<DocumentData>[]> {
 	let queryDocs: QueryDocumentSnapshot<DocumentData>[] = []
 
 	for (let i = 0; i < list.length; i += 10) {
 		const subList = list.slice(i, i + 10)
-		const subQuery = query(collection, where(fieldToCheck, 'in', subList), ...queryContraints)
+		const subQuery = query(collection, where(fieldToCheck, 'in', subList))
 		queryDocs = queryDocs.concat((await getDocs(subQuery)).docs)
 	}
 

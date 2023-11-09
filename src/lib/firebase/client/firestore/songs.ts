@@ -10,7 +10,8 @@ import {
 	orderBy,
 	query,
 	setDoc,
-	updateDoc
+	updateDoc,
+	where
 } from 'firebase/firestore'
 
 /**
@@ -30,14 +31,14 @@ export async function getSongs(ids: string[]) {
  * @returns The song data for the given ids, or all suggestions if no ids are given
  */
 export async function getSuggestedSongs(ids?: string[]) {
-	// Apart from sorting, this also filters out songs that were not added to the database as suggestions as they don't have a suggestionDate
-	const orderByConstraint = orderBy('suggestionDate')
-
 	const songDocs = ids
-		? await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids, [orderByConstraint])
-		: (await getDocs(query(collection(db, 'songs'), orderByConstraint))).docs
+		? await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids)
+		: (await getDocs(query(collection(db, 'songs')))).docs
 
-	return songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
+	return songDocs
+		.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
+		.filter((doc) => doc.suggestionDate)
+		.sort((a, b) => a.suggestionDate.seconds - b.suggestionDate.seconds)
 }
 
 /**
