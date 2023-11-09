@@ -2,7 +2,16 @@ import { db } from '$lib/firebase/client/firebase'
 import { editionId } from '$lib/types/domain/edition'
 import type { Song, SuggestedSong } from '$lib/types/domain/song'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
-import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore'
+import {
+	arrayUnion,
+	collection,
+	doc,
+	getDocs,
+	orderBy,
+	query,
+	setDoc,
+	updateDoc
+} from 'firebase/firestore'
 
 /**
  * Get the song data for the given ids
@@ -21,13 +30,14 @@ export async function getSongs(ids: string[]) {
  * @returns The song data for the given ids, or all suggestions if no ids are given
  */
 export async function getSuggestedSongs(ids?: string[]) {
-	const songDocs = ids
-		? await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids)
-		: (await getDocs(query(collection(db, 'songs')))).docs
+	// Apart from sorting, this also filters out songs that were not added to the database as suggestions as they don't have a suggestionDate
+	const orderByConstraint = orderBy('suggestionDate')
 
-	return songDocs
-		.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
-		.sort((a, b) => a.suggestionDate.seconds - b.suggestionDate.seconds)
+	const songDocs = ids
+		? await QueryWhereInBatched(collection(db, 'songs'), '__name__', ids, [orderByConstraint])
+		: (await getDocs(query(collection(db, 'songs'), orderByConstraint))).docs
+
+	return songDocs.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
 }
 
 /**
