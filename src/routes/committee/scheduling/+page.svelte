@@ -14,7 +14,7 @@
 	export let data: PageData
 </script>
 
-<Grid class="with-overflow">
+<Grid>
 	<Row padding>
 		<Column><h1 class="titleText">Scheduling</h1></Column>
 	</Row>
@@ -70,9 +70,5 @@
 		border-style: solid;
 		border-color: rgb(57, 57, 57);
 		padding: 4px 8px !important;
-	}
-
-	:global(.with-overflow) {
-		overflow: visible !important;
 	}
 </style>
