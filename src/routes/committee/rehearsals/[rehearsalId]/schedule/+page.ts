@@ -64,6 +64,9 @@ export const load: PageLoad = async ({ params }) => {
 	const songs = editionSongsDocs.map((doc) => ({ id: doc.id, ...doc.data() } as Song))
 
 	if (songs.length > 0) {
+		// Add all songs to the musicians dictionary
+		songs.forEach((song) => (musiciansForSongs[song.id] = []))
+
 		const playsInDocs = await QueryWhereInBatched(
 			collectionGroup(db, 'playsSongs'),
 			'song',
@@ -91,9 +94,6 @@ export const load: PageLoad = async ({ params }) => {
 			if (!participant) throw new Error('Participant was not loaded, something is wrong')
 
 			const playsInSongData = playsInSong.data()
-			// Create array if not exists
-			if (!musiciansForSongs[playsInSongData.song.id])
-				musiciansForSongs[playsInSongData.song.id] = []
 
 			// Add musician
 			musiciansForSongs[playsInSongData.song.id].push({

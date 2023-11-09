@@ -15,5 +15,8 @@ export const load: PageLoad = async () => {
 	const users = await getUsers()
 
 	// Bundle and return all data
-	return { suggestions, users }
+	return {
+		suggestions,
+		users
+	}
 }

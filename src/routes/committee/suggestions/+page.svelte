@@ -86,10 +86,10 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		{#each data.suggestions as song, i}
-			{#if (filterFavourites && favouriteSongs.includes(song)) || !filterFavourites}
+			{#if song.liked || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
-						{data.users.find((user) => user.id === song.user.id)?.name ?? "Unknown"} 
+						{data.users.find((user) => user.id === song.user.id)?.name ?? 'Unknown'}
 					</StructuredListCell>
 					<StructuredListCell>
 						{song.name}
@@ -109,11 +109,9 @@
 							size="small"
 							iconDescription="Like"
 							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
-							class={favouriteSongs.includes(song) ? 'yesFave' : 'noFave'}
-							on:click={() => { 
-								favouriteSongs.includes(song)
-									? UnfavouriteSong(song.id)
-									: FavouriteSong(song.id)
+							class={song.liked ? 'yesFave' : 'noFave'}
+							on:click={() => {
+								song.liked ? UnfavouriteSong(song.id) : FavouriteSong(song.id)
 							}}
 						/>
 					</StructuredListCell>
