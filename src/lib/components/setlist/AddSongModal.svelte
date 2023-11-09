@@ -1,44 +1,63 @@
 <script lang="ts">
-	import { invalidateAll } from "$app/navigation"
-	import { addSongToSetlist, createSong } from "$lib/firebase/client/firestore/songs"
-	import { isValidUrl } from "$lib/util/urlValidation"
-	import { Modal, Form, Grid, Row, Column, TextInput } from "carbon-components-svelte"
-	import { MusicAdd } from "carbon-icons-svelte"
+	import { invalidateAll } from '$app/navigation'
+	import { addSongToSetlist, createSong } from '$lib/firebase/client/firestore/songs'
+	import { isValidUrl } from '$lib/util/urlValidation'
+	import { Modal, Form, Grid, Row, Column, TextInput } from 'carbon-components-svelte'
+	import { MusicAdd } from 'carbon-icons-svelte'
 
-	let addSongName: string
-	let addSongArtist: string
-	let addSongLink: string
+	let name: string
+	let artist: string
+	let genre: string
+	let length: string
+	$: validLength = true
+	let link: string
 	$: validLink = true
 
 	export let openAddSong = false
 
+	/**
+	 * Create the song and add it to the setlist.
+	 * @returns Whether the song was successfully created and added to the setlist.
+	 */
 	async function CreateAndAddSongToSetlist() {
 		// TODO: Show error if failed
-		if (!isValidUrl(addSongLink)) {
+		if (!isValidUrl(link)) {
 			console.log('invalid')
 			validLink = false
-			return
+			return false
+		}
+
+		if (!/[0-9][0-9]:[0-9][0-9]/.test(length)) {
+			console.log('invalid')
+			validLength = false
+			return false
 		}
 
 		// Create the song
 		const song = {
-			name: addSongName,
-			artist: addSongArtist,
-			link: addSongLink
+			name,
+			artist,
+			link,
+			genre,
+			length
 		}
 		const songId = await createSong(song)
 
 		// Add the song to the setlist
 		await addSongToSetlist(songId)
 
-		addSongName = ''
-		addSongArtist = ''
-		addSongLink = ''
+		name = ''
+		artist = ''
+		genre = ''
+		length = ''
+		validLength = true
+		link = ''
 		validLink = true
 
 		invalidateAll()
-	}
 
+		return true
+	}
 </script>
 
 <Modal
@@ -50,8 +69,8 @@
 	hasForm
 	selectorPrimaryFocus="#name"
 	on:click:button--primary={async () => {
-		await CreateAndAddSongToSetlist()
-		openAddSong = false
+		const success = await CreateAndAddSongToSetlist()
+		openAddSong = !success
 	}}
 	on:click:button--secondary={() => {
 		openAddSong = false
@@ -61,11 +80,16 @@
 		<Grid>
 			<Row padding>
 				<Column>
+					<TextInput id="name" labelText="Name*" placeholder="Name" bind:value={name} required />
+				</Column>
+			</Row>
+			<Row padding>
+				<Column>
 					<TextInput
-						id="name"
-						labelText="Name"
-						placeholder="Name"
-						bind:value={addSongName}
+						id="artist"
+						labelText="Artist*"
+						placeholder="Artist"
+						bind:value={artist}
 						required
 					/>
 				</Column>
@@ -73,24 +97,34 @@
 			<Row padding>
 				<Column>
 					<TextInput
-						id="artist"
-						labelText="Artist"
-						placeholder="Artist"
-						bind:value={addSongArtist}
-						required
+						id="link"
+						labelText="Link*"
+						placeholder="Link"
+						bind:value={link}
+						invalid={!validLink}
+						invalidText={validLink ? undefined : 'Enter a valid link'}
 					/>
 				</Column>
 			</Row>
 			<Row padding>
-				<Column >
+				<Column>
 					<TextInput
-					id="link"
-					labelText="Link"
-					placeholder="Link"
-					bind:value={addSongLink}
-					invalid={!validLink}
-					invalidText={validLink ? undefined : 'Enter a valid link'}
-				/>
+						id="genre"
+						labelText="Genre*"
+						placeholder="Genre"
+						bind:value={genre}
+						required
+					/>
+				</Column>
+				<Column>
+					<TextInput
+						bind:value={length}
+						labelText="Length* (mm:ss)"
+						placeholder="Length"
+						required
+						invalid={!validLength}
+						invalidText={validLength ? undefined : 'Format the length as mm:ss'}
+					/>
 				</Column>
 			</Row>
 		</Grid>
