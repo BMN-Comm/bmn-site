@@ -2,17 +2,7 @@ import { db } from '$lib/firebase/client/firebase'
 import { editionId } from '$lib/types/domain/edition'
 import type { Song, SuggestedSong } from '$lib/types/domain/song'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
-import {
-	arrayUnion,
-	collection,
-	doc,
-	getDocs,
-	orderBy,
-	query,
-	setDoc,
-	updateDoc,
-	where
-} from 'firebase/firestore'
+import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore'
 
 /**
  * Get the song data for the given ids
