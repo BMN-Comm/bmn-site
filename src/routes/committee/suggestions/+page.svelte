@@ -28,8 +28,6 @@
 	let remarkText: string
 	let selectedSong: number
 
-	const favouriteSongIds = data.suggestions.filter((song) => song.liked).map((song) => song.id)
-
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
 		const docRef = doc(db, 'songs', data.suggestions[selectedSong].id)
@@ -89,7 +87,7 @@
 			</StructuredListRow>
 		</StructuredListHead>
 		{#each data.suggestions as song, i}
-			{#if (filterFavourites && favouriteSongIds.includes(song.id)) || !filterFavourites}
+			{#if song.liked || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
 						{data.users.find((user) => user.id === song.user.id)?.name ?? 'Unknown'}
@@ -112,11 +110,9 @@
 							size="small"
 							iconDescription="Like"
 							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
-							class={favouriteSongIds.includes(song.id) ? 'yesFave' : 'noFave'}
+							class={song.liked ? 'yesFave' : 'noFave'}
 							on:click={() => {
-								favouriteSongIds.includes(song.id)
-									? UnfavouriteSong(song.id)
-									: FavouriteSong(song.id)
+								song.liked ? UnfavouriteSong(song.id) : FavouriteSong(song.id)
 							}}
 						/>
 					</StructuredListCell>
