@@ -13,7 +13,6 @@ import {
  * @param collection - The Collection or CollectionGroup the retrieve data from
  * @param fieldToCheck - The field to filter on. Note: document id = '\_\_name\_\_'
  * @param list - The filter items
- * @param queryContraints - Optional: Additional query constraints
  * @returns The retrieved documents matching the filter
  */
 export async function QueryWhereInBatched(
