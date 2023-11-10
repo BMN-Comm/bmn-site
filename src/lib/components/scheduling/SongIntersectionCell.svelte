@@ -11,11 +11,13 @@
 	} from 'carbon-components-svelte'
 	import _ from 'lodash'
 
+	type SongWithMusicians = { name: string; musicians: Musician[] }
+	// Participant name, instruments played on song 1, instruments played on song 2
+	type ConflictingParticipant = [string, string[], string[]]
+
 	export let columnIndex: number
 	export let rowIndex: number
 	export let columns: number
-
-	type SongWithMusicians = { name: string; musicians: Musician[] }
 
 	export let song1: SongWithMusicians
 	export let song2: SongWithMusicians
@@ -34,9 +36,6 @@
 	let toolTipOpen = false
 	let toolTipAlign: 'bottom' | 'bottom-left' | 'bottom-right' =
 		columnIndex < 2 ? 'bottom-left' : columnIndex > columns - 4 ? 'bottom-right' : 'bottom'
-
-	// Participant name, instruments played on song 1, instruments played on song 2
-	type ConflictingParticipant = [string, string[], string[]]
 
 	function calculateMusicianIntersection(
 		song1: SongWithMusicians,
