@@ -19,6 +19,7 @@
 		"@sveltejs/kit": "next",
 		"@tsconfig/svelte": "^2.0.0",
 		"@types/cookie": "^0.5.1",
+		"@types/lodash": "^4.14.201",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
 		"carbon-components-svelte": "^0.70.12",

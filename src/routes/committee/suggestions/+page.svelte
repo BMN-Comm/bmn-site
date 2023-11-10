@@ -11,7 +11,7 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
-	import {  deleteDoc, doc, updateDoc } from 'firebase/firestore'
+	import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
@@ -27,8 +27,6 @@
 	let filterFavourites = false
 	let remarkText: string
 	let selectedSongIndex: number
-
-	const favouriteSongs = data.suggestions.filter((song) => song.liked)
 
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
