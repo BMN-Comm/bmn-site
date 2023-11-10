@@ -17,7 +17,7 @@
 		TextInput
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
+	import { Edit, MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
 	import {
 		addDoc,
 		arrayRemove,
@@ -33,6 +33,7 @@
 	import { editionId } from '$lib/types/domain/edition'
 	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
 	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
+	import EditSongModal from '$lib/components/setlist/EditSongModal.svelte'
 
 	export let data: PageData
 
@@ -45,6 +46,7 @@
 	let openDelMusician = false
 	let openAddMusician = false
 	let openAddSong = false
+	let openEditSong = false
 
 	let participantListItems: DropdownItem[] = data.users.map(
 		(user) => ({ id: user.id, text: user.name } as DropdownItem)
@@ -121,6 +123,8 @@
 			<StructuredListRow head>
 				<StructuredListCell head>Title</StructuredListCell>
 				<StructuredListCell head>Artist</StructuredListCell>
+				<StructuredListCell head>Genre</StructuredListCell>
+				<StructuredListCell head>Length</StructuredListCell>
 				<StructuredListCell head>Link</StructuredListCell>
 				<StructuredListCell head>Line-up</StructuredListCell>
 			</StructuredListRow>
@@ -129,6 +133,8 @@
 			<StructuredListRow>
 				<StructuredListCell>{song.name}</StructuredListCell>
 				<StructuredListCell>{song.artist}</StructuredListCell>
+				<StructuredListCell>{song.genre}</StructuredListCell>
+				<StructuredListCell>{song.length}</StructuredListCell>
 				<StructuredListCell>
 					<PlayLinkButton url={song.link} />
 				</StructuredListCell>
@@ -167,6 +173,16 @@
 						}}
 					/>
 					<Button
+						kind="ghost"
+						size="small"
+						iconDescription="Edit"
+						icon={Edit}
+						on:click={() => {
+							selectedSong = i
+							openEditSong = true
+						}}
+					/>
+					<Button
 						kind="danger-tertiary"
 						size="small"
 						iconDescription="Delete"
@@ -183,6 +199,10 @@
 </Grid>
 
 <AddSongModal bind:openAddSong />
+
+{#if data.songs[selectedSong]}
+	<EditSongModal bind:openEditSong song={data.songs[selectedSong]} />
+{/if}
 
 <Modal
 	danger
