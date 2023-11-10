@@ -177,7 +177,7 @@
 						size="small"
 						iconDescription="Edit"
 						icon={Edit}
-						on:click={async () => {
+						on:click={() => {
 							selectedSong = i
 							openEditSong = true
 						}}
