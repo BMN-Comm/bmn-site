@@ -53,7 +53,7 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 			participantName: participant.name,
 			instrumentName: playsInSongData.part,
 			participantId: participant.id
-		} as Musician
+		}
 
 		musiciansForSongs[playsInSongData.song.id].push(musician)
 	}

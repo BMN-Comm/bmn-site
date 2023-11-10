@@ -40,21 +40,22 @@
 		<ScrollableList condensed>
 			<StructuredListRow>
 				<StructuredListCell />
-				{#each data.songs as song}
-					<SongNameCell positionClass="top-cell" song={song.name} />
+				{#each data.songs as columnSong}
+					<SongNameCell positionClass="top-cell" song={columnSong.name} />
 				{/each}
 			</StructuredListRow>
-			{#each data.songs as song1, i}
-				{@const musicians1 = data.musiciansForSongs[song1.id]}
+			{#each data.songs as columnSong, i}
+				{@const columnMusicians = data.musiciansForSongs[columnSong.id]}
 				<StructuredListRow>
-					<SongNameCell positionClass="left-cell" song={song1.name} />
-					{#each data.songs as song2, j}
-						{@const musicians2 = data.musiciansForSongs[song2.id]}
+					<SongNameCell positionClass="left-cell" song={columnSong.name} />
+					{#each data.songs as rowSong, j}
+						{@const rowMusicians = data.musiciansForSongs[rowSong.id]}
 						<SongIntersectionCell
-							position={[i, j]}
+							rowIndex={i}
+							columnIndex={j}
 							columns={data.songs.length}
-							songs={[song1.name, song2.name]}
-							musicians={[musicians1, musicians2]}
+							song1={{ name: columnSong.name, musicians: columnMusicians }}
+							song2={{ name: rowSong.name, musicians: rowMusicians }}
 						/>
 					{/each}
 				</StructuredListRow>

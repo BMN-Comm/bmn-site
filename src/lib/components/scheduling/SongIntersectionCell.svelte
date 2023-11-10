@@ -9,108 +9,88 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
+	import _ from 'lodash'
 
-	export let position: [number, number]
+	export let columnIndex: number
+	export let rowIndex: number
 	export let columns: number
 
-	export let songs: [string, string]
-	export let musicians: [Musician[], Musician[]]
+	type SongWithMusicians = { name: string; musicians: Musician[] }
 
-	let intersection = calculateMusicianIntersection(musicians[0], musicians[1])
+	export let song1: SongWithMusicians
+	export let song2: SongWithMusicians
+
+	let conflictingParticipants = calculateMusicianIntersection(song1, song2)
 
 	let colorClass =
-		position[0] === position[1]
+		rowIndex === columnIndex
 			? 'black-cell'
-			: Object.entries(intersection).length > 0
+			: conflictingParticipants.length > 0
 			? 'red-cell'
 			: 'green-cell'
 
 	// When the two songs are the same or the intersection between the songs is empty, no tooltip is needed
-	let withTooltip = position[0] !== position[1] && Object.entries(intersection).length > 0
+	let withTooltip = rowIndex !== columnIndex && conflictingParticipants.length > 0
 	let toolTipOpen = false
+	let toolTipAlign: 'bottom' | 'bottom-left' | 'bottom-right' =
+		columnIndex < 2 ? 'bottom-left' : columnIndex > columns - 4 ? 'bottom-right' : 'bottom'
 
-	type MusicianIntersection = {
-		[participant: string]: { instrumentsSong1: Set<string>; instrumentsSong2: Set<string> }
-	}
+	// Participant name, instruments played on song 1, instruments played on song 2
+	type ConflictingParticipant = [string, string[], string[]]
 
 	function calculateMusicianIntersection(
-		musiciansSong1: Musician[],
-		musiciansSong2: Musician[]
-	): MusicianIntersection {
-		// Create an empty dictionary
-		let intersection: MusicianIntersection = {}
+		song1: SongWithMusicians,
+		song2: SongWithMusicians
+	): ConflictingParticipant[] {
+		const conflictingMusicians = _.intersectionBy(
+			song1.musicians,
+			song2.musicians,
+			(musician) => musician.participantName
+		)
 
-		// For each musician in song 1, check if they are also in song 2
-		for (let musician1 of musiciansSong1) {
-			for (let musician2 of musiciansSong2) {
-				if (musician1.participantName === musician2.participantName) {
-					// If the musician is in both songs, add them to the dictionary (if not already present)
-					if (!intersection[musician1.participantName]) {
-						intersection[musician1.participantName] = {
-							instrumentsSong1: new Set(),
-							instrumentsSong2: new Set()
-						}
-					}
-
-					// Add their instruments to the sets in the dictionary
-					intersection[musician1.participantName].instrumentsSong1.add(musician1.instrumentName)
-					intersection[musician1.participantName].instrumentsSong2.add(musician2.instrumentName)
-				}
+		const conflictingParticipants: ConflictingParticipant[] = conflictingMusicians.map(
+			(musician) => {
+				const instrumentsSong1 = song1.musicians
+					.filter((x) => x.participantName === musician.participantName)
+					.map((x) => x.instrumentName)
+				const instrumentsSong2 = song2.musicians
+					.filter((x) => x.participantName === musician.participantName)
+					.map((x) => x.instrumentName)
+				return [musician.participantName, instrumentsSong1, instrumentsSong2]
 			}
-		}
+		)
 
-		return intersection
-	}
-
-	function getFirstName(name: string): string {
-		return name.split(' ')[0]
-	}
-
-	// To avoid the tooltip being cut off, we need to align it sometimes on the left and sometimes on the right
-	function calculatePopoverAlign() {
-		if (position[1] < 2) {
-			return 'bottom-left'
-		} else if (position[1] > columns - 4) {
-			return 'bottom-right'
-		} else {
-			return 'bottom'
-		}
+		return conflictingParticipants
 	}
 </script>
 
 <StructuredListCell
 	class="middle-cell fixed-table-cell {colorClass}"
 	on:mouseenter={() => {
-		if (withTooltip) {
-			toolTipOpen = true
-		}
+		if (withTooltip) toolTipOpen = true
 	}}
 	on:mouseleave={() => {
 		toolTipOpen = false
 	}}
 	on:click={() => {
-		if (withTooltip) {
-			toolTipOpen = !toolTipOpen
-		}
+		if (withTooltip) toolTipOpen = !toolTipOpen
 	}}
 >
-	<Popover caret bind:open={toolTipOpen} align={calculatePopoverAlign()}>
+	<Popover caret bind:open={toolTipOpen} align={toolTipAlign}>
 		<StructuredList>
 			<StructuredListHead>
 				<StructuredListRow head>
 					<FixedWidthCell head>Name</FixedWidthCell>
-					<FixedWidthCell head>{songs[0]}</FixedWidthCell>
-					<FixedWidthCell head>{songs[1]}</FixedWidthCell>
+					<FixedWidthCell head>{song1.name}</FixedWidthCell>
+					<FixedWidthCell head>{song2.name}</FixedWidthCell>
 				</StructuredListRow>
 			</StructuredListHead>
 
 			<StructuredListBody>
-				{#each Object.entries(intersection) as [musicianName, instruments]}
-					{@const instrumentsSong1 = [...instruments.instrumentsSong1.values()]}
-					{@const instrumentsSong2 = [...instruments.instrumentsSong2.values()]}
+				{#each conflictingParticipants as [participantName, instrumentsSong1, instrumentsSong2]}
 					<StructuredListRow>
 						<FixedWidthCell>
-							{getFirstName(musicianName)}
+							{participantName.split(' ')[0]}
 						</FixedWidthCell>
 						<FixedWidthCell>
 							{#each instrumentsSong1 as instrument, i}
