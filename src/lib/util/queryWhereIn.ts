@@ -11,7 +11,7 @@ import {
 /**
  * Batches an in-query to get past the 10 filter limit
  * @param collection - The Collection or CollectionGroup the retrieve data from
- * @param fieldToCheck - The field to filter on. Note: document id = '__name__'
+ * @param fieldToCheck - The field to filter on. Note: document id = '\_\_name\_\_'
  * @param list - The filter items
  * @returns The retrieved documents matching the filter
  */

@@ -27,6 +27,7 @@ export async function getSuggestedSongs(ids?: string[]) {
 
 	return songDocs
 		.map((doc) => ({ id: doc.id, ...doc.data() } as SuggestedSong))
+		.filter((doc) => doc.suggestionDate)
 		.sort((a, b) => a.suggestionDate.seconds - b.suggestionDate.seconds)
 }
 

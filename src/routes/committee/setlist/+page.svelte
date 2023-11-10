@@ -64,8 +64,8 @@
 
 		// If the song was not a suggestion (but added directly to the setlist), delete it from the database completely
 		if ((await getSuggestedSongs([selectedSongId])).length === 0) {
-			const suggestionDoc = doc(db, 'songs', selectedSongId)
-			await deleteDoc(suggestionDoc)
+			const songDoc = doc(db, 'songs', selectedSongId)
+			await deleteDoc(songDoc)
 		}
 
 		invalidateAll()
