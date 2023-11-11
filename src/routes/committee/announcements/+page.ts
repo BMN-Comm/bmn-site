@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types'
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
-import type { announcement } from '$lib/types/domain/announcement'
+import type { Announcement } from '$lib/types/domain/announcement'
 
 export const ssr = false
 
@@ -15,7 +15,7 @@ export const load: PageLoad = async () => {
 			return {
 				id: doc.id,
 				...doc.data()
-			} as announcement
+			} as Announcement
 		})
 	}
 }

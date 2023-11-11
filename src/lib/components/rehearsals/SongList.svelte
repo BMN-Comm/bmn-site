@@ -2,7 +2,7 @@
 	import { page } from '$app/stores'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import type { Musician } from '$lib/types/domain/musician'
-	import type { rehearsalSong } from '$lib/types/domain/rehearsal'
+	import type { RehearsalSong } from '$lib/types/domain/rehearsal'
 	import type { Song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
 	import {
@@ -12,7 +12,7 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 
-	export let songsToRehearse: rehearsalSong[]
+	export let songsToRehearse: RehearsalSong[]
 	export let songs: { [x: string]: Song }
 	export let musicians: {
 		[songId: string]: Musician[]

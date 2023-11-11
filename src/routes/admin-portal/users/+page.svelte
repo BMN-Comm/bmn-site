@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Button, DataTable } from 'carbon-components-svelte'
-	import type { authUser } from '$lib/types/auth/authUser'
-	import type { user } from '$lib/types/domain/user'
+	import type { AuthUser } from '$lib/types/auth/authUser'
+	import type { User } from '$lib/types/domain/user'
 	import { TrashCan } from 'carbon-icons-svelte'
 
-	export let data: { users: (user & { authUser: authUser })[] }
+	export let data: { users: (User & { authUser: AuthUser })[] }
 	const users = data.users
 
 	/** Remove a user from the system. */

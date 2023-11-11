@@ -1,33 +1,33 @@
 import type { DocumentReference, Timestamp } from 'firebase/firestore'
 
-export type rehearsal = {
+export type Rehearsal = {
 	id: string
-	rooms: rehearsalRoom[]
-	songsToRehearse: rehearsalSong[]
-} & rehearsalInfo
+	rooms: RehearsalRoom[]
+	songsToRehearse: RehearsalSong[]
+} & RehearsalInfo
 
-export type rehearsalInfo = {
+export type RehearsalInfo = {
 	startTime: Timestamp
 	endTime: Timestamp
 	location: string
 }
 
-export type rehearsalRoom = {
+export type RehearsalRoom = {
 	id: string
-} & rehearsalRoomInfo
+} & RehearsalRoomInfo
 
-export type rehearsalRoomInfo = {
+export type RehearsalRoomInfo = {
 	startTime: Timestamp
 	endTime: Timestamp
 	roomName: string
-	songsToRehearse: rehearsalSong[]
+	songsToRehearse: RehearsalSong[]
 }
 
-export type rehearsalSong = {
+export type RehearsalSong = {
 	id: string
-} & rehearsalSongInfo
+} & RehearsalSongInfo
 
-export type rehearsalSongInfo = {
+export type RehearsalSongInfo = {
 	startTime: Timestamp
 	endTime: Timestamp
 	song: DocumentReference
