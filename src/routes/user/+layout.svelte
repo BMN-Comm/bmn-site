@@ -7,12 +7,12 @@
 		Content,
 		HeaderNavItem
 	} from 'carbon-components-svelte'
-	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import type { SidebarContext } from 'src/routes/+layout.svelte'
 	import { getContext } from 'svelte'
 
 	import { page } from '$app/stores'
 
-	const { open } = getContext<sidebarContextType>('sidebar')
+	const { open } = getContext<SidebarContext>('sidebar')
 
 	$: innerWidth = 0
 </script>
