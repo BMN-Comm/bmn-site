@@ -15,3 +15,12 @@ export type SuggestedSong = Song & {
 	user: DocumentReference // Reference to user path
 	liked: boolean
 }
+
+/** All the state for creating a new song in the database with empty fields. */
+export const emptyNewSong: Omit<Song, 'id'> = {
+	name: '',
+	artist: '',
+	link: '',
+	length: '',
+	genre: ''
+}
