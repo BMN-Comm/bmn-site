@@ -12,6 +12,8 @@
 
 <div
 	class="toggle"
+	role="button"
+	tabindex="0"
 	on:click={() => {
 		expanded = !expanded
 	}}

@@ -13,6 +13,8 @@
 	{#if song}
 		<div
 			class="delete"
+			role="button"
+			tabindex="0"
 			on:click={() => {
 				if (deleteSong) deleteSong()
 			}}

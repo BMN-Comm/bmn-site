@@ -12,7 +12,7 @@
 		TextInput,
 		TextArea
 	} from 'carbon-components-svelte'
-	import type { announcement, newAnnouncement } from '$lib/types/domain/announcement'
+	import type { newAnnouncement } from '$lib/types/domain/announcement'
 	import { Add, TrashCan } from 'carbon-icons-svelte'
 	import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
 	import { page } from '$app/stores'

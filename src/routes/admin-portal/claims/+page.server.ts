@@ -1,5 +1,4 @@
 import { getAuthUsers } from '$lib/firebase/server/firebase'
-// import type { Load } from '@sveltejs/kit'
 
 export const load = async function () {
 	const users = await getAuthUsers()

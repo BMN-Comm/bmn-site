@@ -64,6 +64,8 @@
 	</div>
 	<div
 		class="dropdown-icon"
+		role="button"
+		tabindex="0"
 		on:click={() => {
 			showParticipants = !showParticipants
 		}}

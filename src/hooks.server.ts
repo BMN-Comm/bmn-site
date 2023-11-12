@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit'
 import cookie from 'cookie'
-import { prerendering } from '$app/environment'
+import { building } from '$app/environment'
 
 // Hooks file used for server side functions, see https://kit.svelte.dev/docs/hooks
 
@@ -13,7 +13,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event)
 
 	// If the app is prerendering during deploy, we don't want to run the rest of the code as it will cause env errors
-	if (prerendering) return await resolve(event)
+	if (building) return await resolve(event)
 
 	// Which unfortunately also means we need to import the ugly way :(
 	const decodeToken = (await import('$lib/firebase/server/firebase')).decodeToken

@@ -3,14 +3,18 @@ import type { App } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import type { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
 import { firebaseAdminConfig } from './firebaseConfig'
+import { building } from '$app/environment'
 
 /** Initialize the firebase admin sdk with the admin config */
 function initializeFirebase() {
 	if (!admin.apps.length) {
-		return admin.initializeApp({
-			credential: admin.credential.cert(firebaseAdminConfig)
-			// databaseURL: `https://${firebaseAdminConfig.project_id}.firebaseio.com`
-		})
+		return admin.initializeApp(
+			building
+				? undefined
+				: {
+						credential: admin.credential.cert(firebaseAdminConfig)
+				  }
+		)
 	} else return admin.apps[0] as App
 }
 
