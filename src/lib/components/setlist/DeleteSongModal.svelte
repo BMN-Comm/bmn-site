@@ -13,9 +13,7 @@
 
 	export let song: Song
 
-	/**
-	 *  Remove the song from the setlist. If the song was not a suggestion, it gets deleted from the database altogether.
-	 */
+	/** Remove the song from the setlist. If the song was not a suggestion, it gets deleted from the database altogether. */
 	async function removeSongFromSetlist() {
 		try {
 			// Remove the song from the setlist
