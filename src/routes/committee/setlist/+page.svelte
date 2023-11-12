@@ -10,15 +10,15 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { Edit, LogicalPartition, MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
+	import { Edit, MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
 	import EditSongModal from '$lib/components/setlist/EditSongModal.svelte'
 	import DeleteSongModal from '$lib/components/setlist/DeleteSongModal.svelte'
 	import AddParticipantToSongModal from '$lib/components/setlist/AddParticipantToSongModal.svelte'
 	import RemoveParticipantFromSongModal from '$lib/components/setlist/RemoveParticipantFromSongModal.svelte'
-	import { unknownUser, type user } from '$lib/types/domain/user'
 	import type { Song } from '$lib/types/domain/song'
+	import type { user } from '$lib/types/domain/user'
 
 	type ModalState = { state: 'closed' } | (OpenModalState & { open: boolean })
 
@@ -94,14 +94,18 @@
 								size="small"
 								kind="danger-ghost"
 								class="removePerson"
-								on:click={() =>
+								on:click={() => {
+									const user = data.users.find((user) => user.id === musician.participantId)
+									if (!user) {
+										throw new Error('User cannot be not found')
+									}
 									openModal({
 										state: 'deleteMusician',
 										song,
-										user:
-											data.users.find((user) => user.id === musician.participantId) ?? unknownUser,
+										user,
 										instrument: musician.instrumentName
-									})}
+									})
+								}}
 							>
 								X
 							</Button>

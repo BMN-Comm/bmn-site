@@ -18,7 +18,6 @@
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
 	import { addSongToSetlist } from '$lib/firebase/client/firestore/songs'
-	import { unknownUser } from '$lib/types/domain/user'
 
 	export let data: PageData
 
@@ -88,7 +87,7 @@
 			{#if song.liked || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
-						{(data.users.find((user) => user.id === song.user.id) ?? unknownUser).name}
+						{data.users.find((user) => user.id === song.user.id)?.name ?? 'Unknown'}
 					</StructuredListCell>
 					<StructuredListCell>
 						{song.name}
