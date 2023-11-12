@@ -3,7 +3,7 @@
 	import { addSongToSetlist, createSong } from '$lib/firebase/client/firestore/songs'
 	import { isValidUrl } from '$lib/util/urlValidation'
 	import { Form, Grid, Row, Column, TextInput } from 'carbon-components-svelte'
-	import CustomModal from './CustomModal.svelte'
+	import CustomModal from '$lib/components/setlist/CustomModal.svelte'
 	import { MusicAdd } from 'carbon-icons-svelte'
 	import { emptyNewSong, type Song } from '$lib/types/domain/song'
 

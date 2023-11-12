@@ -3,7 +3,7 @@
 	import CustomModal from '$lib/components/setlist/CustomModal.svelte'
 	import { db } from '$lib/firebase/client/firebase'
 	import type { Song } from '$lib/types/domain/song'
-	import type { user } from '$lib/types/domain/user'
+	import type { User } from '$lib/types/domain/user'
 	import { Form, ComboBox, TextInput } from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
 	import { addDoc, collection, doc } from 'firebase/firestore'
@@ -12,7 +12,7 @@
 	export let onClose: () => void
 
 	export let song: Song
-	export let users: user[]
+	export let users: User[]
 
 	let userId: string
 	let instrument: string

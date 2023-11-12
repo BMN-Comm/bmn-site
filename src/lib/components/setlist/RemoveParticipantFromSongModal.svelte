@@ -3,7 +3,7 @@
 	import CustomModal from '$lib/components/setlist/CustomModal.svelte'
 	import { db } from '$lib/firebase/client/firebase'
 	import type { Song } from '$lib/types/domain/song'
-	import type { user } from '$lib/types/domain/user'
+	import type { User } from '$lib/types/domain/user'
 	import { MusicRemove } from 'carbon-icons-svelte'
 	import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
 
@@ -11,7 +11,7 @@
 	export let onClose: () => void
 
 	export let song: Song
-	export let user: user
+	export let user: User
 	export let instrument: string
 
 	async function removeParticipantFromSong() {
