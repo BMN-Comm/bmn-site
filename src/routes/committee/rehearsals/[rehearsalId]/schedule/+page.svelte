@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { RehearsalRoomInfo, rehearsalSongInfo } from '$lib/types/domain/rehearsal'
+	import type { RehearsalRoomInfo, RehearsalSongInfo } from '$lib/types/domain/rehearsal'
 	import type { Song } from '$lib/types/domain/song'
 	import { newSchedule } from '$lib/util/webhook'
 	import type { PageData } from './$types'
@@ -36,7 +36,7 @@
 	let roomName: string
 
 	async function addSong() {
-		let rehearsalSong: rehearsalSongInfo
+		let rehearsalSong: RehearsalSongInfo
 
 		if (!songs.some((s: Song) => s.id == songId)) return
 

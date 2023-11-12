@@ -18,7 +18,7 @@
 	import AddParticipantToSongModal from '$lib/components/setlist/AddParticipantToSongModal.svelte'
 	import RemoveParticipantFromSongModal from '$lib/components/setlist/RemoveParticipantFromSongModal.svelte'
 	import type { Song } from '$lib/types/domain/song'
-	import type { user } from '$lib/types/domain/user'
+	import type { User } from '$lib/types/domain/user'
 
 	type ModalState = { state: 'closed' } | (OpenModalState & { open: boolean })
 
@@ -30,7 +30,7 @@
 		| {
 				state: 'deleteMusician'
 				song: Song
-				user: user
+				user: User
 				instrument: string
 		  }
 
