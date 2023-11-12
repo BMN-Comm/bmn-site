@@ -1,8 +1,8 @@
-import type { availability } from '$lib/types/domain/availability'
+import type { Availability } from '$lib/types/domain/availability'
 
 export const bmnAdminUserId = 'Om9orRRBrIkeXhHTHELj'
 
-export type user = {
+export type User = {
 	id: string
 	email: string
 	name: string
@@ -11,5 +11,5 @@ export type user = {
 		song: string // Reference to song
 		part: string
 	}[]
-	availability: availability[]
+	availability: Availability[]
 }

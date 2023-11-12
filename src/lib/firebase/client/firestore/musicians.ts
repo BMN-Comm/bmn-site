@@ -1,6 +1,6 @@
 import { db } from '$lib/firebase/client/firebase'
 import type { Musician } from '$lib/types/domain/musician'
-import type { user } from '$lib/types/domain/user'
+import type { User } from '$lib/types/domain/user'
 import { QueryWhereInBatched } from '$lib/util/queryWhereIn'
 import { collection, collectionGroup, doc, getDoc } from 'firebase/firestore'
 
@@ -38,7 +38,7 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 			({
 				id: participant.id,
 				...participant.data()
-			} as user)
+			} as User)
 	)
 
 	// Add them to the dictionary for the songs they play

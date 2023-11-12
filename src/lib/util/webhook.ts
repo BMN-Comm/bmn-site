@@ -1,11 +1,11 @@
-import type { rehearsalInfo, rehearsal } from '$lib/types/domain/rehearsal'
-import type { newAnnouncement } from '$lib/types/domain/announcement'
+import type { RehearsalInfo, Rehearsal } from '$lib/types/domain/rehearsal'
+import type { NewAnnouncement } from '$lib/types/domain/announcement'
 import { PUBLIC_DISCORD_WEBHOOK_URL } from '$env/static/public'
 
 const colours: string[] = ['00b380', '800020', '696969']
 
 // TODO: Send on server
-export async function newRehearsalPost(rehearsalId: string, rehearsal: rehearsalInfo) {
+export async function newRehearsalPost(rehearsalId: string, rehearsal: RehearsalInfo) {
 	const params = createWebhookMessage(
 		'New Rehearsal!',
 		'http://betamusicnight.nl/participant/availability/' + rehearsalId,
@@ -39,7 +39,7 @@ export async function newRehearsalPost(rehearsalId: string, rehearsal: rehearsal
 	return sendWebhookMessage(params)
 }
 
-export async function newNewsPost(announcement: newAnnouncement) {
+export async function newNewsPost(announcement: NewAnnouncement) {
 	const params = createWebhookMessage(
 		'New Announcement! - ' + announcement.title,
 		'http://betamusicnight.nl/participant/announcements',
@@ -49,7 +49,7 @@ export async function newNewsPost(announcement: newAnnouncement) {
 	return sendWebhookMessage(params)
 }
 
-export async function newSchedule(rehearsal: rehearsal) {
+export async function newSchedule(rehearsal: Rehearsal) {
 	const params = createWebhookMessage(
 		'Schedule Live!',
 		`http://betamusicnight.nl/participant/rehearsals/${rehearsal.id}/schedule`,

@@ -1,10 +1,10 @@
 import type { DocumentReference, Timestamp } from 'firebase/firestore'
 
-export type announcement = {
+export type Announcement = {
 	id: string
-} & newAnnouncement
+} & NewAnnouncement
 
-export type newAnnouncement = {
+export type NewAnnouncement = {
 	publishDate: Timestamp
 	title: string
 	content: string

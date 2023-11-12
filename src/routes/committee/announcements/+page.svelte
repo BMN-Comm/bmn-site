@@ -12,7 +12,7 @@
 		TextInput,
 		TextArea
 	} from 'carbon-components-svelte'
-	import type { announcement, newAnnouncement } from '$lib/types/domain/announcement'
+	import type { NewAnnouncement } from '$lib/types/domain/announcement'
 	import { Add, TrashCan } from 'carbon-icons-svelte'
 	import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
 	import { page } from '$app/stores'
@@ -35,7 +35,7 @@
 
 		const publishDate = Timestamp.fromDate(new Date())
 
-		const newAnnouncement: newAnnouncement = {
+		const newAnnouncement: NewAnnouncement = {
 			publishDate,
 			title,
 			content: message,

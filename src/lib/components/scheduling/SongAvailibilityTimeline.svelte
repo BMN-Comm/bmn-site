@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ScrollableList from '$lib/components/scrollableList.svelte'
-	import type { availability } from '$lib/types/domain/availability'
+	import type { Availability } from '$lib/types/domain/availability'
 	import type { Musician } from '$lib/types/domain/musician'
 	import type { Song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
@@ -21,7 +21,7 @@
 	export let musicians: Musician[]
 
 	export let musicianAvailabilities: {
-		[x: string]: availability | undefined
+		[x: string]: Availability | undefined
 	}
 
 	const startMinutes = startTime.getHours() * 60 + startTime.getMinutes()

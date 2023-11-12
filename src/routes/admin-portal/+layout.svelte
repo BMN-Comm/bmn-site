@@ -10,9 +10,9 @@
 
 	import { page } from '$app/stores'
 	import { getContext } from 'svelte'
-	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import type { SidebarContext } from 'src/routes/+layout.svelte'
 
-	const { open } = getContext<sidebarContextType>('sidebar')
+	const { open } = getContext<SidebarContext>('sidebar')
 
 	$: innerWidth = 0
 </script>
