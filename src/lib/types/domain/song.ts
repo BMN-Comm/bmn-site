@@ -16,7 +16,7 @@ export type SuggestedSong = Song & {
 	liked: boolean
 }
 
-/** All the state for creating a new song in the database with empty fields. */
+/** Default values for the add song modal. */
 export const emptyNewSong: Omit<Song, 'id'> = {
 	name: '',
 	artist: '',
