@@ -2,7 +2,7 @@ import type { PageLoad } from './$types'
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { query, getDocs, where, doc, collectionGroup } from 'firebase/firestore'
 import { getUsers } from '$lib/firebase/client/firestore/users'
-import type { availability } from '$lib/types/domain/availability'
+import type { Availability } from '$lib/types/domain/availability'
 
 export const ssr = false
 
@@ -17,12 +17,12 @@ export const load: PageLoad = async ({ params }) => {
 	)
 	const allAvailability = (await getDocs(availabilityQuery)).docs
 
-	const userAvailabilities: { name: string; availability: availability | undefined }[] = users.map(
+	const userAvailabilities: { name: string; availability: Availability | undefined }[] = users.map(
 		(user) => {
 			return {
 				name: user.name,
 				availability: allAvailability.find((x) => x.ref.parent.parent!.id === user.id)?.data() as
-					| availability
+					| Availability
 					| undefined
 			}
 		}

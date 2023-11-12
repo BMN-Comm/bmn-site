@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { rehearsalRoomInfo, rehearsalSongInfo } from '$lib/types/domain/rehearsal'
+	import type { RehearsalRoomInfo, rehearsalSongInfo } from '$lib/types/domain/rehearsal'
 	import type { Song } from '$lib/types/domain/song'
 	import { newSchedule } from '$lib/util/webhook'
 	import type { PageData } from './$types'
@@ -91,7 +91,7 @@
 	async function addRoom() {
 		if (roomName?.trim().length === 0) return
 
-		let rehearsalRoom: rehearsalRoomInfo
+		let rehearsalRoom: RehearsalRoomInfo
 
 		let rehearsalDay = rehearsal.startTime.toDate()
 		let startDate = new Date(rehearsalDay)

@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	export type sidebarContextType = { open: Writable<boolean> }
+	export type SidebarContext = { open: Writable<boolean> }
 </script>
 
 <!-- Layout file used to guarantee all pages have the correct styling imported -->

@@ -1,10 +1,10 @@
 import type { DocumentReference, Timestamp } from 'firebase/firestore'
 
-export type availability = {
+export type Availability = {
 	id: string
-} & newAvailability
+} & NewAvailability
 
-export type newAvailability = {
+export type NewAvailability = {
 	available: boolean
 	startTime: Timestamp
 	endTime: Timestamp

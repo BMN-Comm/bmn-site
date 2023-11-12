@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { db } from '$lib/firebase/client/firebase'
-	import type { newAvailability } from '$lib/types/domain/availability'
+	import type { NewAvailability } from '$lib/types/domain/availability'
 	import {
 		Grid,
 		Column,
@@ -62,7 +62,7 @@
 
 		if (startTimeInvalid || endTimeInvalid) return
 
-		const newAvailibilityDoc: newAvailability = {
+		const newAvailibilityDoc: NewAvailability = {
 			available,
 			rehearsal: data.availability?.rehearsal ?? doc(db, 'rehearsals/' + data.rehearsal.id),
 			reason: remarksText,
