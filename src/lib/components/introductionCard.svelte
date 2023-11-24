@@ -14,9 +14,7 @@
 			onerror="this.src='committeePhotos/unknown.png';"
 		/>
 		<p class="introduction-title">{title}</p>
-		<div class="introduction-text">
-			<slot />
-		</div>
+		<slot />
 	</div>
 </div>
 
