@@ -119,6 +119,12 @@
 </Grid>
 
 <style>
+	@property --red-angle {
+		syntax: '<angle>';
+		inherits: false;
+		initial-value: 10deg;
+	}
+
 	.committee-header {
 		width: 100%;
 		margin-bottom: 40px;
@@ -127,22 +133,22 @@
 	}
 
 	.committee-picture-gradient {
+		--red-angle: 0deg;
 		width: 100%;
 		max-width: 800px;
 		margin: auto;
 		margin-top: 10px;
 		padding: 5px;
 		background: conic-gradient(
-			hsl(360, 100%, 60%),
-			hsl(315, 100%, 60%),
-			hsl(270, 100%, 60%),
-			hsl(225, 100%, 60%),
-			hsl(180, 100%, 60%),
-			hsl(135, 100%, 60%),
-			hsl(90, 100%, 60%),
-			hsl(45, 100%, 60%),
-			hsl(0, 100%, 60%)
+			#ff0000 calc(var(--red-angle) - 360deg),
+			#00ff00 calc(var(--red-angle) - 240deg),
+			#0000ff calc(var(--red-angle) - 120deg),
+			#ff0000 var(--red-angle),
+			#00ff00 calc(var(--red-angle) + 120deg),
+			#0000ff calc(var(--red-angle) + 240deg),
+			#ff0000 calc(var(--red-angle) + 360deg)
 		);
+		animation: rotate-red 10s linear infinite;
 		border-radius: 39px;
 	}
 
@@ -155,5 +161,14 @@
 	.committee-picture {
 		border-radius: 24px;
 		max-width: 100%;
+	}
+
+	@keyframes rotate-red {
+		0% {
+			--red-angle: 0deg;
+		}
+		100% {
+			--red-angle: 360deg;
+		}
 	}
 </style>
