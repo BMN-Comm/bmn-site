@@ -7,14 +7,22 @@
 	<Row>
 		<div class="committee-header">
 			<h1>The 10th BMN committee (2022-2024)</h1>
-			<img class="committee-picture" src="committeePhotos/committee2024.jpg" alt="Committee 2024" />
+			<div class="committee-picture-gradient">
+				<div class="committee-picture-wrapper">
+					<img
+						class="committee-picture"
+						src="committeePhotos/committee2024.jpg"
+						alt="Committee 2024"
+					/>
+				</div>
+			</div>
 		</div>
 	</Row>
 	<Row>
 		<h1 style="margin-bottom: 20px;">The members</h1>
 	</Row>
 	<Row>
-		<IntroductionCard img_src="committeePhotos/roos.jpg" title="Chairwoman">
+		<IntroductionCard img_src="committeePhotos/roos.jpg" title="Chairwoman" color="red">
 			<p>
 				Hiya, I'm Roos and for this year's BMN, I'm the chairwoman. It's my responsibility to make
 				sure that the concert, as well as everything leading up to it, goes smoothly. Before taking
@@ -26,7 +34,7 @@
 				you'll enjoy this year's concert!
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/sebas.jpg" title="Agent">
+		<IntroductionCard img_src="committeePhotos/sebas.jpg" title="Agent" color="green">
 			<p>
 				Heyo, I'm Sebastian. I'm the secretary for the BMN aka professional emailer and point of
 				contact. If you have any questions or troubles, just reach out to me! Music is okay I guess.
@@ -39,7 +47,7 @@
 				I've met by doing this :)
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/buse.jpg" title="PR/Vice-chair">
+		<IntroductionCard img_src="committeePhotos/buse.jpg" title="PR/Vice-chair" color="blue">
 			<p>
 				Hi! My name is Buse~ I've veen involved with BMN for close to four years now, and this year
 				I have the honor of being the vice-chair and doing the PR for the event. My job is to ensure
@@ -49,7 +57,7 @@
 				"singing" singing since I was 14. Hope to see you all in the audience this year :3
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/annemarijn.jpg" title="Time manager">
+		<IntroductionCard img_src="committeePhotos/annemarijn.jpg" title="Time manager" color="red">
 			<p>
 				Hi, my name is Annemarijn. I love to sing and play guitar, which is what I'll be doing on
 				stage (and off stage as well). This is my second year in the beta music night committee.
@@ -59,14 +67,14 @@
 				concert!
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/bjorn.jpg" title="Event manager">
+		<IntroductionCard img_src="committeePhotos/bjorn.jpg" title="Event manager" color="green">
 			<p>
 				This particular specimen has unforunately not yet been fully identified. We are still trying
 				to find out more about this mysterious creature. If you have any information about this
 				person, please contact us.
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/raoul.jpg" title="Treasurer">
+		<IntroductionCard img_src="committeePhotos/raoul.jpg" title="Treasurer" color="blue">
 			<p>
 				Yoooo I am known as Raoul (Perry to some) and I'm from Curaçao. I play guitar and
 				(left-handed) drums. This year I am treasurer, meaning I hunt for treasure so we can afford
@@ -77,7 +85,7 @@
 				and if I have time play some videogames. See ya 'round!
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/bernd.jpg" title="Composer">
+		<IntroductionCard img_src="committeePhotos/bernd.jpg" title="Composer" color="red">
 			<p>
 				Hi, I'm Bernd! I have been playing (classical) piano since I was 8 years old and still going
 				strong! Recently I have been collecting other instruments such as an accordeon, a melodica
@@ -89,7 +97,11 @@
 				bombastic or overly dramatic music myself. I hope to see you at BMN 2024!
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/luuk.jpg" title="Roadie/Setlist manager">
+		<IntroductionCard
+			img_src="committeePhotos/luuk.jpg"
+			title="Roadie/Setlist manager"
+			color="green"
+		>
 			<p>
 				Hello, I am Luuk. I will be this year's Roadie, meaning that I will oversee all things
 				technical. I make sure that all the gear will be there where it's supposed to, and at the
@@ -114,11 +126,34 @@
 		flex-direction: column;
 	}
 
-	.committee-picture {
-		border-radius: 24px;
+	.committee-picture-gradient {
 		width: 100%;
 		max-width: 800px;
 		margin: auto;
 		margin-top: 10px;
+		padding: 5px;
+		background: conic-gradient(
+			hsl(360, 100%, 60%),
+			hsl(315, 100%, 60%),
+			hsl(270, 100%, 60%),
+			hsl(225, 100%, 60%),
+			hsl(180, 100%, 60%),
+			hsl(135, 100%, 60%),
+			hsl(90, 100%, 60%),
+			hsl(45, 100%, 60%),
+			hsl(0, 100%, 60%)
+		);
+		border-radius: 39px;
+	}
+
+	.committee-picture-wrapper {
+		margin: auto;
+		padding: 10px;
+		background-color: #161616;
+		border-radius: 34px;
+	}
+	.committee-picture {
+		border-radius: 24px;
+		max-width: 100%;
 	}
 </style>
