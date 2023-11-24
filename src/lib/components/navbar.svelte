@@ -12,9 +12,9 @@
 	import { getContext } from 'svelte'
 
 	import { page } from '$app/stores'
-	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import type { SidebarContext } from 'src/routes/+layout.svelte'
 
-	const { open } = getContext<sidebarContextType>('sidebar')
+	const { open } = getContext<SidebarContext>('sidebar')
 
 	$: innerWidth = 0
 </script>
@@ -36,13 +36,6 @@
 			{#if $page.data.user?.admin}
 				<HeaderNavItem text="Admin" href="/admin-portal/claims" />
 			{/if}
-			<!-- TODO: Add link based on configurable setting -->
-			<HeaderNavItem
-				href="https://forms.gle/wHRwks5aiH9rLjxZ7"
-				text="Auditions!"
-				target="_blank"
-				rel="noreferrer"
-			/>
 		</HeaderNav>
 
 		<LoginButton />
@@ -62,13 +55,6 @@
 			{#if $page.data.user?.admin}
 				<SideNavLink text="Admin" href="/admin-portal/claims" target="_blank" />
 			{/if}
-			<!-- TODO: Add link based on configurable setting -->
-			<SideNavLink
-				href="https://forms.gle/wHRwks5aiH9rLjxZ7"
-				text="Auditions!"
-				rel="noreferrer"
-				target="_blank"
-			/>
 		</SideNavItems>
 	</SideNav>
 {/if}

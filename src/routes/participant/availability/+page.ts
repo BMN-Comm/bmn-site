@@ -1,9 +1,9 @@
 import type { PageLoad } from './$types'
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { query, collection, getDocs, orderBy, where, Timestamp } from 'firebase/firestore'
-import type { rehearsal } from '$lib/types/domain/rehearsal'
+import type { Rehearsal } from '$lib/types/domain/rehearsal'
 import { toDict } from '$lib/util/dict'
-import type { availability } from '$lib/types/domain/availability'
+import type { Availability } from '$lib/types/domain/availability'
 
 export const ssr = false
 
@@ -17,7 +17,7 @@ export const load: PageLoad = async ({ parent }) => {
 		where('endTime', '>=', Timestamp.now())
 	)
 	const rehearsals = (await getDocs(rehearsalsQuery)).docs.map(
-		(doc) => ({ id: doc.id, ...doc.data() } as rehearsal)
+		(doc) => ({ id: doc.id, ...doc.data() } as Rehearsal)
 	)
 
 	const availabilityQuery = query(
@@ -26,7 +26,7 @@ export const load: PageLoad = async ({ parent }) => {
 	)
 	const availability = toDict(
 		(await getDocs(availabilityQuery)).docs.map((doc) => {
-			const data = doc.data() as availability
+			const data = doc.data() as Availability
 			return {
 				[data.rehearsal.id]: data.available
 			}

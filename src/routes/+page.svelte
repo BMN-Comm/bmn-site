@@ -35,7 +35,7 @@
 			gelijknamige commissie van studievereniging A–Eskwadraat. De eerste editie was in 2013, en
 			hierop volgden al acht edities. Ondertussen is de Bèta Music Night uitgegroeid tot één van de
 			grootste activiteiten van A–Eskwadraat. We zijn alweer druk bezig met het organiseren van de
-			negende editie.
+			tiende editie.
 		</p>
 		<p>
 			Voor de BMN worden de beste muzikanten van A–Eskwadraat bij elkaar gebracht. Ook dit jaar gaan
@@ -46,16 +46,6 @@
 			heel nuttige bandervaring op. Het is ook mooi om te zien dat wij als echte bèta-vereniging
 			naast onze exacte kwaliteiten ons ook van een een andere kant kunnen laten zien.
 		</p>
-		<!-- TODO: Add link based on configurable setting -->
-		<p>
-			Koop <a
-				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9131/BtaMusicNight2023/Info"
-				target="_blank"
-				rel="noreferrer"
-			>
-				hier
-			</a> tickets!
-		</p>
 	</div>
 
 	<div class="watBMN">
@@ -64,7 +54,7 @@
 			The Bèta Music Night (BMN) is a yearly recurring concert, organised by the studyassociation
 			A–Eskwadraat's committee with the same name. The first edition was in 2013, and we have had
 			eight editions since. The Bèta Music Night has grown to be one of A–Eskwadraat's biggest
-			activities. We are already very busy with the organisation of the ninth edition
+			activities. We are already very busy with the organisation of the tenth edition
 		</p>
 
 		<p>
@@ -74,14 +64,6 @@
 			group of musicians on stage. This way the musicians learn to play together with a lot of
 			different people resulting in some nifty band experience. It is very nice to see that we, as
 			real bèta association, can show a different side of ourselves.
-		</p>
-		<!-- TODO: Add link based on configurable setting -->
-		<p>
-			Buy tickets <a
-				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9131/BtaMusicNight2023/Info"
-				target="_blank"
-				rel="noreferrer">here!</a
-			>
 		</p>
 	</div>
 

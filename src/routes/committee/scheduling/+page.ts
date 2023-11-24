@@ -18,9 +18,9 @@ export const load: PageLoad = async () => {
 
 	const songs = await getSongs(editionSongIds)
 
-	const musiciansForSongs = await GetMusisciansThatPlaySongs(editionSongIds)
+	const musiciansForSongs = GetMusisciansThatPlaySongs(editionSongIds)
 
-	const users = await getUsers()
+	const users = getUsers()
 
 	return { songs, musiciansForSongs, users }
 }

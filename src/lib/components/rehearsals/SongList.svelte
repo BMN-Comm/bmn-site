@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
-	import type { rehearsalSong } from '$lib/types/domain/rehearsal'
-	import type { song } from '$lib/types/domain/song'
+	import type { Musician } from '$lib/types/domain/musician'
+	import type { RehearsalSong } from '$lib/types/domain/rehearsal'
+	import type { Song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
 	import {
 		StructuredListBody,
@@ -11,14 +12,10 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 
-	export let songsToRehearse: rehearsalSong[]
-	export let songs: { [x: string]: song }
+	export let songsToRehearse: RehearsalSong[]
+	export let songs: { [x: string]: Song }
 	export let musicians: {
-		[songId: string]: {
-			participantName: string
-			instrumentName: string
-			participantId: string
-		}[]
+		[songId: string]: Musician[]
 	}
 
 	export let filterOwnSongs: boolean

@@ -12,7 +12,8 @@
 		TextArea,
 		ToastNotification
 	} from 'carbon-components-svelte'
-	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
+	import { doc, Timestamp } from 'firebase/firestore'
+	import { createSongFromSuggestion } from '$lib/firebase/client/firestore/songs'
 
 	let title: string
 	let artist: string
@@ -44,13 +45,11 @@
 			user: doc(db, 'users', $page.data.user!.databaseId)
 		}
 
-		const newSong = doc(collection(db, 'songs'))
-
+		createSongFromSuggestion(song)
+		
 		toasts.push(title)
 		toasts = toasts
-
-		await setDoc(newSong, song)
-
+		
 		title = ''
 		artist = ''
 		genre = ''

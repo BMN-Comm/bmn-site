@@ -9,10 +9,10 @@
 	} from 'carbon-components-svelte'
 
 	import { page } from '$app/stores'
-	import type { sidebarContextType } from 'src/routes/+layout.svelte'
+	import type { SidebarContext } from 'src/routes/+layout.svelte'
 	import { getContext } from 'svelte'
 
-	const { open } = getContext<sidebarContextType>('sidebar')
+	const { open } = getContext<SidebarContext>('sidebar')
 
 	$: innerWidth = 0
 </script>
@@ -33,6 +33,7 @@
 		<SideNavLink text="Announcements" href="/committee/announcements" />
 		<SideNavLink text="Setlist" href="/committee/setlist" />
 		<SideNavLink text="Suggestions" href="/committee/suggestions" />
+		<SideNavLink text="Scheduling" href="/committee/scheduling" />
 		<SideNavDivider />
 		<SideNavLink text="Rehearsals" href="/committee/rehearsals" />
 	</SideNavItems>

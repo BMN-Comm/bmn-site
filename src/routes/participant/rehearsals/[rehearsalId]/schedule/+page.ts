@@ -1,7 +1,7 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { GetMusisciansThatPlaySongs } from '$lib/firebase/client/firestore/musicians'
 import { getSongs } from '$lib/firebase/client/firestore/songs'
-import type { rehearsal, rehearsalRoom, rehearsalSong } from '$lib/types/domain/rehearsal'
+import type { Rehearsal, RehearsalRoom, RehearsalSong } from '$lib/types/domain/rehearsal'
 import { query, collection, orderBy, getDocs, doc, getDoc } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 import { toDict } from '$lib/util/dict'
@@ -13,18 +13,18 @@ export const load: PageLoad = async ({ params }) => {
 
 	// Get the rehearsal
 	const rehearsalDoc = doc(db, 'rehearsals/', params.rehearsalId)
-	const rehearsal = { id: rehearsalDoc.id, ...(await getDoc(rehearsalDoc)).data() } as rehearsal
+	const rehearsal = { id: rehearsalDoc.id, ...(await getDoc(rehearsalDoc)).data() } as Rehearsal
 
 	// Get all the rooms of a rehearsal
 	const rehearsalRoomsQuery = query(collection(rehearsalDoc, 'rooms'), orderBy('startTime'))
 	const roomDocs = (await getDocs(rehearsalRoomsQuery)).docs
-	const rooms = roomDocs.map((doc) => ({ id: doc.id, ...doc.data() } as rehearsalRoom))
+	const rooms = roomDocs.map((doc) => ({ id: doc.id, ...doc.data() } as RehearsalRoom))
 
 	// For each room, get the songs that should be rehearsed
 	roomDocs.forEach(async (roomDoc, i) => {
 		const roomSongsQuery = query(collection(roomDoc.ref, 'songsToRehearse'), orderBy('startTime'))
 		rooms[i].songsToRehearse = (await getDocs(roomSongsQuery)).docs.map(
-			(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
+			(doc) => ({ id: doc.id, ...doc.data() } as RehearsalSong)
 		)
 	})
 
@@ -36,7 +36,7 @@ export const load: PageLoad = async ({ params }) => {
 		orderBy('startTime')
 	)
 	rehearsal.songsToRehearse = (await getDocs(rehearsalSongsQuery)).docs.map(
-		(doc) => ({ id: doc.id, ...doc.data() } as rehearsalSong)
+		(doc) => ({ id: doc.id, ...doc.data() } as RehearsalSong)
 	)
 
 	// Get the unique document ids of the songs

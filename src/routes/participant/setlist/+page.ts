@@ -1,7 +1,7 @@
 import { db, verifyUserLoggedIn } from '$lib/firebase/client/firebase'
 import { GetMusisciansThatPlaySongs } from '$lib/firebase/client/firestore/musicians'
 import { getSongs } from '$lib/firebase/client/firestore/songs'
-import { editionId, type edition } from '$lib/types/domain/edition'
+import { editionId, type Edition } from '$lib/types/domain/edition'
 import { doc, getDoc } from 'firebase/firestore'
 import type { PageLoad } from './$types'
 
@@ -11,7 +11,7 @@ export const load: PageLoad = async () => {
 	await verifyUserLoggedIn()
 
 	const editionRef = doc(db, editionId)
-	const edition = (await getDoc(editionRef)).data() as edition
+	const edition = (await getDoc(editionRef)).data() as Edition
 
 	const editionSongIds = edition.songs.map((s) => s.id)
 

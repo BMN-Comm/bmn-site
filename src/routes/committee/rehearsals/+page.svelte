@@ -23,7 +23,7 @@
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
 	import ScrollableList from '$lib/components/scrollableList.svelte'
-	import type { rehearsal, rehearsalInfo } from '$lib/types/domain/rehearsal'
+	import type { Rehearsal, RehearsalInfo } from '$lib/types/domain/rehearsal'
 
 	export let data: PageData
 
@@ -43,7 +43,7 @@
 		let sTimeSplit = startTime.split(':')
 		let eTimeSplit = endTime.split(':')
 
-		let rehearsal: rehearsalInfo = {
+		let rehearsal: RehearsalInfo = {
 			startTime: Timestamp.fromDate(
 				new Date(+dateSplit[2], +dateSplit[1] - 1, +dateSplit[0], +sTimeSplit[0], +sTimeSplit[1])
 			),
@@ -105,7 +105,7 @@
 	}
 
 	/** Set the current date and location of the active rehearsal */
-	function setRehearsalState(rehearsal: rehearsal) {
+	function setRehearsalState(rehearsal: Rehearsal) {
 		location = rehearsal.location
 		startTime = rehearsal.startTime
 			.toDate()

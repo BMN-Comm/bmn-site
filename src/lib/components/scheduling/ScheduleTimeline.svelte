@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TimelineBlock from '$lib/components/scheduling/TimelineBlock.svelte'
-	import type { rehearsalSong } from '$lib/types/domain/rehearsal'
-	import type { song } from '$lib/types/domain/song'
+	import type { RehearsalSong } from '$lib/types/domain/rehearsal'
+	import type { Song } from '$lib/types/domain/song'
 	import { Column, Row } from 'carbon-components-svelte'
 
 	export let roomStartTime: Date | undefined
@@ -10,8 +10,8 @@
 	export let startTime: Date
 	export let endTime: Date
 
-	export let songsToRehearse: rehearsalSong[]
-	export let songs: song[]
+	export let songsToRehearse: RehearsalSong[]
+	export let songs: Song[]
 
 	export let deleteSong: (songToDelete: string) => void
 

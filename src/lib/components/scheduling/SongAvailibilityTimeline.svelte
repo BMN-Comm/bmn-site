@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ScrollableList from '$lib/components/scrollableList.svelte'
-	import type { availability } from '$lib/types/domain/availability'
-	import type { song } from '$lib/types/domain/song'
+	import type { Availability } from '$lib/types/domain/availability'
+	import type { Musician } from '$lib/types/domain/musician'
+	import type { Song } from '$lib/types/domain/song'
 	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Column,
@@ -15,16 +16,12 @@
 	export let startTime: Date
 	export let endTime: Date
 
-	export let song: song
+	export let song: Song
 
-	export let musicians: {
-		participantId: string
-		participantName: string
-		instrumentName: string
-	}[]
+	export let musicians: Musician[]
 
 	export let musicianAvailabilities: {
-		[x: string]: availability | undefined
+		[x: string]: Availability | undefined
 	}
 
 	const startMinutes = startTime.getHours() * 60 + startTime.getMinutes()
@@ -89,7 +86,7 @@
 			/>
 		{/if}
 		<Column
-			class={somebodyUnavailable ? "orange" : "green"}
+			class={somebodyUnavailable ? 'orange' : 'green'}
 			style={`max-width: ${((maxEndTime - minStartTime) / totalMinutes) * 100}%;`}
 		/>
 		{#if maxEndTime < totalMinutes}
@@ -117,13 +114,11 @@
 							{#if availability.available}
 								{getTimeString(availability.startTime)} -
 								{getTimeString(availability.endTime)}
+							{:else if availability.reason}
+								Unavailable: <br />
+								{availability.reason}
 							{:else}
-								{#if availability.reason}
-									Unavailable: <br />
-									{availability.reason}
-								{:else}
-									Unavailable
-								{/if}
+								Unavailable
 							{/if}
 						{:else}
 							Availablity not given

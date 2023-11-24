@@ -32,5 +32,4 @@
 		</Row>
 		<SongList {filterOwnSongs} songsToRehearse={room.songsToRehearse} {songs} {musicians} />
 	{/each}
-	<SongList {filterOwnSongs} songsToRehearse={rehearsal.songsToRehearse} {songs} {musicians} />
 </Grid>
