@@ -69,9 +69,11 @@
 		</IntroductionCard>
 		<IntroductionCard img_src="committeePhotos/bjorn.jpg" title="Event manager" color="green">
 			<p>
-				This particular specimen has unforunately not yet been fully identified. We are still trying
-				to find out more about this mysterious creature. If you have any information about this
-				person, please contact us.
+				Hi, I'm Bjorn, and the event manager of this year, which among other things means I organize
+				fun activities for the participants, beside the show itself. This is my fifth year
+				participating in the BMN, but have been singing and playing piano for much longer, and still
+				derive a lot of pleasure from making music. I am pursuing masters in Mathematics and
+				Computing Science, and also like to go bouldering. I hope to see you at the BMN!
 			</p>
 		</IntroductionCard>
 		<IntroductionCard img_src="committeePhotos/raoul.jpg" title="Treasurer" color="blue">
