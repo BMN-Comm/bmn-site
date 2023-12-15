@@ -43,7 +43,7 @@
 		modalState = { ...state, open: false }
 		setTimeout(() => {
 			modalState = { ...state, open: true }
-		}, 50)
+		})
 	}
 
 	/** Closes the modal. */

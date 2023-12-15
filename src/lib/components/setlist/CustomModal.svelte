@@ -8,7 +8,7 @@
 	/** Closes the modal and waits a short time to call the onClose to account for the closing animation of the modal. */
 	function closeModal() {
 		open = false
-		setTimeout(onClose, 250)
+		onClose()
 	}
 </script>
 
