@@ -15,3 +15,12 @@ export type SuggestedSong = Song & {
 	user: DocumentReference // Reference to user path
 	liked: boolean
 }
+
+/** Default values for the add song modal. */
+export const emptyNewSong: Omit<Song, 'id'> = {
+	name: '',
+	artist: '',
+	link: '',
+	length: '',
+	genre: ''
+}
