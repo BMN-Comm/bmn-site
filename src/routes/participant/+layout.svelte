@@ -23,6 +23,7 @@
 	<SideNavItems>
 		{#if innerWidth < 1056}
 			<SideNavLink text="Home" href="/" />
+			<SideNavLink text="About us" href="/about-us" />
 			{#if $page.data.user?.commissie}
 				<HeaderNavItem text="Committee" href="/committee" />
 			{/if}
