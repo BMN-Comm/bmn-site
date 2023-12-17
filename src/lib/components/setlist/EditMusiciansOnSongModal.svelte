@@ -15,7 +15,17 @@
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
 	import { AddAlt, CloseOutline } from 'carbon-icons-svelte'
-	import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
+	import {
+		DocumentReference,
+		addDoc,
+		collection,
+		deleteDoc,
+		doc,
+		getDocs,
+		query,
+		where,
+		type DocumentData
+	} from 'firebase/firestore'
 
 	export let song: Song
 	export let open = false
@@ -37,9 +47,13 @@
 	}[] = [...participants, { participantId: undefined, instrument: undefined }]
 
 	/** Remove a participant from the song */
-	async function removeParticipantFromSong(song: Song, user: User, instrument: string) {
+	async function removeParticipantFromSong(
+		songRef: DocumentReference<DocumentData>,
+		user: User,
+		instrument: string
+	) {
 		// Get the document reference to the song the user plays on
-		const songRef = doc(db, 'songs', song.id)
+		// const songRef = doc(db, 'songs', song.id)
 		const playsInQuery = query(
 			collection(db, 'users', user.id, 'playsSongs'),
 			where('song', '==', songRef),
@@ -67,11 +81,13 @@
 				)
 		)
 
+		const songRef = doc(db, 'songs', song.id)
+
 		// Add all missing musicians to the song
 		for (const { participantId, instrument } of addedParticipants) {
 			await addDoc(collection(db, 'users/' + participantId + '/playsSongs'), {
 				part: instrument,
-				song: doc(db, 'songs', song.id)
+				song: songRef
 			})
 		}
 
@@ -79,7 +95,7 @@
 		for (const { participantId, instrument } of deletedParticipants) {
 			const user = users.find((u) => u.id === participantId)
 			if (!user) console.error('User not found')
-			else await removeParticipantFromSong(song, user, instrument!)
+			else await removeParticipantFromSong(songRef, user, instrument!)
 		}
 
 		invalidateAll()
@@ -87,7 +103,7 @@
 </script>
 
 <Modal
-	modalHeading="Add participant(s) to line-up"
+	modalHeading="Edit participant(s) on song"
 	primaryButtonText="Confirm"
 	secondaryButtonText="Cancel"
 	bind:open
@@ -103,7 +119,7 @@
 			(participantId && !instrument) || (instrument && !participantId)
 	)}
 	hasScrollingContent
-	class="addParticipantModal"
+	class="editMusiciansOnSongModal"
 >
 	<Form>
 		<Grid>
@@ -172,5 +188,9 @@
 	:global(.add-musician-button) {
 		margin: 0 auto !important;
 		display: block !important;
+	}
+
+	:global(.editMusiciansOnSongModal .bx--modal-content) {
+		height: 30rem;
 	}
 </style>

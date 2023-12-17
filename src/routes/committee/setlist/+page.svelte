@@ -29,7 +29,7 @@
 	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
 	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
 	import EditSongModal from '$lib/components/setlist/EditSongModal.svelte'
-	import AddMusiciansToSongModal from '$lib/components/setlist/AddMusiciansToSongModal.svelte'
+	import EditMusiciansOnSongModal from '$lib/components/setlist/EditMusiciansOnSongModal.svelte'
 
 	export let data: PageData
 
@@ -142,7 +142,7 @@
 					<Button
 						kind="ghost"
 						size="small"
-						iconDescription="Add musicians"
+						iconDescription="Edit musicians"
 						icon={UserFollow}
 						on:click={() => {
 							selectedSong = i
@@ -200,7 +200,7 @@
 </Modal>
 
 {#if data.songs[selectedSong]}
-	<AddMusiciansToSongModal
+	<EditMusiciansOnSongModal
 		bind:open={openAddMusician}
 		song={data.songs[selectedSong]}
 		users={data.users}
@@ -237,10 +237,6 @@
 		padding: 0px !important;
 		margin: 2px 0px !important;
 		border: 0px;
-	}
-
-	:global(.addParticipantModal .bx--modal-content) {
-		height: 30rem;
 	}
 
 	:global(.alignRight) {
