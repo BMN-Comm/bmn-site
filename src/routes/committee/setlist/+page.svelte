@@ -6,20 +6,15 @@
 	import {
 		Button,
 		Column,
-		ComboBox,
-		Form,
 		Grid,
 		Modal,
 		Row,
 		StructuredListCell,
 		StructuredListHead,
-		StructuredListRow,
-		TextInput
+		StructuredListRow
 	} from 'carbon-components-svelte'
-	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
 	import { Edit, MusicAdd, MusicRemove, UserFollow } from 'carbon-icons-svelte'
 	import {
-		addDoc,
 		arrayRemove,
 		collection,
 		deleteDoc,
@@ -34,6 +29,7 @@
 	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
 	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
 	import EditSongModal from '$lib/components/setlist/EditSongModal.svelte'
+	import EditMusiciansOnSongModal from '$lib/components/setlist/EditMusiciansOnSongModal.svelte'
 
 	export let data: PageData
 
@@ -47,13 +43,6 @@
 	let openAddMusician = false
 	let openAddSong = false
 	let openEditSong = false
-
-	let participantListItems: DropdownItem[] = data.users.map(
-		(user) => ({ id: user.id, text: user.name } as DropdownItem)
-	)
-
-	let participant: string
-	let instrument: string
 
 	async function RemoveSongFromSetlist() {
 		const selectedSongId = data.songs[selectedSong].id
@@ -69,18 +58,6 @@
 			const songDoc = doc(db, 'songs', selectedSongId)
 			await deleteDoc(songDoc)
 		}
-
-		invalidateAll()
-	}
-
-	async function AddParticipantToSong() {
-		await addDoc(collection(db, 'users/' + participant + '/playsSongs'), {
-			part: instrument,
-			song: doc(db, 'songs', data.songs[selectedSong].id)
-		})
-
-		participant = ''
-		instrument = ''
 
 		invalidateAll()
 	}
@@ -165,7 +142,7 @@
 					<Button
 						kind="ghost"
 						size="small"
-						iconDescription="Add musician"
+						iconDescription="Edit musicians"
 						icon={UserFollow}
 						on:click={() => {
 							selectedSong = i
@@ -222,6 +199,18 @@
 	<p>Delete {data.songs[selectedSong]?.name}?</p>
 </Modal>
 
+{#if data.songs[selectedSong]}
+	<EditMusiciansOnSongModal
+		bind:open={openAddMusician}
+		song={data.songs[selectedSong]}
+		users={data.users}
+		participants={data.musiciansForSongs[data.songs[selectedSong].id].map((musician) => ({
+			participantId: musician.participantId,
+			instrument: musician.instrumentName
+		}))}
+	/>
+{/if}
+
 <Modal
 	danger
 	modalHeading="Remove from song"
@@ -240,33 +229,6 @@
 	<p>Remove {selectedUser} from {data.songs[selectedSong]?.name}?</p>
 </Modal>
 
-<Modal
-	bind:open={openAddMusician}
-	modalHeading="Add participant to line-up"
-	primaryButtonText="Confirm"
-	on:click:button--primary={() => {
-		AddParticipantToSong()
-		openAddMusician = false
-	}}
-	hasScrollingContent
-	class="addParticipantModal"
->
-	<Form>
-		<ComboBox
-			titleText="Participant"
-			bind:selectedId={participant}
-			items={participantListItems}
-			required
-			shouldFilterItem={(item, value) => {
-				if (!value) return true
-				return item.text.toLowerCase().includes(value.toLowerCase())
-			}}
-		/>
-		<br />
-		<TextInput bind:value={instrument} required labelText="Instrument" />
-	</Form>
-</Modal>
-
 <style>
 	:global(.removePerson) {
 		color: red !important;
@@ -275,10 +237,6 @@
 		padding: 0px !important;
 		margin: 2px 0px !important;
 		border: 0px;
-	}
-
-	:global(.addParticipantModal .bx--modal-content) {
-		height: 30rem;
 	}
 
 	:global(.alignRight) {
