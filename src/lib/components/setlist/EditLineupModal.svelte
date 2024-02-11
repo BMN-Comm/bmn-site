@@ -14,7 +14,7 @@
 		Button
 	} from 'carbon-components-svelte'
 	import type { DropdownItem } from 'carbon-components-svelte/types/Dropdown/Dropdown.svelte'
-	import { AddAlt, CloseOutline } from 'carbon-icons-svelte'
+	import { AddAlt, CloseOutline, Edit } from 'carbon-icons-svelte'
 	import {
 		DocumentReference,
 		addDoc,
@@ -36,15 +36,18 @@
 		(user) => ({ id: user.id, text: user.name } as DropdownItem)
 	)
 
-	export let participants: {
+	export let lineup: {
 		participantId: string | undefined
 		instrument: string | undefined
 	}[]
 
-	let modalParticipants: {
-		participantId: string | undefined
-		instrument: string | undefined
-	}[] = [...participants, { participantId: undefined, instrument: undefined }]
+	// These must be reactive, so that the modal updates when the song or participants change
+	$: bandcoachId = lineup.find((p) => p.instrument?.toLowerCase() === 'bandcoach')?.participantId
+
+	$: modalLineup = [
+		...lineup.filter((p) => p.instrument?.toLowerCase() !== 'bandcoach'),
+		{ participantId: undefined, instrument: undefined }
+	]
 
 	/** Remove a participant from the song */
 	async function removeParticipantFromSong(
@@ -67,16 +70,20 @@
 
 	/** Update the musicians for the song. */
 	async function updateParticipantsOnSong() {
-		const definedParticipants = modalParticipants.filter(
-			({ participantId, instrument }) => participantId && instrument
-		)
-		const addedParticipants = definedParticipants.filter(
+		const fullyFilledOutParticipants = [
+			...modalLineup.filter(({ participantId, instrument }) => participantId && instrument)
+		]
+		// Bandcoach is optional
+		if (bandcoachId)
+			fullyFilledOutParticipants.push({ participantId: bandcoachId, instrument: 'Bandcoach' })
+
+		const addedParticipants = fullyFilledOutParticipants.filter(
 			({ participantId, instrument }) =>
-				!participants.find((p) => p.participantId === participantId && p.instrument === instrument)
+				!lineup.find((p) => p.participantId === participantId && p.instrument === instrument)
 		)
-		const deletedParticipants = participants.filter(
+		const deletedParticipants = lineup.filter(
 			({ participantId, instrument }) =>
-				!definedParticipants.find(
+				!fullyFilledOutParticipants.find(
 					(p) => p.participantId === participantId && p.instrument === instrument
 				)
 		)
@@ -103,7 +110,8 @@
 </script>
 
 <Modal
-	modalHeading="Edit participant(s) on song"
+	modalHeading={`Edit line-up for ${song.name}`}
+	primaryButtonIcon={Edit}
 	primaryButtonText="Confirm"
 	secondaryButtonText="Cancel"
 	bind:open
@@ -114,16 +122,36 @@
 	on:click:button--secondary={() => {
 		open = false
 	}}
-	primaryButtonDisabled={modalParticipants.some(
+	on:close={() => {
+		open = false
+	}}
+	primaryButtonDisabled={modalLineup.some(
 		({ participantId, instrument }) =>
 			(participantId && !instrument) || (instrument && !participantId)
 	)}
 	hasScrollingContent
+	hasForm
 	class="editMusiciansOnSongModal"
 >
 	<Form>
 		<Grid>
-			{#each modalParticipants as participant, i}
+			<Row class="row-with-bottom-padding">
+				<Column>
+					<ComboBox
+						titleText="Bandcoach"
+						on:select={(e) => (bandcoachId = e.detail.selectedId)}
+						on:clear={() => (bandcoachId = undefined)}
+						selectedId={bandcoachId}
+						items={participantListItems}
+						shouldFilterItem={(item, value) => {
+							if (!value) return true
+							return item.text.toLowerCase().includes(value.toLowerCase())
+						}}
+					/>
+				</Column>
+			</Row>
+
+			{#each modalLineup as participant, i}
 				<Row>
 					<Column sm={2} md={4} lg={7}>
 						<ComboBox
@@ -154,7 +182,7 @@
 							iconDescription="Remove musician"
 							kind="ghost"
 							on:click={() => {
-								modalParticipants = modalParticipants.filter((_, index) => index !== i)
+								modalLineup = modalLineup.filter((_, index) => index !== i)
 							}}
 						/>
 					</Column>
@@ -168,8 +196,8 @@
 			kind="ghost"
 			class="add-musician-button"
 			on:click={() => {
-				modalParticipants = [
-					...modalParticipants,
+				modalLineup = [
+					...modalLineup,
 					{
 						participantId: undefined,
 						instrument: undefined
@@ -190,7 +218,7 @@
 		display: block !important;
 	}
 
-	:global(.editMusiciansOnSongModal .bx--modal-content) {
-		height: 30rem;
+	:global(.row-with-bottom-padding) {
+		padding-bottom: 1rem;
 	}
 </style>
