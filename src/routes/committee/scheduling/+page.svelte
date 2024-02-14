@@ -25,7 +25,8 @@
 				musicians and bandcoaches that are playing in each song. A black cell indicates that the
 				songs are the same, a red cell indicates that there is at least one musician playing in both
 				songs. A green cell indicates that there are no musicians playing in both songs, so these
-				songs can be scheduled at the same time.
+				songs can be scheduled at the same time. For orange cells all musicians can be scheduled at
+				the same time, but there is a collision for just the bandcoaches in either of the song.
 			</p>
 		</Column>
 	</Row>

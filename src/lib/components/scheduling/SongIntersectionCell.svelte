@@ -12,8 +12,19 @@
 	import _ from 'lodash'
 
 	type SongWithMusicians = { name: string; musicians: Musician[] }
-	// Participant name, instruments played on song 1, instruments played on song 2
-	type ConflictingParticipant = [string, string[], string[]]
+
+	type ConflictingParticipant = {
+		name: string
+		instrumentsSong1: string[]
+		instrumentsSong2: string[]
+	}
+
+	type SongIntersection = {
+		hasConflict: boolean
+		conflictingParticipants: ConflictingParticipant[]
+		conflictingBandcoachParticipants: ConflictingParticipant[]
+		conflictingMusicianParticipants: ConflictingParticipant[]
+	}
 
 	export let columnIndex: number
 	export let rowIndex: number
@@ -22,17 +33,19 @@
 	export let song1: SongWithMusicians
 	export let song2: SongWithMusicians
 
-	let conflictingParticipants = calculateMusicianIntersection(song1, song2)
+	let songIntersection = calculateMusicianIntersection(song1, song2)
 
 	let colorClass =
 		rowIndex === columnIndex
 			? 'black-cell'
-			: conflictingParticipants.length > 0
+			: songIntersection.conflictingMusicianParticipants.length > 0
 			? 'red-cell'
+			: songIntersection.conflictingBandcoachParticipants.length > 0
+			? 'orange-cell'
 			: 'green-cell'
 
-	// When the two songs are the same or the intersection between the songs is empty, no tooltip is needed
-	let withTooltip = rowIndex !== columnIndex && conflictingParticipants.length > 0
+	// When the two songs are the same or there is no conflict between the songs, no tooltip is needed
+	let withTooltip = rowIndex !== columnIndex && songIntersection.hasConflict
 	let toolTipOpen = false
 	let toolTipAlign: 'bottom' | 'bottom-left' | 'bottom-right' =
 		columnIndex < 2 ? 'bottom-left' : columnIndex > columns - 4 ? 'bottom-right' : 'bottom'
@@ -40,7 +53,7 @@
 	function calculateMusicianIntersection(
 		song1: SongWithMusicians,
 		song2: SongWithMusicians
-	): ConflictingParticipant[] {
+	): SongIntersection {
 		const conflictingMusicians = _.intersectionBy(
 			song1.musicians,
 			song2.musicians,
@@ -55,11 +68,23 @@
 				const instrumentsSong2 = song2.musicians
 					.filter((x) => x.participantName === musician.participantName)
 					.map((x) => x.instrumentName)
-				return [musician.participantName, instrumentsSong1, instrumentsSong2]
+				return { name: musician.participantName, instrumentsSong1, instrumentsSong2 }
 			}
 		)
 
-		return conflictingParticipants
+		const [conflictingBandcoachParticipants, conflictingMusicianParticipants] = _.partition(
+			conflictingParticipants,
+			(participant) =>
+				_.includes(participant.instrumentsSong1.map(_.toLower), 'bandcoach') ||
+				_.includes(participant.instrumentsSong2.map(_.toLower), 'bandcoach')
+		)
+
+		return {
+			hasConflict: conflictingParticipants.length > 0,
+			conflictingParticipants,
+			conflictingBandcoachParticipants,
+			conflictingMusicianParticipants
+		}
 	}
 </script>
 
@@ -86,23 +111,23 @@
 			</StructuredListHead>
 
 			<StructuredListBody>
-				{#each conflictingParticipants as [participantName, instrumentsSong1, instrumentsSong2]}
+				{#each songIntersection.conflictingParticipants as conflictingParticipant}
 					<StructuredListRow>
 						<FixedWidthCell>
-							{participantName.split(' ')[0]}
+							{conflictingParticipant.name.split(' ')[0]}
 						</FixedWidthCell>
 						<FixedWidthCell>
-							{#each instrumentsSong1 as instrument, i}
+							{#each conflictingParticipant.instrumentsSong1 as instrument, i}
 								{instrument}
-								{#if i < instrumentsSong1.length - 1}
+								{#if i < conflictingParticipant.instrumentsSong1.length - 1}
 									<br />
 								{/if}
 							{/each}
 						</FixedWidthCell>
 						<FixedWidthCell>
-							{#each instrumentsSong2 as instrument, i}
+							{#each conflictingParticipant.instrumentsSong2 as instrument, i}
 								{instrument}
-								{#if i < instrumentsSong2.length - 1}
+								{#if i < conflictingParticipant.instrumentsSong2.length - 1}
 									<br />
 								{/if}
 							{/each}
@@ -121,6 +146,9 @@
 
 	:global(.red-cell) {
 		background-color: rgb(243, 137, 137);
+	}
+	:global(.orange-cell) {
+		background-color: rgb(255, 204, 153);
 	}
 	:global(.green-cell) {
 		background-color: rgb(120, 193, 163);
