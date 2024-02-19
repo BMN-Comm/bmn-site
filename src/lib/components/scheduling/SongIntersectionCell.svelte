@@ -1,6 +1,9 @@
 <script lang="ts">
+	import {
+		calculateMusicianIntersection,
+		type SongWithMusicians
+	} from '$lib/components/scheduling/CalculateMusicianIntesection'
 	import FixedWidthCell from '$lib/components/scheduling/FixedWidthCell.svelte'
-	import type { Musician } from '$lib/types/domain/musician'
 	import {
 		Popover,
 		StructuredList,
@@ -9,22 +12,8 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
+	import type { PopoverProps } from 'carbon-components-svelte/types/Popover/Popover.svelte'
 	import _ from 'lodash'
-
-	type SongWithMusicians = { name: string; musicians: Musician[] }
-
-	type ConflictingParticipant = {
-		name: string
-		instrumentsSong1: string[]
-		instrumentsSong2: string[]
-	}
-
-	type SongIntersection = {
-		hasConflict: boolean
-		conflictingParticipants: ConflictingParticipant[]
-		conflictingBandcoachParticipants: ConflictingParticipant[]
-		conflictingMusicianParticipants: ConflictingParticipant[]
-	}
 
 	export let columnIndex: number
 	export let rowIndex: number
@@ -33,63 +22,27 @@
 	export let song1: SongWithMusicians
 	export let song2: SongWithMusicians
 
+	let songsAreTheSame = rowIndex === columnIndex
+
 	let songIntersection = calculateMusicianIntersection(song1, song2)
 
-	let colorClass =
-		rowIndex === columnIndex
-			? 'black-cell'
-			: songIntersection.conflictingMusicianParticipants.length > 0
-			? 'red-cell'
-			: songIntersection.conflictingBandcoachParticipants.length > 0
-			? 'orange-cell'
-			: 'green-cell'
+	let cellColorClass = songsAreTheSame
+		? 'black-cell'
+		: songIntersection.conflictingMusicianParticipants.length > 0
+		? 'red-cell'
+		: songIntersection.conflictingBandcoachParticipants.length > 0
+		? 'orange-cell'
+		: 'green-cell'
 
 	// When the two songs are the same or there is no conflict between the songs, no tooltip is needed
-	let withTooltip = rowIndex !== columnIndex && songIntersection.hasConflict
+	let withTooltip = songsAreTheSame && songIntersection.hasConflict
 	let toolTipOpen = false
-	let toolTipAlign: 'bottom' | 'bottom-left' | 'bottom-right' =
+	let toolTipAlign: PopoverProps['align'] =
 		columnIndex < 2 ? 'bottom-left' : columnIndex > columns - 4 ? 'bottom-right' : 'bottom'
-
-	function calculateMusicianIntersection(
-		song1: SongWithMusicians,
-		song2: SongWithMusicians
-	): SongIntersection {
-		const conflictingMusicians = _.intersectionBy(
-			song1.musicians,
-			song2.musicians,
-			(musician) => musician.participantName
-		)
-
-		const conflictingParticipants: ConflictingParticipant[] = conflictingMusicians.map(
-			(musician) => {
-				const instrumentsSong1 = song1.musicians
-					.filter((x) => x.participantName === musician.participantName)
-					.map((x) => x.instrumentName)
-				const instrumentsSong2 = song2.musicians
-					.filter((x) => x.participantName === musician.participantName)
-					.map((x) => x.instrumentName)
-				return { name: musician.participantName, instrumentsSong1, instrumentsSong2 }
-			}
-		)
-
-		const [conflictingBandcoachParticipants, conflictingMusicianParticipants] = _.partition(
-			conflictingParticipants,
-			(participant) =>
-				_.includes(participant.instrumentsSong1.map(_.toLower), 'bandcoach') ||
-				_.includes(participant.instrumentsSong2.map(_.toLower), 'bandcoach')
-		)
-
-		return {
-			hasConflict: conflictingParticipants.length > 0,
-			conflictingParticipants,
-			conflictingBandcoachParticipants,
-			conflictingMusicianParticipants
-		}
-	}
 </script>
 
 <StructuredListCell
-	class="middle-cell fixed-table-cell {colorClass}"
+	class="middle-cell fixed-table-cell {cellColorClass}"
 	on:mouseenter={() => {
 		if (withTooltip) toolTipOpen = true
 	}}
