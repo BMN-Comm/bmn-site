@@ -4,6 +4,7 @@
 	import type { Availability, NewAvailability } from '$lib/types/domain/availability'
 	import type { Rehearsal } from '$lib/types/domain/rehearsal'
 	import { newTimeOnDay } from '$lib/util/date'
+	import { isValidTimeString } from '$lib/util/timeInputValidation'
 	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Modal,
@@ -21,7 +22,7 @@
 	export let user: { id: string; name: string }
 	export let availability: Availability | undefined = undefined
 
-	export let displayUserName: boolean = false
+	export let userSubmitsOwnAvailability: boolean = false
 
 	export let openSetAvailability = false
 	export let onClose: () => void
@@ -42,9 +43,8 @@
 	 */
 	async function saveAvailability(): Promise<boolean> {
 		// Time input validation
-		const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
-		startTimeInvalid = !timeRegex.test(startTimeString)
-		endTimeInvalid = !timeRegex.test(endTimeString)
+		startTimeInvalid = !isValidTimeString(startTimeString)
+		endTimeInvalid = !isValidTimeString(endTimeString)
 		if (startTimeInvalid || endTimeInvalid) return false
 
 		// If the participant is not available, they are unavailable for the entire rehearsal
@@ -121,7 +121,7 @@
 		<Row padding>
 			<Column>
 				{`${setOrUpdate} ${
-					displayUserName ? user.name + "'s" : 'your'
+					userSubmitsOwnAvailability ? user.name + "'s" : 'your'
 				} availability for ${rehearsal.startTime.toDate().toDateString()}`}
 			</Column>
 		</Row>

@@ -107,18 +107,20 @@
 						{`Unavailable: ${userAvailability.availability.reason || 'No reason given'}`}
 					</StructuredListCell>
 					<StructuredListCell>
-						<Button
-							kind="ghost"
-							size="small"
-							on:click={() => {
-								selectedRehearsal = data.rehearsal
-								selectedAvailability = userAvailability.availability
-								selectedUser = userAvailability.user
-								openSetAvailability = true
-							}}
-						>
-							Update availability
-						</Button>
+						{#if data.user?.commissie}
+							<Button
+								kind="ghost"
+								size="small"
+								on:click={() => {
+									selectedRehearsal = data.rehearsal
+									selectedAvailability = userAvailability.availability
+									selectedUser = userAvailability.user
+									openSetAvailability = true
+								}}
+							>
+								Update availability
+							</Button>
+						{/if}
 					</StructuredListCell>
 				</StructuredListRow>
 			{/each}
@@ -158,7 +160,7 @@
 		rehearsal={selectedRehearsal}
 		availability={selectedAvailability}
 		user={selectedUser}
-		displayUserName
+		userSubmitsOwnAvailability
 		onClose={() => {
 			selectedRehearsal = undefined
 			selectedAvailability = undefined
