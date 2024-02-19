@@ -35,7 +35,7 @@
 		: 'green-cell'
 
 	// When the two songs are the same or there is no conflict between the songs, no tooltip is needed
-	let withTooltip = songsAreTheSame && songIntersection.hasConflict
+	let withTooltip = !songsAreTheSame && songIntersection.hasConflict
 	let toolTipOpen = false
 	let toolTipAlign: PopoverProps['align'] =
 		columnIndex < 2 ? 'bottom-left' : columnIndex > columns - 4 ? 'bottom-right' : 'bottom'
