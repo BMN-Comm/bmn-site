@@ -41,10 +41,14 @@
 		instrument: string
 	}[]
 
-	// These must be reactive, so that the modal updates when the song or participants change
-	$: bandcoachId = lineup.find((p) => p.instrument.toLowerCase() === 'bandcoach')?.participantId
+	// The map ensures the type checker the participantIds can also be undefined
+	$: bandcoachIds = lineup
+		.filter((p) => p.instrument.toLowerCase() === 'bandcoach')
+		.map((p) => p.participantId)
 
-	// The map is to make sure the type checker understands the participantIds or instruments can also be undefined
+	$: modalBandcoachIds = [...bandcoachIds, undefined]
+
+	// The map ensures the type checker understands the participantIds or instruments can also be undefined
 	$: modalLineup = [
 		...lineup
 			.filter((p) => p.instrument.toLowerCase() !== 'bandcoach')
@@ -54,6 +58,11 @@
 			})),
 		{ participantId: undefined, instrument: undefined }
 	]
+
+	$: notAllowedToSubmit = modalLineup.some(
+		({ participantId, instrument }) =>
+			(participantId && !instrument) || (instrument && !participantId)
+	)
 
 	/** Remove a participant from the song */
 	async function removeParticipantFromSong(
@@ -92,9 +101,14 @@
 				instrument: instrument!
 			}))
 
-		// Bandcoach is optional
-		if (bandcoachId)
-			fullyFilledOutParticipants.push({ participantId: bandcoachId, instrument: 'Bandcoach' })
+		// Bandcoaches are optional
+		const filledOutBandcoaches = modalBandcoachIds.filter((id) => !!id).map((id) => id!)
+		if (filledOutBandcoaches.length > 0)
+			fullyFilledOutParticipants.push(
+				...filledOutBandcoaches.map((id) => {
+					return { participantId: id, instrument: 'Bandcoach' }
+				})
+			)
 
 		const addedParticipants = fullyFilledOutParticipants.filter(
 			({ participantId, instrument }) =>
@@ -146,32 +160,55 @@
 	on:close={() => {
 		open = false
 	}}
-	primaryButtonDisabled={modalLineup.some(
-		({ participantId, instrument }) =>
-			(participantId && !instrument) || (instrument && !participantId)
-	)}
+	primaryButtonDisabled={notAllowedToSubmit}
 	hasScrollingContent
 	hasForm
 	class="editMusiciansOnSongModal"
 >
 	<Form>
 		<Grid>
-			<Row class="row-with-bottom-padding">
-				<Column>
-					<ComboBox
-						titleText="Bandcoach"
-						on:select={(e) => (bandcoachId = e.detail.selectedId)}
-						on:clear={() => (bandcoachId = undefined)}
-						selectedId={bandcoachId}
-						items={participantListItems}
-						shouldFilterItem={(item, value) => {
-							if (!value) return true
-							return item.text.toLowerCase().includes(value.toLowerCase())
-						}}
-					/>
-				</Column>
-			</Row>
+			{#each modalBandcoachIds as bandcoachId, i}
+				<Row>
+					<Column sm={3} md={6} lg={13}>
+						<ComboBox
+							titleText={`Bandcoach ${i + 1}`}
+							on:select={(e) => (bandcoachId = e.detail.selectedId)}
+							on:clear={() => (bandcoachId = undefined)}
+							selectedId={bandcoachId}
+							items={participantListItems}
+							shouldFilterItem={(item, value) => {
+								if (!value) return true
+								return item.text.toLowerCase().includes(value.toLowerCase())
+							}}
+						/>
+					</Column>
+					<Column sm={1} md={1} lg={1}>
+						<Button
+							class="remove-musician-button"
+							icon={CloseOutline}
+							iconDescription="Remove bandcoach"
+							kind="ghost"
+							on:click={() => {
+								modalBandcoachIds = modalBandcoachIds.filter((_, index) => index !== i)
+							}}
+						/>
+					</Column>
+				</Row>
+			{/each}
+		</Grid>
+		<br />
+		<Button
+			icon={AddAlt}
+			iconDescription="Add bandcoach"
+			kind="ghost"
+			class="add-musician-button"
+			on:click={() => {
+				modalBandcoachIds = [...modalBandcoachIds, undefined]
+			}}
+		/>
+		<br />
 
+		<Grid>
 			{#each modalLineup as participant, i}
 				<Row>
 					<Column sm={2} md={4} lg={7}>
