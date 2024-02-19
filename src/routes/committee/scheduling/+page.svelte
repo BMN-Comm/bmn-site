@@ -4,29 +4,27 @@
 		Column,
 		Grid,
 		Row,
+		StructuredList,
 		StructuredListCell,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import ScrollableList from '$lib/components/scrollableList.svelte'
 	import SongIntersectionCell from '$lib/components/scheduling/SongIntersectionCell.svelte'
 	import SongNameCell from '$lib/components/scheduling/SongNameCell.svelte'
+	import CellColorLegend from '$lib/components/scheduling/CellColorLegend.svelte'
 
 	export let data: PageData
 </script>
 
 <Grid>
-	<Row padding>
+	<Row>
 		<Column><h1 class="titleText">Scheduling</h1></Column>
 	</Row>
-	<Row>
+	<Row padding>
 		<Column>
 			<p>
 				Below, you can see the overlap between any two songs on the setlist. The table shows the
-				musicians and bandcoaches that are playing in each song. A black cell indicates that the
-				songs are the same, a red cell indicates that there is at least one musician playing in both
-				songs. A green cell indicates that there are no musicians playing in both songs, so these
-				songs can be scheduled at the same time. For orange cells all musicians can be scheduled at
-				the same time, but there is a collision for just the bandcoaches in either of the song.
+				musicians and bandcoaches that are playing in each song. Below the table, you can find a
+				legend.
 			</p>
 		</Column>
 	</Row>
@@ -38,7 +36,7 @@
 			</Column>
 		</Row>
 	{:else}
-		<ScrollableList condensed>
+		<StructuredList class="list-without-bottom-margin">
 			<StructuredListRow>
 				<StructuredListCell />
 				{#each data.songs as columnSong}
@@ -61,11 +59,17 @@
 					{/each}
 				</StructuredListRow>
 			{/each}
-		</ScrollableList>
+		</StructuredList>
+
+		<CellColorLegend />
 	{/if}
 </Grid>
 
 <style>
+	:global(.list-without-bottom-margin) {
+		margin-bottom: 0;
+	}
+
 	:global(.fixed-table-cell) {
 		max-width: 80px !important;
 		min-width: 80px !important;
