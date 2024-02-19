@@ -37,15 +37,21 @@
 	)
 
 	export let lineup: {
-		participantId: string | undefined
-		instrument: string | undefined
+		participantId: string
+		instrument: string
 	}[]
 
 	// These must be reactive, so that the modal updates when the song or participants change
-	$: bandcoachId = lineup.find((p) => p.instrument?.toLowerCase() === 'bandcoach')?.participantId
+	$: bandcoachId = lineup.find((p) => p.instrument.toLowerCase() === 'bandcoach')?.participantId
 
+	// The map is to make sure the type checker understands the participantIds or instruments can also be undefined
 	$: modalLineup = [
-		...lineup.filter((p) => p.instrument?.toLowerCase() !== 'bandcoach'),
+		...lineup
+			.filter((p) => p.instrument.toLowerCase() !== 'bandcoach')
+			.map((p) => ({
+				participantId: p.participantId as string | undefined,
+				instrument: p.instrument as string | undefined
+			})),
 		{ participantId: undefined, instrument: undefined }
 	]
 
@@ -68,11 +74,24 @@
 		await deleteDoc(playsInDoc)
 	}
 
-	/** Update the musicians for the song. */
-	async function updateParticipantsOnSong() {
-		const fullyFilledOutParticipants = [
-			...modalLineup.filter(({ participantId, instrument }) => participantId && instrument)
-		]
+	/**
+	 * Update the musicians for the song.
+	 * @returns Whether the update was successful.
+	 */
+	async function updateParticipantsOnSong(): Promise<boolean> {
+		// Check if the participants don't contain any bandcoaches
+		if (modalLineup.some(({ instrument }) => instrument?.toLowerCase() === 'bandcoach')) {
+			return false
+		}
+
+		// The map is to make sure the type checker understands the participantIds or instruments can not be undefined (because of the filter)
+		const fullyFilledOutParticipants = modalLineup
+			.filter(({ participantId, instrument }) => participantId && instrument)
+			.map(({ participantId, instrument }) => ({
+				participantId: participantId!,
+				instrument: instrument!
+			}))
+
 		// Bandcoach is optional
 		if (bandcoachId)
 			fullyFilledOutParticipants.push({ participantId: bandcoachId, instrument: 'Bandcoach' })
@@ -106,6 +125,8 @@
 		}
 
 		invalidateAll()
+
+		return true
 	}
 </script>
 
@@ -115,9 +136,9 @@
 	primaryButtonText="Confirm"
 	secondaryButtonText="Cancel"
 	bind:open
-	on:click:button--primary={() => {
-		updateParticipantsOnSong()
-		open = false
+	on:click:button--primary={async () => {
+		const success = await updateParticipantsOnSong()
+		open = !success
 	}}
 	on:click:button--secondary={() => {
 		open = false
@@ -157,6 +178,7 @@
 						<ComboBox
 							titleText="Participant"
 							on:select={(e) => (participant.participantId = e.detail.selectedId ?? undefined)}
+							on:clear={() => (participant.participantId = undefined)}
 							selectedId={participant.participantId}
 							items={participantListItems}
 							required
@@ -171,6 +193,7 @@
 							on:change={(e) =>
 								(participant.instrument = e.detail ? e.detail.toString() : undefined)}
 							value={participant.instrument}
+							invalid={participant.instrument?.toLowerCase() === 'bandcoach'}
 							required
 							labelText="Instrument"
 						/>
