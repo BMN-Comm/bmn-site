@@ -61,7 +61,7 @@
 
 	$: notAllowedToSubmit = modalLineup.some(
 		({ participantId, instrument }) =>
-			(participantId && !instrument) || (instrument && !participantId)
+			(participantId && !instrument) || (instrument && !participantId) || instrument?.toLowerCase() === 'bandcoach'
 	)
 
 	/** Remove a participant from the song */
@@ -169,7 +169,7 @@
 		<Grid>
 			{#each modalBandcoachIds as bandcoachId, i}
 				<Row>
-					<Column sm={3} md={6} lg={13}>
+					<Column sm={3} md={7} lg={15}>
 						<ComboBox
 							titleText={`Bandcoach ${i + 1}`}
 							on:select={(e) => (bandcoachId = e.detail.selectedId)}
@@ -187,7 +187,8 @@
 							class="remove-musician-button"
 							icon={CloseOutline}
 							iconDescription="Remove bandcoach"
-							kind="ghost"
+							tooltipAlignment='end'
+							kind="danger-ghost"
 							on:click={() => {
 								modalBandcoachIds = modalBandcoachIds.filter((_, index) => index !== i)
 							}}
@@ -211,7 +212,7 @@
 		<Grid>
 			{#each modalLineup as participant, i}
 				<Row>
-					<Column sm={2} md={4} lg={7}>
+					<Column sm={2} md={4} lg={8}>
 						<ComboBox
 							titleText="Participant"
 							on:select={(e) => (participant.participantId = e.detail.selectedId ?? undefined)}
@@ -225,12 +226,13 @@
 							}}
 						/>
 					</Column>
-					<Column sm={2} md={3} lg={6}>
+					<Column sm={1} md={3} lg={7}>
 						<TextInput
 							on:change={(e) =>
 								(participant.instrument = e.detail ? e.detail.toString() : undefined)}
 							value={participant.instrument}
 							invalid={participant.instrument?.toLowerCase() === 'bandcoach'}
+							invalidText="Please fill in bandcoaches at the top"
 							required
 							labelText="Instrument"
 						/>
@@ -240,7 +242,8 @@
 							class="remove-musician-button"
 							icon={CloseOutline}
 							iconDescription="Remove musician"
-							kind="ghost"
+							tooltipAlignment='end'
+							kind="danger-ghost"
 							on:click={() => {
 								modalLineup = modalLineup.filter((_, index) => index !== i)
 							}}
