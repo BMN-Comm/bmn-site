@@ -1,10 +1,6 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation'
-	import { db } from '$lib/firebase/client/firebase'
-	import type { Availability, NewAvailability } from '$lib/types/domain/availability'
+	import type { Availability } from '$lib/types/domain/availability'
 	import type { Rehearsal } from '$lib/types/domain/rehearsal'
-	import { newTimeOnDay } from '$lib/util/date'
-	import { isValidTimeString } from '$lib/util/timeInputValidation'
 	import { getTimeString } from '$lib/util/timeString'
 	import {
 		Modal,
@@ -16,8 +12,8 @@
 		TimePicker
 	} from 'carbon-components-svelte'
 	import { Edit } from 'carbon-icons-svelte'
-	import { collection, doc, setDoc, Timestamp } from 'firebase/firestore'
-
+	import { saveAvailability } from '$lib/components/availability/SaveAvailability'
+	
 	export let rehearsal: Rehearsal
 	export let user: { id: string; name: string }
 	export let availability: Availability | undefined = undefined
@@ -37,60 +33,25 @@
 	let startTimeInvalid: boolean = false
 	let endTimeInvalid: boolean = false
 
-	/**
-	 * Submit or update the availability in the database.
-	 * @returns `true` if the mutation was successful, `false` otherwise.
-	 */
-	async function saveAvailability(): Promise<boolean> {
-		// Time input validation
-		startTimeInvalid = !isValidTimeString(startTimeString)
-		endTimeInvalid = !isValidTimeString(endTimeString)
-		if (startTimeInvalid || endTimeInvalid) return false
+	async function submitAvailability(): Promise<boolean> {
+		const response = await saveAvailability(
+			{
+				id: availability?.id,
+				startTimeString,
+				endTimeString,
+				isAvailable: available,
+				remark
+			},
+			rehearsal,
+			user.id
+		)
 
-		// If the participant is not available, they are unavailable for the entire rehearsal
-		if (!available) {
-			startTimeString = getTimeString(rehearsal.startTime)
-			endTimeString = getTimeString(rehearsal.endTime)
+		if (!response.isSuccess) {
+			startTimeInvalid = response.startTimeInvalid
+			endTimeInvalid = response.endTimeInvalid
 		}
 
-		// Check if the availability is within the rehearsal time and if the start time is before the end time
-		const rehearsalStart = rehearsal.startTime.toDate()
-		const rehearsalEnd = rehearsal.endTime.toDate()
-
-		const start = startTimeString.split(':')
-		const end = endTimeString.split(':')
-
-		const availableStart = newTimeOnDay(rehearsalStart, parseInt(start[0]), parseInt(start[1]))
-		const availableEnd = newTimeOnDay(rehearsalEnd, parseInt(end[0]), parseInt(end[1]))
-
-		startTimeInvalid =
-			rehearsalStart > availableStart ||
-			rehearsalEnd < availableStart ||
-			availableStart >= availableEnd
-		endTimeInvalid =
-			rehearsalStart > availableEnd || rehearsalEnd < availableEnd || availableStart >= availableEnd
-
-		if (startTimeInvalid || endTimeInvalid) return false
-
-		// Save the availability to the database
-		const newAvailibilityDoc: NewAvailability = {
-			available,
-			rehearsal: doc(db, 'rehearsals/' + rehearsal.id),
-			reason: remark,
-			startTime: Timestamp.fromDate(availableStart),
-			endTime: Timestamp.fromDate(availableEnd)
-		}
-
-		const availabilityRef =
-			availability?.id !== undefined
-				? doc(db, 'users/' + user.id + '/availability/' + availability.id)
-				: doc(collection(db, 'users/' + user.id + '/availability'))
-
-		await setDoc(availabilityRef, newAvailibilityDoc)
-
-		invalidateAll()
-
-		return true
+		return response.isSuccess
 	}
 
 	function toggleAvailable() {
@@ -109,7 +70,7 @@
 	primaryButtonIcon={Edit}
 	secondaryButtonText="Cancel"
 	on:click:button--primary={async () => {
-		const success = await saveAvailability()
+		const success = await submitAvailability()
 		openSetAvailability = !success
 	}}
 	on:click:button--secondary={() => {
@@ -165,6 +126,6 @@
 <style>
 	/* Make the time picker full width of the column */
 	:global(.bx--time-picker__input-field, .bx--time-picker__input, .bx--time-picker) {
-		width: 100%;
+		width: 100% !important;
 	}
 </style>
