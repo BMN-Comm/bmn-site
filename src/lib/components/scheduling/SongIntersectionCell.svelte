@@ -13,7 +13,6 @@
 		StructuredListRow
 	} from 'carbon-components-svelte'
 	import type { PopoverProps } from 'carbon-components-svelte/types/Popover/Popover.svelte'
-	import _ from 'lodash'
 
 	export let columnIndex: number
 	export let rowIndex: number
