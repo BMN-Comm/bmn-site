@@ -29,7 +29,7 @@
 	import { getSuggestedSongs } from '$lib/firebase/client/firestore/songs'
 	import AddSongModal from '$lib/components/setlist/AddSongModal.svelte'
 	import EditSongModal from '$lib/components/setlist/EditSongModal.svelte'
-	import EditMusiciansOnSongModal from '$lib/components/setlist/EditMusiciansOnSongModal.svelte'
+	import EditLineupModal from '$lib/components/setlist/EditLineupModal.svelte'
 
 	export let data: PageData
 
@@ -40,7 +40,7 @@
 
 	let openDelSong = false
 	let openDelMusician = false
-	let openAddMusician = false
+	let openEditLineup = false
 	let openAddSong = false
 	let openEditSong = false
 
@@ -142,17 +142,17 @@
 					<Button
 						kind="ghost"
 						size="small"
-						iconDescription="Edit musicians"
+						iconDescription="Edit line-up"
 						icon={UserFollow}
 						on:click={() => {
 							selectedSong = i
-							openAddMusician = true
+							openEditLineup = true
 						}}
 					/>
 					<Button
 						kind="ghost"
 						size="small"
-						iconDescription="Edit"
+						iconDescription="Edit song"
 						icon={Edit}
 						on:click={() => {
 							selectedSong = i
@@ -200,11 +200,11 @@
 </Modal>
 
 {#if data.songs[selectedSong]}
-	<EditMusiciansOnSongModal
-		bind:open={openAddMusician}
+	<EditLineupModal
+		bind:open={openEditLineup}
 		song={data.songs[selectedSong]}
 		users={data.users}
-		participants={data.musiciansForSongs[data.songs[selectedSong].id].map((musician) => ({
+		lineup={data.musiciansForSongs[data.songs[selectedSong].id].map((musician) => ({
 			participantId: musician.participantId,
 			instrument: musician.instrumentName
 		}))}

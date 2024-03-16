@@ -22,16 +22,17 @@ export const load: PageLoad = async ({ parent }) => {
 
 	const availabilityQuery = query(
 		collection(db, 'users/' + (await parent()).user!.databaseId + '/availability'),
-		orderBy('startTime')
+		orderBy('startTime'),
+		where('startTime', '>=', Timestamp.now())
 	)
-	const availability = toDict(
+	const availabilities = toDict(
 		(await getDocs(availabilityQuery)).docs.map((doc) => {
-			const data = doc.data() as Availability
+			const data = { id: doc.id, ...doc.data() } as Availability
 			return {
-				[data.rehearsal.id]: data.available
+				[data.rehearsal.id]: data
 			}
 		})
 	)
 
-	return { rehearsals, availability }
+	return { rehearsals, availabilities }
 }
