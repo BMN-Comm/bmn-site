@@ -36,6 +36,13 @@
 			{#if $page.data.user?.admin}
 				<HeaderNavItem text="Admin" href="/admin-portal/claims" />
 			{/if}
+			<!-- TODO: Add link based on configurable setting -->
+			<HeaderNavItem
+				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9203/BetaMusicNight2024/KaartjeKopen"
+				text="Tickets!"
+				target="_blank"
+				rel="noreferrer"
+			/>
 		</HeaderNav>
 
 		<LoginButton />
@@ -55,6 +62,13 @@
 			{#if $page.data.user?.admin}
 				<SideNavLink text="Admin" href="/admin-portal/claims" target="_blank" />
 			{/if}
+			<!-- TODO: Add link based on configurable setting -->
+			<SideNavLink
+				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9203/BetaMusicNight2024/KaartjeKopen"
+				text="Tickets!"
+				rel="noreferrer"
+				target="_blank"
+			/>
 		</SideNavItems>
 	</SideNav>
 {/if}

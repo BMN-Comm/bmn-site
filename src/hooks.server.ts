@@ -5,6 +5,15 @@ import { prerendering } from '$app/environment'
 // Hooks file used for server side functions, see https://kit.svelte.dev/docs/hooks
 
 export const handle: Handle = async ({ event, resolve }) => {
+	if (event.url.pathname?.toLowerCase() == '/tickets')
+		return new Response('redirecting...', {
+			status: 302,
+			headers: new Headers({
+				status: '302',
+				Location: `https://www.a-eskwadraat.nl/Activiteiten/bmn/9203/BetaMusicNight2024/KaartjeKopen`
+			})
+		})
+
 	// When asking for a refresh token or api token, resolve before the token can fail
 	if (
 		event.url.pathname?.startsWith('/refresh-token') ||

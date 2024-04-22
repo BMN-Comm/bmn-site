@@ -46,6 +46,16 @@
 			heel nuttige bandervaring op. Het is ook mooi om te zien dat wij als echte bèta-vereniging
 			naast onze exacte kwaliteiten ons ook van een een andere kant kunnen laten zien.
 		</p>
+		<!-- TODO: Add link based on configurable setting -->
+		<p>
+			Koop <a
+				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9203/BetaMusicNight2024/KaartjeKopen"
+				target="_blank"
+				rel="noreferrer"
+			>
+				hier
+			</a> tickets!
+		</p>
 	</div>
 
 	<div class="watBMN">
@@ -64,6 +74,16 @@
 			group of musicians on stage. This way the musicians learn to play together with a lot of
 			different people resulting in some nifty band experience. It is very nice to see that we, as
 			real bèta association, can show a different side of ourselves.
+		</p>
+		<!-- TODO: Add link based on configurable setting -->
+		<p>
+			Buy tickets <a
+				href="https://www.a-eskwadraat.nl/Activiteiten/bmn/9203/BetaMusicNight2024/KaartjeKopen"
+				target="_blank"
+				rel="noreferrer"
+			>
+				here!
+			</a>
 		</p>
 	</div>
 
