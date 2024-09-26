@@ -26,6 +26,8 @@
 		<img src="BMN2024.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
+            <HeaderNavItem href="/photos" text="Photos" />
+            <HeaderNavItem href="/auditions" text="Auditions" />
 			<HeaderNavItem href="/about-us" text="About us" />
 			{#if $page.data.user}
 				<HeaderNavItem text="Participants" href="/participant" />
@@ -65,7 +67,7 @@
 		height: 48px;
 	}
 
-	/* The normal z-index was 8000, messing with the modal. 100 fixes this but stull stays above most of the items */
+	/* The normal z-index was 8000, messing with the modal. 100 fixes this but still stays above most of the items */
 	:global(.sidenav) {
 		z-index: 100 !important;
 	}
