@@ -28,6 +28,7 @@
 			<HeaderNavItem href="/" text="Home" />
             <HeaderNavItem href="/photos" text="Photos" />
             <HeaderNavItem href="/auditions" text="Auditions" />
+			<HeaderNavItem href="/" text="Tickets" />
 			<HeaderNavItem href="/about-us" text="About us" />
 			{#if $page.data.user}
 				<HeaderNavItem text="Participants" href="/participant" />
@@ -47,9 +48,10 @@
 	<SideNav bind:isOpen={$open} class="sidenav">
 		<SideNavItems>
 			<SideNavLink href="/" text="Home" />
+			<SideNavLink href="/tickets" text="Tickets" />
 			<SideNavLink href="/about-us" text="About us" />
 			{#if $page.data.user}
-				<SideNavLink text="Participants" href="/participant" />
+			<SideNavLink text="Participants" href="/participant" />
 			{/if}
 			{#if $page.data.user?.commissie}
 				<SideNavLink text="Committee" href="/committee" />
