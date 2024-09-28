@@ -3,59 +3,31 @@
 	import IntroductionCard from '$lib/components/introductionCard.svelte'
 </script>
 
-<p>OmgoshAPAge</p>
+<div class="tickText">
+	<h1><strong>It seems that the ticket sale hasn't started yet :C</strong></h1>
+	<h2>Do you want to keep up with all BMN news and be notified when the ticketsale starts? <br> Follow us on instagram!</h2>
+	<a href= https://instagram.com/betamusicnight> 
+		<img class="socialImg" width="100px" src="socials/instagram.png" alt="InstagramIcon" />
+	</a>
+</div>
 
 <style>
-	@property --red-angle {
-		syntax: '<angle>';
-		inherits: false;
-		initial-value: 10deg;
+	.tickText {
+		margin: 10% 25%;
+		text-align: center;
+		align-items: center;
 	}
-
-	.committee-header {
-		width: 100%;
-		margin-bottom: 40px;
-		display: flex;
-		flex-direction: column;
+	.tickText h1 {
+		font-size: 50px;
 	}
-
-	.committee-picture-gradient {
-		--red-angle: 0deg;
-		width: 100%;
-		max-width: 800px;
-		margin: auto;
-		margin-top: 10px;
-		padding: 5px;
-		background: conic-gradient(
-			#ff0000 calc(var(--red-angle) - 360deg),
-			#00ff00 calc(var(--red-angle) - 240deg),
-			#0000ff calc(var(--red-angle) - 120deg),
-			#ff0000 var(--red-angle),
-			#00ff00 calc(var(--red-angle) + 120deg),
-			#0000ff calc(var(--red-angle) + 240deg),
-			#ff0000 calc(var(--red-angle) + 360deg)
-		);
-		animation: rotate-red 10s linear infinite;
-		border-radius: 39px;
+	.tickText h2 {
+		font-style: italic;
+		font-size: 26px;
+		margin-top: 5%;
+		text-align: center;
 	}
-
-	.committee-picture-wrapper {
-		margin: auto;
-		padding: 10px;
-		background-color: #161616;
-		border-radius: 34px;
+	.tickText img {
+		margin-top: 5%;
 	}
-	.committee-picture {
-		border-radius: 24px;
-		max-width: 100%;
-	}
-
-	@keyframes rotate-red {
-		0% {
-			--red-angle: 0deg;
-		}
-		100% {
-			--red-angle: 360deg;
-		}
-	}
+	
 </style>

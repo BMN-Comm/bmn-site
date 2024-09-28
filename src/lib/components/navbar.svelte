@@ -28,17 +28,17 @@
 			<HeaderNavItem href="/" text="Home" />
             <HeaderNavItem href="/photos" text="Photos" />
             <HeaderNavItem href="/auditions" text="Auditions" />
-			<HeaderNavItem href="/" text="Tickets" />
 			<HeaderNavItem href="/about-us" text="About us" />
 			{#if $page.data.user}
-				<HeaderNavItem text="Participants" href="/participant" />
+			<HeaderNavItem text="Participants" href="/participant" />
 			{/if}
 			{#if $page.data.user?.commissie}
-				<HeaderNavItem text="Committee" href="/committee" />
+			<HeaderNavItem text="Committee" href="/committee" />
 			{/if}
 			{#if $page.data.user?.admin}
-				<HeaderNavItem text="Admin" href="/admin-portal/claims" />
+			<HeaderNavItem text="Admin" href="/admin-portal/claims" />
 			{/if}
+			<HeaderNavItem color= #00ff00 href="/tickets" text="Tickets!" />
 		</HeaderNav>
 
 		<LoginButton />
@@ -65,6 +65,13 @@
 
 <style>
 	/* Since the header has a fixed position, we wrap it in a simple div with fixed height to prevent hiding data. */
+	.bx--btn--primary {
+		border-width: 1px;
+		border-style: solid;
+		border-color: rgba(0, 0, 0, 0);
+		background-color: #0ffe4b;
+		color: #fff;
+	}
 	.header-wrapper {
 		height: 48px;
 	}
