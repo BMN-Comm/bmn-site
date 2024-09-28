@@ -65,13 +65,6 @@
 
 <style>
 	/* Since the header has a fixed position, we wrap it in a simple div with fixed height to prevent hiding data. */
-	.bx--btn--primary {
-		border-width: 1px;
-		border-style: solid;
-		border-color: rgba(0, 0, 0, 0);
-		background-color: #0ffe4b;
-		color: #fff;
-	}
 	.header-wrapper {
 		height: 48px;
 	}
@@ -84,4 +77,6 @@
 	:global(.bx--side-nav__overlay-active) {
 		z-index: 99 !important;
 	}
+
+	
 </style>
