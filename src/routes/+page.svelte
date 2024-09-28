@@ -160,7 +160,7 @@
 		display: block;
 		margin-left: 37.5%;
 		margin-right: 37.5%;
-		bottom: -10%;
+		bottom: 0;
 		opacity: 0.5;
 		position: fixed;
 	}
