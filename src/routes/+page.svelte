@@ -1,21 +1,72 @@
 <!-- Homepage -->
 <script>
-	import { Column, Grid, Row } from 'carbon-components-svelte'
+    import { db } from '$lib/firebase/client/firebase'
+    import {collection, getDocs, query, orderBy, addDoc, setDoc, doc} from 'firebase/firestore';
+    import {Button, Column, Grid, Row} from 'carbon-components-svelte'
 	import { onMount } from 'svelte'
+    import { page } from '$app/stores'
+    import {Edit, MusicRemove, Save} from "carbon-icons-svelte";
+    import fs from 'fs'
+    import path from 'path'
+    import {goto} from "$app/navigation";
 
 	// Importing carousel in a tragic way because the
 	// author forgot that typescript is superior...
 	// He forgor 💀
 
-	/** @type {any} **/
+    let watBMN_NL = ''
+    let watBMN_EN = ''
+
+    let watBMN_NL_ID = ''
+    let watBMN_EN_ID = ''
+
+    let editingNL = false
+    let editingEN = false
+
+    /** @type {any} **/
 	let Carousel
 	onMount(async () => {
 		const module = await import('svelte-carousel')
 		Carousel = module.default
+
+        const q = query(collection(db, 'text'))
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((doc) => {
+            if (doc.data().name === 'watBMN_NL') {
+                watBMN_NL = doc.data().content
+                watBMN_NL_ID = doc.id
+            } else if (doc.data().name === 'watBMN_EN') {
+                watBMN_EN = doc.data().content
+                watBMN_EN_ID = doc.id
+            }
+        })
 	})
 
+    async function saveText()
+    {
+        const docRefNL = doc(db, 'text', watBMN_NL_ID)
+        const docRefEN = doc(db, 'text', watBMN_EN_ID)
+        if (editingNL) {
+            await setDoc(docRefNL, {
+                name: 'watBMN_NL',
+                content: watBMN_NL
+            })
+        }
+        if (editingEN) {
+            await setDoc(docRefEN, {
+                name: 'watBMN_EN',
+                content: watBMN_EN
+            })
+        }
+
+        editingEN = false
+        editingNL = false
+        await goto('/')
+    }
+
 	// Add carousel photos here
-	const carouselPhotos = ['foto1.jpg', 'foto2.jpg', 'foto3.jpg']
+    // Foto1 en Foto4 awaiting approval van gefotografeerden
+	const carouselPhotos = ['foto2.jpg', 'foto3.jpg', 'foto5.jpg', 'foto6.jpg']
 </script>
 
 <content>
@@ -28,43 +79,44 @@
 		{/each}
 	</svelte:component>
 
-	<div class="watBMN" id="info">
-		<h1>Wat is de Bèta Music Night?</h1>
-		<p>
-			De Bèta Music Night (BMN) is een jaarlijks terugkerend concert, georganiseerd door de
-			gelijknamige commissie van studievereniging A–Eskwadraat. De eerste editie was in 2013, en
-			hierop volgden al acht edities. Ondertussen is de Bèta Music Night uitgegroeid tot één van de
-			grootste activiteiten van A–Eskwadraat. We zijn alweer druk bezig met het organiseren van de
-			tiende editie.
-		</p>
-		<p>
-			Voor de BMN worden de beste muzikanten van A–Eskwadraat bij elkaar gebracht. Ook dit jaar gaan
-			we weer een groep van ongeveer dertig muzikanten bij elkaar te vinden. De setlist bestaat
-			volledig uit covers van bekende en wat minder bekende nummers. De bezetting per nummer is
-			steeds anders, zo staat er bij geen enkele twee nummers precies dezelfde groep op het podium.
-			Op deze manier leren de muzikanten samenspelen met veel verschillende mensen en doen hierbij
-			heel nuttige bandervaring op. Het is ook mooi om te zien dat wij als echte bèta-vereniging
-			naast onze exacte kwaliteiten ons ook van een een andere kant kunnen laten zien.
-		</p>
-	</div>
+	<div class="watBMN" id="watBMN_NL">
+		{#if editingNL}
+            <textarea id="editNL" bind:value={watBMN_NL} rows=30 cols=80 />
+            <Button
+                kind="primary"
+                size="small"
+                iconDescription="Save"
+                icon={Save}
+                on:click={saveText}
+            />
+        {:else}{@html watBMN_NL}{/if}
+        {#if $page.data.user?.commissie}<Button
+                kind="primary"
+                size="small"
+                iconDescription="Edit"
+                icon={Edit}
+                on:click={() => { editingNL = !editingNL }}
+        />{/if}
+    </div>
 
-	<div class="watBMN">
-		<h1>What is the Bèta Music Night?</h1>
-		<p>
-			The Bèta Music Night (BMN) is a yearly recurring concert, organised by the studyassociation
-			A–Eskwadraat's committee with the same name. The first edition was in 2013, and we have had
-			eight editions since. The Bèta Music Night has grown to be one of A–Eskwadraat's biggest
-			activities. We are already very busy with the organisation of the tenth edition
-		</p>
-
-		<p>
-			The BMN brings A–Eskwadraat's best musisians together. This year we will once again get a
-			group of around thirty participants together. The setlist consists of covers of famous, and
-			not so famous songs. Each song has a different line-up with no two songs having the exact same
-			group of musicians on stage. This way the musicians learn to play together with a lot of
-			different people resulting in some nifty band experience. It is very nice to see that we, as
-			real bèta association, can show a different side of ourselves.
-		</p>
+	<div class="watBMN" id="watBMN_EN">
+        {#if editingEN}
+            <textarea id="editEN" bind:value={watBMN_EN} rows=30 cols=80 />
+            <Button
+                    kind="primary"
+                    size="small"
+                    iconDescription="Save"
+                    icon={Save}
+                    on:click={saveText}
+            />
+            {:else}{@html watBMN_EN}{/if}
+            {#if $page.data.user?.commissie}<Button
+                    kind="primary"
+                    size="small"
+                    iconDescription="Edit"
+                    icon={Edit}
+                    on:click={() => { editingEN = !editingEN }}
+            />{/if}
 	</div>
 
 	<Grid class="sponsors" padding>
@@ -88,7 +140,7 @@
 	</Grid>
 
 	<div class="footer">
-		<h1>© Bèta Music Night 2023</h1>
+		<h1>© Bèta Music Night 2024</h1>
 		<a href="mailto:bmn@a-eskwadraat.nl">Contact</a>
 	</div>
 </content>
@@ -108,7 +160,7 @@
 		display: block;
 		margin-left: 37.5%;
 		margin-right: 37.5%;
-		top: 70%;
+		bottom: -10%;
 		opacity: 0.5;
 		position: fixed;
 	}

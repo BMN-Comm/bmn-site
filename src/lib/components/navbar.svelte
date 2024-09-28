@@ -26,16 +26,19 @@
 		<img src="BMN2024.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
+            <HeaderNavItem href="/photos" text="Photos" />
+            <HeaderNavItem href="/auditions" text="Auditions" />
 			<HeaderNavItem href="/about-us" text="About us" />
 			{#if $page.data.user}
-				<HeaderNavItem text="Participants" href="/participant" />
+			<HeaderNavItem text="Participants" href="/participant" />
 			{/if}
 			{#if $page.data.user?.commissie}
-				<HeaderNavItem text="Committee" href="/committee" />
+			<HeaderNavItem text="Committee" href="/committee" />
 			{/if}
 			{#if $page.data.user?.admin}
-				<HeaderNavItem text="Admin" href="/admin-portal/claims" />
+			<HeaderNavItem text="Admin" href="/admin-portal/claims" />
 			{/if}
+			<HeaderNavItem color= #00ff00 href="/tickets" text="Tickets!" />
 		</HeaderNav>
 
 		<LoginButton />
@@ -45,9 +48,10 @@
 	<SideNav bind:isOpen={$open} class="sidenav">
 		<SideNavItems>
 			<SideNavLink href="/" text="Home" />
+			<SideNavLink href="/tickets" text="Tickets" />
 			<SideNavLink href="/about-us" text="About us" />
 			{#if $page.data.user}
-				<SideNavLink text="Participants" href="/participant" />
+			<SideNavLink text="Participants" href="/participant" />
 			{/if}
 			{#if $page.data.user?.commissie}
 				<SideNavLink text="Committee" href="/committee" />
@@ -65,7 +69,7 @@
 		height: 48px;
 	}
 
-	/* The normal z-index was 8000, messing with the modal. 100 fixes this but stull stays above most of the items */
+	/* The normal z-index was 8000, messing with the modal. 100 fixes this but still stays above most of the items */
 	:global(.sidenav) {
 		z-index: 100 !important;
 	}
@@ -73,4 +77,6 @@
 	:global(.bx--side-nav__overlay-active) {
 		z-index: 99 !important;
 	}
+
+	
 </style>

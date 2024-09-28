@@ -106,7 +106,7 @@
 							kind="danger-tertiary"
 							size="small"
 							iconDescription="Like"
-							icon={song.user.id === 'KcRkWMQUEClLEeiccSD5' ? Bat : Favorite}
+							icon={Favorite}
 							class={song.liked ? 'yesFave' : 'noFave'}
 							on:click={() => {
 								song.liked ? UnfavouriteSong(song.id) : FavouriteSong(song.id)
@@ -145,7 +145,7 @@
 								selectedSongIndex = i
 								openAdd = true
 							}}
-							class={song.user.id === '3ClGLhR2ctxg6ZPn0Ls7' ? 'ilanButton' : 'addButton'}
+							class={'addButton'}
 						/>
 					</StructuredListCell>
 				</StructuredListRow>
@@ -194,7 +194,6 @@
 </Modal>
 
 <style>
-	@import '/src/style/rainbow.css';
 	.titleText {
 		font-size: x-large;
 	}
@@ -203,12 +202,6 @@
 		border-color: rgba(41, 252, 101, 255) !important;
 		background-color: rgba(0, 0, 0, 0) !important;
 		color: rgba(41, 252, 101, 255) !important;
-	}
-
-	:global(.ilanButton) {
-		animation: rainbow 2.5s linear !important;
-		animation-iteration-count: infinite !important;
-		background-color: rgba(0, 0, 0, 0) !important;
 	}
 	:global(.yesFave) {
 		background-color: #b81921 !important;
