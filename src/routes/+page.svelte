@@ -1,5 +1,7 @@
 <!-- Homepage -->
 <script>
+    import { db } from '$lib/firebase/client/firebase'
+    import {collection, getDocs, query, orderBy, addDoc, setDoc, doc} from 'firebase/firestore';
     import {Button, Column, Grid, Row} from 'carbon-components-svelte'
 	import { onMount } from 'svelte'
     import { page } from '$app/stores'
@@ -15,6 +17,9 @@
     let watBMN_NL = ''
     let watBMN_EN = ''
 
+    let watBMN_NL_ID = ''
+    let watBMN_EN_ID = ''
+
     let editingNL = false
     let editingEN = false
 
@@ -24,39 +29,39 @@
 		const module = await import('svelte-carousel')
 		Carousel = module.default
 
-        const resp1 = await fetch('/text/frontpage/watBMN_NL.txt')
-        watBMN_NL = await resp1.text()
-        const resp2 = await fetch('/text/frontpage/watBMN_EN.txt')
-        watBMN_EN = await resp2.text()
+        const q = query(collection(db, 'text'))
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((doc) => {
+            if (doc.data().name === 'watBMN_NL') {
+                watBMN_NL = doc.data().content
+                watBMN_NL_ID = doc.id
+            } else if (doc.data().name === 'watBMN_EN') {
+                watBMN_EN = doc.data().content
+                watBMN_EN_ID = doc.id
+            }
+        })
 	})
 
-    function saveFile(dest, text)
+    async function saveText()
     {
-        fetch('/api/storage/save_text', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                filepath: dest,
-                content: text,
-            }),
-        })
-            .then((data) => {
-                console.log('Success:', data); // Handle the response data
+        const docRefNL = doc(db, 'text', watBMN_NL_ID)
+        const docRefEN = doc(db, 'text', watBMN_EN_ID)
+        if (editingNL) {
+            await setDoc(docRefNL, {
+                name: 'watBMN_NL',
+                content: watBMN_NL
             })
-            .catch((error) => {
-                console.error('Error:', error); // Handle any errors
-            });
-    }
+        }
+        if (editingEN) {
+            await setDoc(docRefEN, {
+                name: 'watBMN_EN',
+                content: watBMN_EN
+            })
+        }
 
-    function saveText()
-    {
-        saveFile('././static/text/frontpage/watBMN_NL.txt', watBMN_NL)
-        saveFile('././static/text/frontpage/watBMN_EN.txt', watBMN_EN)
         editingEN = false
         editingNL = false
-        goto('/')
+        await goto('/')
     }
 
 	// Add carousel photos here
@@ -75,17 +80,8 @@
 	</svelte:component>
 
 	<div class="watBMN" id="watBMN_NL">
-		<h1>Wat is de Bèta Music Night? {#if $page.data.user?.commissie}<Button
-            kind="primary"
-            size="small"
-            iconDescription="Edit"
-            icon={Edit}
-            on:click={() => {
-								editingNL = !editingNL
-							}}
-            />{/if}</h1>
-        <p>{#if editingNL}
-            <textarea id="editNL" bind:value={watBMN_NL} rows=30 cols=80 /><br>
+		{#if editingNL}
+            <textarea id="editNL" bind:value={watBMN_NL} rows=30 cols=80 />
             <Button
                 kind="primary"
                 size="small"
@@ -93,21 +89,19 @@
                 icon={Save}
                 on:click={saveText}
             />
-        {:else}{@html watBMN_NL}{/if}</p>
-    </div>
-
-	<div class="watBMN" id="watBMN_EN">
-		<h1>What is the Bèta Music Night? {#if $page.data.user?.commissie}<Button
+        {:else}{@html watBMN_NL}{/if}
+        {#if $page.data.user?.commissie}<Button
                 kind="primary"
                 size="small"
                 iconDescription="Edit"
                 icon={Edit}
-                on:click={() => {
-								editingEN = !editingEN
-							}}
-        />{/if}</h1>
-        <p>{#if editingEN}
-            <textarea id="editEN" bind:value={watBMN_EN} rows=30 cols=80 /><br>
+                on:click={() => { editingNL = !editingNL }}
+        />{/if}
+    </div>
+
+	<div class="watBMN" id="watBMN_EN">
+        {#if editingEN}
+            <textarea id="editEN" bind:value={watBMN_EN} rows=30 cols=80 />
             <Button
                     kind="primary"
                     size="small"
@@ -115,7 +109,14 @@
                     icon={Save}
                     on:click={saveText}
             />
-            {:else}{@html watBMN_EN}{/if}</p>
+            {:else}{@html watBMN_EN}{/if}
+            {#if $page.data.user?.commissie}<Button
+                    kind="primary"
+                    size="small"
+                    iconDescription="Edit"
+                    icon={Edit}
+                    on:click={() => { editingEN = !editingEN }}
+            />{/if}
 	</div>
 
 	<Grid class="sponsors" padding>
@@ -159,7 +160,7 @@
 		display: block;
 		margin-left: 37.5%;
 		margin-right: 37.5%;
-		top: 70%;
+		bottom: -10%;
 		opacity: 0.5;
 		position: fixed;
 	}
