@@ -22,7 +22,7 @@
 		<h1 style="margin-bottom: 20px;">The members</h1>
 	</Row>
 	<Row>
-		<IntroductionCard img_src="committeePhotos/bernd2.jpg" title="Chairman">
+		<IntroductionCard img_src="committeePhotos/bernd2.jpg" title="Chair">
             <p>
                 Hi, I'm Bernd! I have been playing (classical) piano since I was 8 years old and still going strong!
                 Recently I have been collecting other instruments such as an accordeon, a melodica and an electrig

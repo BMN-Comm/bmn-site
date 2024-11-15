@@ -66,7 +66,7 @@
 
 	// Add carousel photos here
     // Foto1 en Foto4 awaiting approval van gefotografeerden
-	const carouselPhotos = ['foto2.jpg', 'foto3.jpg', 'foto5.jpg', 'foto6.jpg']
+	const carouselPhotos = ['foto2.jpg', 'foto3.jpg', 'foto4.jpg', 'foto5.jpg', 'foto6.jpg']
 </script>
 
 <content>
