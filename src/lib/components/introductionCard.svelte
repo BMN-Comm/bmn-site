@@ -4,7 +4,7 @@
 </script>
 
 <div class="introduction-card-wrapper">
-	<div class="introduction-card no-hover {color}">
+	<div class="introduction-card no-hover">
 		<!-- onerror hack to show the default picture when a file cannot be found because it does not exist -->
 		<img
 			class="introduction-img"
