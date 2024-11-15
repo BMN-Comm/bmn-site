@@ -22,7 +22,7 @@
 		<h1 style="margin-bottom: 20px;">The members</h1>
 	</Row>
 	<Row>
-		<IntroductionCard img_src="committeePhotos/bernd.jpg" title="Chairman">
+		<IntroductionCard img_src="committeePhotos/bernd2.jpg" title="Chairman">
             <p>
                 Hi, I'm Bernd! I have been playing (classical) piano since I was 8 years old and still going strong!
                 Recently I have been collecting other instruments such as an accordeon, a melodica and an electrig
@@ -79,7 +79,7 @@
                 yet. Hope to see you at this year’s concert!
             </p>
 		</IntroductionCard>
-        <IntroductionCard img_src="committeePhotos/luuk.jpg" title="Roadie/Treasurer">
+        <IntroductionCard img_src="committeePhotos/luuk2.jpg" title="Roadie/Treasurer">
             <p>
                 Hello, I am Luuk. I will be this year's Roadie and Treasurer, meaning that I will oversee all things
                 technical and monetary. I make sure that all the gear will be there where it's supposed to, at the show,
