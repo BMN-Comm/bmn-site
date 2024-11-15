@@ -6,13 +6,13 @@
 <Grid>
 	<Row>
 		<div class="committee-header">
-			<h1>The 10th BMN committee (2023-2024)</h1>
+			<h1>The 11th BMN committee (2024-2025)</h1>
 			<div class="committee-picture-gradient">
 				<div class="committee-picture-wrapper">
 					<img
 						class="committee-picture"
-						src="committeePhotos/committee2024.jpg"
-						alt="Committee 2024"
+						src="committeePhotos/committee2025.jpg"
+						alt="Committee 20255"
 					/>
 				</div>
 			</div>
