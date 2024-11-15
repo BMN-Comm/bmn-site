@@ -22,7 +22,7 @@
 		<h1 style="margin-bottom: 20px;">The members</h1>
 	</Row>
 	<Row>
-		<IntroductionCard img_src="committeePhotos/bernd.jpg" title="Chairman" color=#644ba0>
+		<IntroductionCard img_src="committeePhotos/bernd.jpg" title="Chairman">
             <p>
                 Hi, I'm Bernd! I have been playing (classical) piano since I was 8 years old and still going strong!
                 Recently I have been collecting other instruments such as an accordeon, a melodica and an electrig
@@ -33,7 +33,7 @@
                 dramatic music myself. I hope to see you at BMN 2025!
             </p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/meinte.jpg" title="Agent" color=#644ba0>
+		<IntroductionCard img_src="committeePhotos/meinte.jpg" title="Agent">
             <p>
                 Hi, I’m Meinte. I am a third years physics student, but I’m also engaging in a minor in anthropology. Having
                 been both a spectator and a participant of the BMN in the last two years, I am excited to be part of the
@@ -44,7 +44,7 @@
                 do not involve a guitar, such as (experimental) hip-hop, house and jungle.
             </p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/tibor.jpg" title="PR" color=#644ba0>
+		<IntroductionCard img_src="committeePhotos/tibor.jpg" title="PR">
             <p>
                 Hi there! My name is Tibor and I am this year's PR. So that means my job is to make sure everyone knows
                 about the BMN and comes to the concert! This is my third year doing BMN. Last year and the year before I
@@ -53,7 +53,7 @@
                 (I am in my third year of the bachelor). See you at the concert!
             </p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/murren.jpg" title="Time Manager" color=#644ba0>
+		<IntroductionCard img_src="committeePhotos/murren.jpg" title="Time Manager">
 			<p>
 				"Yes, it is I, says me. And all who agree are more than three cuz they're we!" <br>
                 I'm Merijn, also known as Murren or 'The Frog Guy'. I'll  be the time manager of this year, meaning I
@@ -69,7 +69,7 @@
                 rehearsals, so be warned. Otherwise, I will see you June 4th at the BMN!
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/jennifer.jpg" title="Event Manager" color=#644ba0>
+		<IntroductionCard img_src="committeePhotos/jennifer.jpg" title="Event Manager">
             <p>
                 Yerrooo! My name is Jennifer. I’ve been listening and singing along to music of all kinds all my life
                 and started taking singing classes around 2 years ago. I also taught myself some ukulelelele and guitar,
@@ -79,7 +79,7 @@
                 yet. Hope to see you at this year’s concert!
             </p>
 		</IntroductionCard>
-        <IntroductionCard img_src="committeePhotos/luuk.jpg" title="Roadie/Treasurer" color="green">
+        <IntroductionCard img_src="committeePhotos/luuk.jpg" title="Roadie/Treasurer">
             <p>
                 Hello, I am Luuk. I will be this year's Roadie and Treasurer, meaning that I will oversee all things
                 technical and monetary. I make sure that all the gear will be there where it's supposed to, at the show,
@@ -93,12 +93,12 @@
                 seriously (though I really should have).
             </p>
         </IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/annemarijn.jpg" title="Composer/Vice-chair" color=#644ba0>
+		<IntroductionCard img_src="committeePhotos/annemarijn.jpg" title="Composer/Vice-chair">
 			<p>
 				_
 			</p>
 		</IntroductionCard>
-        <IntroductionCard img_src="committeePhotos/wessel.jpg" title="Setlist Manager" color=#644ba0>
+        <IntroductionCard img_src="committeePhotos/wessel.jpg" title="Setlist Manager">
             <p>
                 Hello, I am Wessel. I am this year’s setlist manager. I will be responsible for managing the setlist
                 (duh’) And a few other things. This is my first year in the BMN and committee. I took classical piano

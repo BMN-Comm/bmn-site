@@ -33,6 +33,7 @@
 		border: 2px;
 		border-style: solid;
 		border-radius: 18px;
+        border-color: #644ba0;
 	}
 
 	.introduction-img {
@@ -46,17 +47,5 @@
 
 	.no-hover:hover {
 		cursor: default;
-	}
-
-	.red {
-		border-color: #ff0000;
-	}
-
-	.green {
-		border-color: #00ff00;
-	}
-
-	.blue {
-		border-color: #0000ff;
 	}
 </style>
