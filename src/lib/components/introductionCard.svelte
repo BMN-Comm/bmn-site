@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let img_src: string
 	export let title: string
-	export let color: string
 </script>
 
 <div class="introduction-card-wrapper">
