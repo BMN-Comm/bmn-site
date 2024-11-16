@@ -1,11 +1,10 @@
 <script lang="ts">
 	export let img_src: string
 	export let title: string
-	export let color: string
 </script>
 
 <div class="introduction-card-wrapper">
-	<div class="introduction-card no-hover {color}">
+	<div class="introduction-card no-hover">
 		<!-- onerror hack to show the default picture when a file cannot be found because it does not exist -->
 		<img
 			class="introduction-img"
@@ -33,6 +32,7 @@
 		border: 2px;
 		border-style: solid;
 		border-radius: 18px;
+        border-color: #644ba0;
 	}
 
 	.introduction-img {
@@ -46,17 +46,5 @@
 
 	.no-hover:hover {
 		cursor: default;
-	}
-
-	.red {
-		border-color: #ff0000;
-	}
-
-	.green {
-		border-color: #00ff00;
-	}
-
-	.blue {
-		border-color: #0000ff;
 	}
 </style>
