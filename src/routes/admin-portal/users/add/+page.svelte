@@ -7,7 +7,7 @@
 
 	/** Add a new user to the database and the auth system */
 	async function AddUser() {
-		let loweredEmail = email.toLowerCase()
+		const loweredEmail = email.toLowerCase()
 		const response = await fetch('/api/admin-portal/users', {
 			method: 'POST',
 			headers: {
