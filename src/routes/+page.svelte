@@ -65,7 +65,7 @@
     }
 
 	// Add carousel photos here
-    // Foto1 en Foto4 awaiting approval van gefotografeerden
+    // Foto1 awaiting approval van gefotografeerde
 	const carouselPhotos = ['foto2.jpg', 'foto3.jpg', 'foto4.jpg', 'foto5.jpg', 'foto6.jpg']
 </script>
 

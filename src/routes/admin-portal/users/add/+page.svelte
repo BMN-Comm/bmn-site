@@ -7,12 +7,13 @@
 
 	/** Add a new user to the database and the auth system */
 	async function AddUser() {
+		const loweredEmail = email.toLowerCase()
 		const response = await fetch('/api/admin-portal/users', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ email, password, name })
+			body: JSON.stringify({ loweredEmail, password, name })
 		})
 		if (response.status === 200) window.location.replace('/admin-portal/users')
 		else {
