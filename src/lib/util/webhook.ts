@@ -8,7 +8,7 @@ const colours: string[] = ['00b380', '800020', '696969']
 export async function newRehearsalPost(rehearsalId: string, rehearsal: RehearsalInfo) {
 	const params = createWebhookMessage(
 		'New Rehearsal!',
-		'http://betamusicnight.nl/participant/availability/' + rehearsalId,
+		'http://betamusicnight.nl/participant/availability/',
 		'Fill in your availability by clicking the post title!',
 		'New Rehearsal on ' + rehearsal.startTime.toDate().toDateString(),
 		[
