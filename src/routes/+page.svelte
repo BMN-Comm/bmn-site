@@ -139,7 +139,7 @@
 	</Grid>
 
 	<div class="footer">
-		<h1>© Bèta Music Night 2024</h1>
+		<h1>© Bèta Music Night 2025</h1>
 		<a href="mailto:bmn@a-eskwadraat.nl">Contact</a>
 	</div>
 </content>
