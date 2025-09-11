@@ -4,8 +4,10 @@
 </script>
 
 <div class="tickText">
-	<h1><strong>It seems that the ticket sale hasn't started yet :C</strong></h1>
-	<h2>Do you want to keep up with all BMN news and be notified when the ticketsale starts? <br> Follow us on instagram!</h2>
+	<h1><strong>TICKET SALE</strong></h1>
+	<h2>The ticket sale is closed!</h2>
+	<h2>To be notified, fill in the interest form <a href="https://forms.gle/jXuT1JZXQDBLTspv9">here</a> to be notified when the ticket sale opens.</h2>
+	<h2>Do you want to keep up with all BMN news?<br> Follow us on instagram!</h2>
 	<a href= https://instagram.com/betamusicnight> 
 		<img class="socialImg" width="100px" src="socials/instagram.png" alt="InstagramIcon" />
 	</a>
