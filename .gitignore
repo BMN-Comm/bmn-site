@@ -14,3 +14,4 @@ hosting.*.cache
 .idea
 /firebase-debug.log
 /ui-debug.log
+/.firebase

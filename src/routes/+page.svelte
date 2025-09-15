@@ -65,15 +65,14 @@
     }
 
 	// Add carousel photos here
-    // Foto1 awaiting approval van gefotografeerde
-	const carouselPhotos = ['foto2.jpg', 'foto3.jpg', 'foto4.jpg', 'foto5.jpg', 'foto6.jpg']
+    const carouselPhotos = ['foto1.jpg', 'foto2.jpg', 'foto3.jpg', 'foto4.jpg', 'foto5.jpg', 'foto6.jpg']
 </script>
 
 <content>
 	<svelte:component this={Carousel} autoplay>
 		{#each carouselPhotos as foto}
 			<div class="carouselDiv">
-				<img class="BMNLogoCarousel" src="BMN2024.png" alt="BMNLogo" />
+				<img class="BMNLogoCarousel" src="BMN2026.png" alt="BMNLogo" />
 				<img class="carouselPhoto" src="carouselPhotos/{foto}" alt={foto} />
 			</div>
 		{/each}
@@ -140,7 +139,7 @@
 	</Grid>
 
 	<div class="footer">
-		<h1>© Bèta Music Night 2024</h1>
+		<h1>© Bèta Music Night 2025</h1>
 		<a href="mailto:bmn@a-eskwadraat.nl">Contact</a>
 	</div>
 </content>

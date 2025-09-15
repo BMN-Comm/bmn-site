@@ -11,8 +11,8 @@
 				<div class="committee-picture-wrapper">
 					<img
 						class="committee-picture"
-						src="committeePhotos/committee2025.jpg"
-						alt="Committee 20255"
+						src="committeePhotos/committee2025forg.jpg"
+						alt="Committee 2025"
 					/>
 				</div>
 			</div>
@@ -24,8 +24,8 @@
 	<Row>
 		<IntroductionCard img_src="committeePhotos/bernd2.jpg" title="Chair">
             <p>
-                Hi, I'm Bernd! I have been playing (classical) piano since I was 8 years old and still going strong!
-                Recently I have been collecting other instruments such as an accordeon, a melodica and an electrig
+                Hi, I'm Aster! I have been playing (classical) piano since I was 8 years old and still going strong!
+                Recently I have been collecting other instruments such as an accordeon, a melodica and an electric
                 guitar, but I am not yet very skilled at playing them. I am slowly working my way through my master in
                 Theoretical Physics here in Utrecht, which I still very much enjoy. After a very fun and exciting year
                 as a participant in BMN 2023 and being in the committee last year, I am now the Chair of Committee 2025.
@@ -58,8 +58,8 @@
 				"Yes, it is I, says me. And all who agree are more than three cuz they're we!" <br>
                 I'm Merijn, also known as Murren or 'The Frog Guy'. I'll  be the time manager of this year, meaning I
                 will be in charge of making the schedules of all the rehearsals. I am also self-appointed bierkoerier,
-                but don't tell Bernd that. I've been playing the drums since the ripe young age of seven, and last year
-                I started my CS bachelor alongside the BMN. I also play in a thrashmetalband, and music is by far the
+                but don't tell Aster that. I've been playing the drums since the ripe young age of seven, and last year
+                I started my CS bachelor alongside the BMN. Music is by far the
                 most important thing in my life. My favorite genres all fall in the Metal category, but I listen to a wide
                 variety of EDM subgenres as well, from popular to obscure, and the cultured amongst us will have recognized
                 my opening quote from Dr. Dre's "Stranded on Death Row". I can ramble on about music forever, but let's switch it up.
@@ -95,13 +95,13 @@
         </IntroductionCard>
 		<IntroductionCard img_src="committeePhotos/annemarijn.jpg" title="Composer/Vice-chair">
 			<p>
-				_
+                Hi, my name is Annemarijn. I love to sing and play guitar, which is what I'll be doing on stage (and off stage as well). This is my third year in the beta music night committee. I am the composer this year, which means I have written a bewitching medley this year. This year I finished my double bachelors in mathematics and physics. Outside of the BMN I enjoy crocheting and knitting and making jigsaw puzzles, and all things music of course. Hope to see you at the concert!
 			</p>
 		</IntroductionCard>
         <IntroductionCard img_src="committeePhotos/wessel.jpg" title="Setlist Manager">
             <p>
                 Hello, I am Wessel. I am this year’s setlist manager. I will be responsible for managing the setlist
-                (duh’) And a few other things. This is my first year in the BMN and committee. I took classical piano
+                (duh) And a few other things. This is my first year in the BMN and committee. I took classical piano
                 lessons for several years when I was young and I have been playing guitar since my 16th birthday. I
                 enjoy listening and playing a lot of music genres, of which I do enjoy classic rock and blues the most.
                 Currently, I am also a first year gametech student here at the University Utrecht. I hope to see y'all

@@ -13,7 +13,7 @@
 		"format": "prettier --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
-		"@firebase/functions-types": "^0.5.1",
+		"@firebase/functions-types": "^0.6.3",
 		"@rollup/plugin-typescript": "^8.0.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
@@ -28,11 +28,10 @@
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"firebase-admin": "^11.0.0",
+		"firebase-admin": "^13.1.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-svelte": "^2.7.0",
 		"svelte": "^3.52.0",
-		"svelte-adapter-firebase": "^0.14.4",
 		"svelte-check": "^2.9.2",
 		"svelte-preprocess": "^4.10.7",
 		"tslib": "^2.4.0",
@@ -41,8 +40,8 @@
 	"type": "module",
 	"dependencies": {
 		"carbon-icons-svelte": "^11.1.0",
-		"firebase": "9.7",
-		"firebase-functions": "^4.0.2",
+		"firebase": "11.3.1",
+		"firebase-functions": "^6.3.2",
 		"lodash": "^4.17.21",
 		"svelte-carousel": "^1.0.20"
 	}
