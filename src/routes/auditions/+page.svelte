@@ -10,7 +10,7 @@
 <div class="audText">
     <h1><strong>Auditions!</strong></h1>
 
-    <h2>Auditions for BMN 2026 are NOW OPEN! <br>Fill out <a href="https://forms.gle/VuSjpEzTekcWQ3YN8">this Google Form</a> to sign up!<br> <br> <br> </h2>
+    <h2>Auditions for BMN 2026 are NOW OPEN! <br>Fill out <a href="https://forms.gle/qs6Eo1yS6iV8AfLAA">this Google Form</a> to sign up!<br> <br> <br> </h2>
     <h3>The Bèta Music Night, or BMN is an annual concert organized by students from the science faculty at Utrecht University. The setlist of the concert typically is made out of covers of existing songs.
         The tunes that are played are assigned by the committee according to the music taste of the participants, so each song has a different line-up musicians! Right now, the committee is looking for 
         participants to strengthen the pool of artists, to make the BMN an even more unforgettable night, so please consider signing up :D We love all kinds of instruments, so even if it's very niche, we'd love to have you! </h3>
