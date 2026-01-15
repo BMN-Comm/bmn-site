@@ -13,7 +13,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ loweredEmail, password, name })
+			body: JSON.stringify({ email: loweredEmail, password, name })
 		})
 		if (response.status === 200) window.location.replace('/admin-portal/users')
 		else {
