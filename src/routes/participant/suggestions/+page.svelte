@@ -10,11 +10,21 @@
 		Button,
 		Form,
 		TextArea,
-		ToastNotification, Checkbox, Dropdown
+		ToastNotification, Checkbox, Dropdown,
+		StructuredListCell,
+		StructuredListHead,
+		StructuredListRow,
 	} from 'carbon-components-svelte'
-	import { doc, Timestamp } from 'firebase/firestore'
-	import { createSongFromSuggestion } from '$lib/firebase/client/firestore/songs'
+	import {deleteDoc, doc, Timestamp} from 'firebase/firestore'
+	import {createSongFromSuggestion, getSuggestedSongs} from '$lib/firebase/client/firestore/songs'
 	import {text} from "svelte/internal";
+	import {Accessibility, Chat, Favorite, MusicAdd, MusicRemove} from "carbon-icons-svelte";
+	import ScrollableList from "$lib/components/scrollableList.svelte";
+	import PlayLinkButton from "$lib/components/playLinkButton.svelte";
+	import {Modal} from "carbon-components-svelte";
+	import type {PageData} from "../../../../.svelte-kit/types/src/routes/committee/suggestions/$types";
+	import type {SuggestedSong} from "$lib/types/domain/song";
+	import {invalidateAll} from "$app/navigation";
 
 	let title: string
 	let artist: string
@@ -22,6 +32,14 @@
 	let remark: string
 	let selfOn: string
 	let rank: number
+
+	let openRemark = false
+	let openDel = false
+	let openAdd = false
+	let remarkText: string
+	let selectedSongIndex: number
+
+	export let data: PageData
 
 	$: validLink = true
 
@@ -70,6 +88,15 @@
 		selfOn = ''
 		rank = 1
 		validLink = true
+	}
+
+
+	/** Remove a suggestion */
+	async function RemoveSuggestion() {
+		const docRef = doc(db, 'songs', data.suggestions[selectedSongIndex].id)
+		await deleteDoc(docRef)
+
+		invalidateAll()
 	}
 </script>
 
@@ -197,7 +224,108 @@
 	<br>
 	In light of this new system, please also resubmit any songs as you see fit, to clarify earlier<br>
 	suggestions.
+
+	<h3>Your suggestions:</h3>
 </div>
+<Grid>
+	<ScrollableList>
+		<StructuredListHead>
+			<StructuredListRow head>
+				<StructuredListCell head>User</StructuredListCell>
+				<StructuredListCell head>Title</StructuredListCell>
+				<StructuredListCell head>Artist</StructuredListCell>
+				<StructuredListCell head>Timestamp</StructuredListCell>
+				<StructuredListCell head>Rank</StructuredListCell>
+				<StructuredListCell head>Link</StructuredListCell>
+				<StructuredListCell head>Options</StructuredListCell>
+			</StructuredListRow>
+		</StructuredListHead>
+		{#each data.suggestions as song, i}
+			{#if song.user.id === data.user?.databaseId}
+				<StructuredListRow>
+					<StructuredListCell>
+						{data.user.name ?? 'Unknown'}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.name}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.artist}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.suggestionDate.toDate()}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.rank}
+					</StructuredListCell>
+					<StructuredListCell>
+						<PlayLinkButton url={song.link} />
+					</StructuredListCell>
+					<StructuredListCell>
+						<Button
+								kind="danger-tertiary"
+								size="small"
+								iconDescription="Delete"
+								icon={MusicRemove}
+								on:click={() => {
+								selectedSongIndex = i
+								openDel = true
+							}}
+						/>
+						{#if song.remark && song.remark.length > 0}
+							<Button
+									kind="tertiary"
+									size="small"
+									iconDescription="Remarks"
+									icon={Chat}
+									on:click={() => {
+									remarkText = song.remark
+									openRemark = true
+								}}
+							/>
+						{/if}
+						{#if song.selfOn && song.selfOn.length > 0}
+							<Button
+									kind="tertiary"
+									size="small"
+									iconDescription="Wants to Play"
+									icon={Accessibility}
+									on:click={() => {
+									remarkText = song.selfOn
+									openRemark = true
+								}}
+							/>
+						{/if}
+					</StructuredListCell>
+				</StructuredListRow>
+			{/if}
+		{/each}</ScrollableList
+	>
+</Grid>
+
+<Modal passiveModal modalHeading="Remark" bind:open={openRemark}>
+	<p>{remarkText}</p>
+</Modal>
+
+<Modal
+		danger
+		modalHeading="Delete suggestion"
+		primaryButtonText="Delete"
+		primaryButtonIcon={MusicRemove}
+		secondaryButtonText="Cancel"
+		bind:open={openDel}
+		on:click:button--primary={() => {
+		RemoveSuggestion()
+		openDel = false
+	}}
+		on:click:button--secondary={() => {
+		openDel = false
+	}}
+>
+	<p>Delete {data.suggestions[selectedSongIndex]?.name}?</p>
+</Modal>
+
+
 
 <style>
 	:global(.textinput-column) {

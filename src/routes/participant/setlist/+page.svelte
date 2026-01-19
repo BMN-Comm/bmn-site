@@ -36,8 +36,6 @@
 			<StructuredListRow head>
 				<StructuredListCell head>Title</StructuredListCell>
 				<StructuredListCell head>Artist</StructuredListCell>
-				<StructuredListCell head>Genre</StructuredListCell>
-				<StructuredListCell head>Length</StructuredListCell>
 				<StructuredListCell head>Link</StructuredListCell>
 				<StructuredListCell head>Line-up</StructuredListCell>
 			</StructuredListRow>
@@ -48,8 +46,6 @@
 				<StructuredListRow>
 					<StructuredListCell>{song.name}</StructuredListCell>
 					<StructuredListCell>{song.artist}</StructuredListCell>
-					<StructuredListCell>{song.genre}</StructuredListCell>
-					<StructuredListCell>{song.length}</StructuredListCell>
 					<StructuredListCell>
 						<PlayLinkButton url={song.link} />
 					</StructuredListCell>
