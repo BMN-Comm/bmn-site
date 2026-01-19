@@ -72,7 +72,7 @@
 	<svelte:component this={Carousel} autoplay>
 		{#each carouselPhotos as foto}
 			<div class="carouselDiv">
-				<img class="BMNLogoCarousel" src="BMN2024.png" alt="BMNLogo" />
+				<img class="BMNLogoCarousel" src="BMN2026.png" alt="BMNLogo" />
 				<img class="carouselPhoto" src="carouselPhotos/{foto}" alt={foto} />
 			</div>
 		{/each}

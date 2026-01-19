@@ -40,7 +40,7 @@
 	"type": "module",
 	"dependencies": {
 		"carbon-icons-svelte": "^11.1.0",
-		"firebase": "11.3.1",
+		"firebase": "^11.3.1",
 		"firebase-functions": "^6.3.2",
 		"lodash": "^4.17.21",
 		"svelte-carousel": "^1.0.20"

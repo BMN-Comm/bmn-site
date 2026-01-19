@@ -32,7 +32,7 @@
 		border: 2px;
 		border-style: solid;
 		border-radius: 18px;
-        border-color: #644ba0;
+        border-color: #00EEFF;
 	}
 
 	.introduction-img {

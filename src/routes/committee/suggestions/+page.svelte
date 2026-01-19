@@ -10,7 +10,7 @@
 		StructuredListHead,
 		StructuredListRow
 	} from 'carbon-components-svelte'
-	import { Bat, Chat, Favorite, MusicAdd, MusicRemove } from 'carbon-icons-svelte'
+	import {Accessibility, Bat, Chat, Favorite, MusicAdd, MusicRemove} from 'carbon-icons-svelte'
 	import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 	import { db } from '$lib/firebase/client/firebase'
 	import PlayLinkButton from '$lib/components/playLinkButton.svelte'
@@ -18,6 +18,8 @@
 	import { invalidateAll } from '$app/navigation'
 	import type { PageData } from './$types'
 	import { addSongToSetlist } from '$lib/firebase/client/firestore/songs'
+	import {_exportSuggestions} from "./+page";
+	import type {SuggestedSong} from "$lib/types/domain/song";
 
 	export let data: PageData
 
@@ -27,6 +29,8 @@
 	let filterFavourites = false
 	let remarkText: string
 	let selectedSongIndex: number
+
+	let shouldSort = false
 
 	/** Remove a suggestion */
 	async function RemoveSuggestion() {
@@ -56,7 +60,20 @@
 		})
 		invalidateAll()
 	}
+
+	async function Download()
+	{
+		await _exportSuggestions();
+	}
+
+	function sortSuggestions(shouldSort: boolean, suggestions: SuggestedSong[]) {
+		if (!shouldSort) return suggestions
+		else return suggestions.sort((a, b) => b.rank - a.rank)
+	}
 </script>
+
+<Button kind="primary" on:click={Download} style="margin-bottom: 1rem;">
+	Export Suggestions </Button>
 
 <Grid>
 	<Row>
@@ -69,6 +86,15 @@
 				}}
 			/>
 		</Column>
+		<Column>
+			<h1 class="titleText">Suggestions</h1>
+			<Checkbox
+					labelText="Sort on rank"
+					on:change={() => {
+					shouldSort = !shouldSort
+				}}
+			/>
+		</Column>
 	</Row>
 
 	<ScrollableList>
@@ -77,13 +103,14 @@
 				<StructuredListCell head>User</StructuredListCell>
 				<StructuredListCell head>Title</StructuredListCell>
 				<StructuredListCell head>Artist</StructuredListCell>
-				<StructuredListCell head>Genre</StructuredListCell>
+				<StructuredListCell head>Timestamp</StructuredListCell>
+				<StructuredListCell head>Rank</StructuredListCell>
 				<StructuredListCell head>Link</StructuredListCell>
 				<StructuredListCell head>Favo</StructuredListCell>
 				<StructuredListCell head>Options</StructuredListCell>
 			</StructuredListRow>
 		</StructuredListHead>
-		{#each data.suggestions as song, i}
+		{#each sortSuggestions(shouldSort, data.suggestions) as song, i}
 			{#if song.liked || !filterFavourites}
 				<StructuredListRow>
 					<StructuredListCell>
@@ -96,7 +123,10 @@
 						{song.artist}
 					</StructuredListCell>
 					<StructuredListCell>
-						{song.genre}
+						{song.suggestionDate.toDate()}
+					</StructuredListCell>
+					<StructuredListCell>
+						{song.rank}
 					</StructuredListCell>
 					<StructuredListCell>
 						<PlayLinkButton url={song.link} />
@@ -132,6 +162,18 @@
 								icon={Chat}
 								on:click={() => {
 									remarkText = song.remark
+									openRemark = true
+								}}
+							/>
+						{/if}
+						{#if song.selfOn && song.selfOn.length > 0}
+							<Button
+									kind="tertiary"
+									size="small"
+									iconDescription="Wants to Play"
+									icon={Accessibility}
+									on:click={() => {
+									remarkText = song.selfOn
 									openRemark = true
 								}}
 							/>

@@ -23,7 +23,7 @@
 
 <div class="header-wrapper">
 	<Header bind:isSideNavOpen={$open} persistentHamburgerMenu={innerWidth < 1056}>
-		<img src="BMN2024.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
+		<img src="BMN2026.png" height="100%" alt="BMNLogo" style="margin-right: 10px;" />
 		<HeaderNav>
 			<HeaderNavItem href="/" text="Home" />
             <HeaderNavItem href="/photos" text="Photos" />
