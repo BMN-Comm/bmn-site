@@ -150,8 +150,8 @@
 			</Column>
 			<Column>
 				<Dropdown
+						bind:selectedId={rank}
 						on:select={(e) => rank = e.detail.selectedId}
-						selectedId=1
 						invalidText="invalid selection"
 						items={[
 						  {id: 1, text: '1'},

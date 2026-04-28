@@ -44,15 +44,15 @@ export async function GetMusisciansThatPlaySongs(ids: string[]) {
 	// Add them to the dictionary for the songs they play
 	for (const playsInSong of playsInDocs) {
 		const participant = participants.find((x) => x.id === playsInSong.ref.parent.parent?.id)
-		if (!participant) throw new Error('Participant was not loaded, something is wrong')
+		if (!participant) console.error('Participant was not loaded, something is wrong')
 
 		const playsInSongData = playsInSong.data()
 
 		// Add musician
 		const musician = {
-			participantName: participant.name,
+			participantName: participant?.name ?? "undefined",
 			instrumentName: playsInSongData.part,
-			participantId: participant.id
+			participantId: participant?.id ?? "undefined"
 		}
 
 		musiciansForSongs[playsInSongData.song.id].push(musician)

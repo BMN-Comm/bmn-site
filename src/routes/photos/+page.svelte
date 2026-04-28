@@ -1,8 +1,3 @@
-<script>
-    import { Grid, Row } from 'carbon-components-svelte'
-    import IntroductionCard from '$lib/components/introductionCard.svelte'
-</script>
-
 <div class="tickText">
     <h1><strong>Videos and photos!</strong></h1>
     <h2>These are shared drives where you can view and upload photos of earlier BMN editions!</h2>

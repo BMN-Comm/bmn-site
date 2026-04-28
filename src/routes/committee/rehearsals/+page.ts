@@ -11,7 +11,7 @@ export const load: PageLoad = async () => {
 	const rehearsalsQuery = query(
 		collection(db, 'rehearsals'),
 		orderBy('endTime', 'asc'),
-		where('endTime', '>=', Timestamp.now())
+		//where('endTime', '>=', Timestamp.now())
 	)
 	const rehearsals = (await getDocs(rehearsalsQuery)).docs.map(
 		(doc) => ({ id: doc.id, ...doc.data() } as Rehearsal)
