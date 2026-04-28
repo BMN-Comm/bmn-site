@@ -5,6 +5,8 @@ export type Song = {
 	name: string
 	artist: string
 	link: string
+	length: string
+	genre: string
 }
 
 export type SuggestedSong = Song & {
@@ -12,6 +14,4 @@ export type SuggestedSong = Song & {
 	suggestionDate: Timestamp
 	user: DocumentReference // Reference to user path
 	liked: boolean
-	selfOn: string
-	rank: number
 }

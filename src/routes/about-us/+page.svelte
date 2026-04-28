@@ -6,14 +6,14 @@
 <Grid>
 	<Row>
 		<div class="committee-header">
-			<h1>The 14th BMN committee (2025-2026)</h1>
+			<h1>The 11th BMN committee (2024-2025)</h1>
 			<div class="committee-picture-gradient">
 				<div class="committee-picture-wrapper">
-                    <img
-                            src= "BMN2026.png"
-                            width="100%"
-                            alt="Coming soon - Committee"
-                    />
+					<img
+						class="committee-picture"
+						src="committeePhotos/committee2025forg.jpg"
+						alt="Committee 2025"
+					/>
 				</div>
 			</div>
 		</div>
@@ -22,104 +22,90 @@
 		<h1 style="margin-bottom: 20px;">The members</h1>
 	</Row>
 	<Row>
-		<IntroductionCard img_src="committeePhotos/buse.png" title="Co-Chair">
+		<IntroductionCard img_src="committeePhotos/bernd2.jpg" title="Chair">
             <p>
-                I'm Buse, and I am Co-chair and vocalist for BMN2026! I get to tell people what they need to do, and if
-                they don't, I cry :D<br>
-                I am a well seasoned BMNee (gonna be my fifth year in the committee, sixth year participating in BMN)
-                and I'm very excited to see what our people will bring to the table!<br>
-                My music shenanigans began at around 14-15 years old, when I started recording myself singing and
-                posting it online. Ever since, it kinda took over my life. Now I'm a somewhat okay singer,picked up
-                (voice) acting as well and was able to join this amazing group of people in organizing a
-                spectacular annual happening. Please look forward to this year's concert, cause I'm sure we'll be
-                rocking your socks off~
+                Hi, I'm Aster! I have been playing (classical) piano since I was 8 years old and still going strong!
+                Recently I have been collecting other instruments such as an accordeon, a melodica and an electric
+                guitar, but I am not yet very skilled at playing them. I am slowly working my way through my master in
+                Theoretical Physics here in Utrecht, which I still very much enjoy. After a very fun and exciting year
+                as a participant in BMN 2023 and being in the committee last year, I am now the Chair of Committee 2025.
+                I do not really have a favourite genre of music, though I very much enjoy playing bombastic or overly
+                dramatic music myself. I hope to see you at BMN 2025!
             </p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/murren2.png" title="Co-Chair">
+		<IntroductionCard img_src="committeePhotos/meinte.jpg" title="Agent">
             <p>
-                "Yes, it is I, says me. And all who agree are more than three cuz they're we!" <br>
-                I'm Merijn, also known as Murren or 'forg'. I have made my return after last year, this time sharing a
-                chair with Buse! Together, we're gonna make sure this year is <i>even better</i> than last year.
-                I've been playing the drums since the ripe young age of seven, and I am hopefully in my last year
-                of the CS bachelor alongside the BMN. Music is by far the most important thing in my life. My favorite
-                genres all fall in the Metal category, but I listen to a wide variety of EDM subgenres as well, from
-                popular to obscure, and the cultured amongst us will have recognized my opening quote from Dr. Dre's
-                "Stranded on Death Row". I can ramble on about music forever, but let's switch it up.
-                Besides music I write and read (but no one believes that), I do software development and event support
-                to pay the bills, I am full-time discordian, and I make sure to never go to sleep before 4am. I also
-                write stories and code a lot in my free time, maintaining the BMN website, game mods, websites and
-                occasionally an uni assignment. Cheers, and see you June 3rd at the BMN!
+                Hi, I’m Meinte. I am a third years physics student, but I’m also engaging in a minor in anthropology. Having
+                been both a spectator and a participant of the BMN in the last two years, I am excited to be part of the
+                organisation this time around. I will be the agent for the BMN this year, which means that i will take
+                care of all contact the BMN has with the outside world, so if you ever have a question, send me an
+                email! My main instrument is the guitar, although I once started making music on a keyboard long ago. I
+                love playing and listening to alternative rock, but I also enjoy listening to many genres of music that
+                do not involve a guitar, such as (experimental) hip-hop, house and jungle.
             </p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/jenny.png" title="Event Manager / Composer / Vice-Chair">
+		<IntroductionCard img_src="committeePhotos/tibor.jpg" title="PR">
             <p>
-                Yerroooo, I'm Jenny! I’ve been listening and singing along to music of all kinds all my life and had
-                singing classes for around 2.5 years. I also taught myself some ukulelelele and guitar, but still need
-                to practice a lot with those. This year I will be the Event Manager, Composer and Vice-chair for the
-                BMN. This means that 1) I’ll manage the events ~ this includes organising bonding activities and booking
-                the studios for the rehearsals. 2) I'll be puzzling with songs and squish them into a medley. 3) I'll
-                make sure that Bubu and Murrie don't overwork themselves and go to bed on time (the hardest task of all
-                probably...). Currently I’m studying Computer Science, but I did not learn how to fix a printer yet.
-                Hope to see you at this year’s concert!
+                Hi there! My name is Tibor and I am this year's PR. So that means my job is to make sure everyone knows
+                about the BMN and comes to the concert! This is my third year doing BMN. Last year and the year before I
+                played guitar at the BMN and at home I also play bass. I own many instruments, a mandolin and a djembe
+                for example. I like rock, jazz and funk. Outside of music I love to read, climb and study physics
+                (I am in my third year of the bachelor). See you at the concert!
             </p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/femke.png" title="Time Manager">
+		<IntroductionCard img_src="committeePhotos/murren.jpg" title="Time Manager">
 			<p>
-                Hi there! My name is Femke, this year’s time manager. My main job this year is making the rehearsal
-                schedules, and haunting anyone who doesn’t fill in their availability on time. After playing classical
-                piano from the age of six, I decided to participate in the BMN last year. This gave me the opportunity
-                to explore different kinds of music and to discover the joy of playing with others. Currently I am doing
-                the master Theoretical Physics. Outside of BMN and my studies, I love to climb, run (mostly from
-                responsibilities), and bake. See you at the BMN!
+				"Yes, it is I, says me. And all who agree are more than three cuz they're we!" <br>
+                I'm Merijn, also known as Murren or 'The Frog Guy'. I'll  be the time manager of this year, meaning I
+                will be in charge of making the schedules of all the rehearsals. I am also self-appointed bierkoerier,
+                but don't tell Aster that. I've been playing the drums since the ripe young age of seven, and last year
+                I started my CS bachelor alongside the BMN. Music is by far the
+                most important thing in my life. My favorite genres all fall in the Metal category, but I listen to a wide
+                variety of EDM subgenres as well, from popular to obscure, and the cultured amongst us will have recognized
+                my opening quote from Dr. Dre's "Stranded on Death Row". I can ramble on about music forever, but let's switch it up.
+                Besides music I write and read (but no one believes that), I debate, and I am full-time discordian. I code
+                in my free time, working on the BMN website, Minecraft mods and plugins, and occasionally a uni assignment.
+                If you are a participant I will bother you with all means necessary to fill in your availability for
+                rehearsals, so be warned. Otherwise, I will see you June 4th at the BMN!
 			</p>
 		</IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/luka.png" title="Setlist Manager">
+		<IntroductionCard img_src="committeePhotos/jennifer.jpg" title="Event Manager">
             <p>
-                Hi, I’m Luka, as of writing this I’m 18 years old and currently in the first year of my physics and
-                mathematics bachelor, so this will be my first BMN and I’m super excited to be a part of the
-                organization for such a fun (I’ve heard) concert. My task this year is manage the setlist, as we get a
-                ton of song suggestions each year and we sadly can’t play them all, but do send in some fun suggestions
-                you enjoy and maybe we’ll play your song at the BMN this year! I’ve been playing mostly classical piano
-                since I was about 9 years old, yet my music taste has basically nothing to do with classical piano as
-                I’m mainly interested in a range of subgenres of rock. Here at the BMN we will play many different
-                genres, so I’m looking forward to playing songs I actually listen to and especially to play them with or
-                for all of you. As you could have guessed I enjoy playing as well as listening to music, but besides
-                that I also like to hang out with friends, to read and I love traveling to new places around the world,
-                although my studies have taken quite a lot of my pastime recently. Luckily I still have time to enjoy
-                music and I hope all of you have too and I’ll see you at the upcoming BMN!
+                Yerrooo! My name is Jennifer. I’ve been listening and singing along to music of all kinds all my life
+                and started taking singing classes around 2 years ago. I also taught myself some ukulelelele and guitar,
+                but still need to practice a lot with those. This year I will be the Event Manager for the BMN, which
+                means I’ll manage the events :3 ~ this includes organising bonding activities and booking the studios
+                for the rehearsals. Currently I’m studying Computer Science, but I did not learn how to fix a printer
+                yet. Hope to see you at this year’s concert!
             </p>
 		</IntroductionCard>
-        <IntroductionCard img_src="committeePhotos/milo.png" title="Roadie/Agent">
+        <IntroductionCard img_src="committeePhotos/luuk2.jpg" title="Roadie/Treasurer">
             <p>
-                I'm Milo, chief gear officer (friends can call me roadie) of this year's committee. This means I can
-                play anyone's guitar without permission, but also that you can blame me if you can't hear your favorite
-                musician because I forgot to bring the cable to hook them up to the sound system. If the guitarists ruin
-                their effect pedal settings despite me telling them to keep their hands off, that's not my fault though.
-                I'm also taking up the role of agent, which means I will be managing communications between the
-                committee and your dear musicians. I myself play bass (makes that sound that makes your head bop), with
-                about 8 years of experience under my belt. I play pretty much all types of rock (classic, punk, metal,
-                alt, post, etc.), but I listen to many more genres.
+                Hello, I am Luuk. I will be this year's Roadie and Treasurer, meaning that I will oversee all things
+                technical and monetary. I make sure that all the gear will be there where it's supposed to, at the show,
+                make sure the musicians are there where they're supposed to (on stage), and all together make sure the
+                money is where it’s supposed to be (in the pocket). This is my third year in the BMN, and my second year
+                in the committee. Having played piano since I was seven, I traded my life of neo-classical schooling for
+                a more in your face genre of music, metal. Since the age of 16 I picked up the bass guitar and in 18
+                joined my now main band of rascals. I have had singing lessons since 10 and will be doing bass and vocal
+                duties on the BMN itself. Despite this, I'm still well versed enough in the disciplines of piano, guitar
+                and drums. My favourite genre is, of course, metal, but there is no type of music that I will not take
+                seriously (though I really should have).
             </p>
         </IntroductionCard>
-		<IntroductionCard img_src="committeePhotos/raoul.png" title="Treasurer">
+		<IntroductionCard img_src="committeePhotos/annemarijn.jpg" title="Composer/Vice-chair">
 			<p>
-                Hi all, I am Raoul. After a year-long hiatus I am back as treasurer of the BMN this year. I will be in
-                charge of planning how to spend our money and making sure we stick to that plan as much as possible.
-                Besides handling the funds, I like to play music, duh. I will be playing drums and guitar at the BMN
-                this year, though I’m working on my bass game as well. I also like to occupy myself with my study. I’ve
-                finished a double bachelor's degree in mathematics and physics and am currently in my final year of a
-                bachelor’s in computer science. See you at the BMN!
-            </p>
+                Hi, my name is Annemarijn. I love to sing and play guitar, which is what I'll be doing on stage (and off stage as well). This is my third year in the beta music night committee. I am the composer this year, which means I have written a bewitching medley this year. This year I finished my double bachelors in mathematics and physics. Outside of the BMN I enjoy crocheting and knitting and making jigsaw puzzles, and all things music of course. Hope to see you at the concert!
+			</p>
 		</IntroductionCard>
-        <IntroductionCard img_src="committeePhotos/wessel2.png" title="PR Manager">
+        <IntroductionCard img_src="committeePhotos/wessel.jpg" title="Setlist Manager">
             <p>
-                Hello there! I’m Wessel. I’m a second year GameTech student here in Utrecht. This is also my second year
-                at the BMN, after being the setlist manager in my first year. This year, I’ll be the PR Manager. I’ll
-                make sure everyone hears about the BMN! I’ll also be responsible for designing the shirts, stickers, and
-                whatever else we come up with. At the BMN last year, I mainly played guitar, which I’ve been doing for
-                four years already. I’ve also played a bit of piano and done some backing vocals. I enjoy listening to
-                all kinds of music, but I mostly gravitate toward rock, blues, and the occasional bit of metal or jazz.
-                I hope to see all of you at BMN 2026!
+                Hello, I am Wessel. I am this year’s setlist manager. I will be responsible for managing the setlist
+                (duh) And a few other things. This is my first year in the BMN and committee. I took classical piano
+                lessons for several years when I was young and I have been playing guitar since my 16th birthday. I
+                enjoy listening and playing a lot of music genres, of which I do enjoy classic rock and blues the most.
+                Currently, I am also a first year gametech student here at the University Utrecht. I hope to see y'all
+                on the BMN this year.
             </p>
         </IntroductionCard>
 	</Row>
@@ -140,7 +126,7 @@
 		margin: auto;
 		margin-top: 10px;
 		padding: 5px;
-		background: #00EEFF;
+		background: #644ba0;
 		border-radius: 39px;
 	}
 

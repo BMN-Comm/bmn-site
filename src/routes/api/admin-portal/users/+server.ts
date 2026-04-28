@@ -12,7 +12,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		return new Response(undefined, { status: 200 })
 	} catch (e: any) {
-		return new Response(undefined, { status: 500, headers: { error: e.message, email: email } })
+		return new Response(undefined, { status: 500, headers: { error: e.message } })
 	}
 }
 
