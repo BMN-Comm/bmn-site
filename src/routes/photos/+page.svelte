@@ -5,8 +5,12 @@
 
 <div class="tickText">
     <h1><strong>Videos and photos!</strong></h1>
-    <h2>This is a shared drive where you can view the photos of the 2025 edition of the BMN!</h2>
-    <h2>Open it <a href="https://photos.app.goo.gl/bLDH4y8fedBeKs7G9">here</a></h2>
+    <h2>These are shared drives where you can view and upload photos of earlier BMN editions!</h2>
+    <h4>BMN 2025: <a href="https://photos.app.goo.gl/bLDH4y8fedBeKs7G9">Open</a></h4>
+    <h4>BMN 2024: <a href="https://photos.app.goo.gl/n53xPpT7H23yjUFv9">Open</a></h4>
+    <br>
+    <h4><i>Earlier years unfortunately did not centralize all content.</i></h4>
+
     <h2>Do you want to keep up with all BMN news?<br> Follow us on instagram!</h2>
     <a href= https://instagram.com/betamusicnight>
         <img class="socialImg" width="100px" src="socials/instagram.png" alt="InstagramIcon" />
