@@ -1,6 +1,7 @@
 <div class="tickText">
     <h1><strong>Videos and photos!</strong></h1>
     <h2>These are shared drives where you can view and upload photos of earlier BMN editions!</h2>
+    <h4>BMN 2026: <a href="https://photos.app.goo.gl/fgWktKemGsFEFXJM9">Open</a></h4>
     <h4>BMN 2025: <a href="https://photos.app.goo.gl/bLDH4y8fedBeKs7G9">Open</a></h4>
     <h4>BMN 2024: <a href="https://photos.app.goo.gl/n53xPpT7H23yjUFv9">Open</a></h4>
     <br>
