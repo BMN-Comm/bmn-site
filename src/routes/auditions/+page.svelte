@@ -5,7 +5,8 @@
 
 <div class="tickText">
     <h1><strong>Auditions!</strong></h1>
-    <h2>The auditions are currently closed. They will open next schoolyear! Check back later.</h2>
+    <h2>The auditions for 2027 are opening soon!</h2>
+    <h3>To get a reminder when the signups open, fill in <a href="https://genqrco.de/WTZtfu7">the interest form</a>!</h3>
     <h2>Do you want to keep up with all BMN news?<br> Follow us on instagram!</h2>
     <a href= https://instagram.com/betamusicnight>
         <img class="socialImg" width="100px" src="socials/instagram.png" alt="InstagramIcon" />
