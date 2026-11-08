@@ -86,7 +86,7 @@
 		link = ''
 		remark = ''
 		selfOn = ''
-		rank = 1
+		rank = 4
 		validLink = true
 	}
 
@@ -154,11 +154,11 @@
 						on:select={(e) => rank = e.detail.selectedId}
 						invalidText="invalid selection"
 						items={[
-						  {id: 1, text: '1'},
-						  {id: 2, text: '2'},
-						  {id: 3, text: '3'},
-						  {id: 4, text: '4'},
-						  {id: 5, text: '5'}
+						  {id: 1, text: 'Illustrates my taste, but not for the setlist'},
+						  {id: 2, text: 'Fun, but doesn have to include me'},
+						  {id: 3, text: 'Would be fun to play this'},
+						  {id: 4, text: 'Want to play this'},
+						  {id: 5, text: 'Do this with me, or not at all'}
 						]}
 						label="Rank*"
 						titleText="Rank*"
@@ -195,35 +195,11 @@
 	</Grid>
 </Form>
 <div>
-	<h3>What does Rank mean?</h3>
-	As you might have read in the Discord announcement, in round 4 of BMN26 we want to try a<br>
-	new system for deciding songs, to see if this should be kept in the future.<br>
-	The ranks will be considered as the following:<br>
-	5 - I <i>need</i> to play this song on the BMN. Please do not do it without me.<br>
-	4 - I would love to play this song, please consider it!<br>
-	3 - If someone else also wants to play this band or song, I'd like to be on it as well!<br>
-	2 - This band or song would be fun to play, but someone else can take it if they like it more.<br>
-	1 - This would be cool to see on the BMN, but not necessarily with me.<br>
-	<br>
-	Please carefully decide how you rank your songs. If two incompatible musicians rank the same<br>
-	song on 5 (f.e., two drummers) the song will most likely not be chosen to avoid disappointing<br>
-	one of them. If a song is ranked 3 or lower, it will not be done unless multiple participants<br>
-	submit it. Ideally, most of your suggestions are in the 2-4 range. 5 should really only be used<br>
-	for serious exceptions.<br>
-	<br>
-	For us, this will be a way to separate the type of suggestions people make, in hopes of<br>
-	compiling rounds that give people the songs they <i>really</i> want, instead of a song they<br>
-	also 'kinda' like (or don't). To add to that, it allows us to know what kind of genre and<br>
-	style you would like to play, without polluting the actual songs to be considered with those.<br>
-	<br>
-	Furthermore; In the remarks, please put important details like possible challenges/opportunities <br>
+ In the remarks, please put important details like possible challenges/opportunities <br>
 	for exotic instruments, timestamps we should listen to, if we should consider a specific <br>
 	version, and/or if you want this specific artist or just something in that general direction.<br>
 	In the box for parts, please also mention which instrument you prefer if you were accepted on<br>
 	multiple.<br>
-	<br>
-	In light of this new system, please also resubmit any songs as you see fit, to clarify earlier<br>
-	suggestions.
 
 	<h3>Your suggestions:</h3>
 </div>
